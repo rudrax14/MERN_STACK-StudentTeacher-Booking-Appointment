@@ -1,33 +1,25 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Studentsignup from './components/Signup/Student'
+import Studentlogin from './components/Login/Student'
+import Teachersignup from './components/Signup/Teacher'
+import Teacherlogin from './components/Login/Teacher'
 
 function App() {
-  const [count, setCount] = useState(0)
+
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<h1>Welcome to the Home Page</h1>} />
+          <Route path="/student/login" element={<Studentlogin />} />
+          <Route path="/student/signup" element={<Studentsignup />} />
+          <Route path="/teacher/login" element={<Teacherlogin />} />
+          <Route path="/teacher/signup" element={<Teachersignup />} />
+          <Route path="*" element={<h1>404 Not Found</h1>} />
+        </Routes>
+      </BrowserRouter>
     </>
   )
 }
