@@ -9,9 +9,9 @@ app.use(express.json())
 
 
 // Available Routes
-app.use('/api/v1/admin',require('./routes/adminRoutes'))
-app.use('/api/v1/teachers',require('./routes/teacherRoutes'))
-app.use('/api/v1/student',require('./routes/studentRoutes'))
+app.use('/api/v1/admin',require('./routes/adminRoutes'));
+app.use('/api/v1/teachers',require('./routes/teacherRoutes'));
+app.use('/api/v1/student',require('./routes/studentRoutes'));
 
 app.use(errorController)
 
