@@ -15,10 +15,13 @@ const Navbar = () => {
                                 <a class="nav-link active" aria-current="page" href="/">Home</a>
                             </li>
                         </ul>
-                        <form class="d-flex" role="search">
+                        {/* <form class="d-flex" role="search">
                             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
                             <button class="btn btn-outline-success" type="submit">Search</button>
-                        </form>
+                        </form> */}
+                        <div className='bg-primary text-white'>
+                            <i class="bi bi-bell"></i>
+                        </div>
                         <div class="dropdown mx-5">
                             <button class="btn btn-secondary dropdown-toggle mx-3 " type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Profile
@@ -29,6 +32,7 @@ const Navbar = () => {
                                 <li><a class="dropdown-item" href="/">Action 2</a></li>
                             </ul>
                         </div>
+
                         {/* <ProfileDropdown /> */}
                     </div>
                 </div>

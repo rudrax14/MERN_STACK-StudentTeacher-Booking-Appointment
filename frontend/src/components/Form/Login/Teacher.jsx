@@ -29,7 +29,7 @@ function Student() {
               />
             </div>
             <div className="flex mt-3">
-              <Link to="/" className="mr-7">
+              <Link to="/teacher/dashboard" className="mr-7">
                 <button className=" bg-blue-700 w-full mr-7 rounded-xl text-white py-2 hover:scale-110 duration-300">Login</button>
               </Link>
               <Link to="/signup">

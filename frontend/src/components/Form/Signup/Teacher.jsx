@@ -1,102 +1,79 @@
 import React from 'react'
+import { Link } from "react-router-dom";
+import Navbar from "../../UI/Navbar";
 function teacher() {
   return (
-    <section className="vh-100 bg-gray-200">
-      <div className="container h-screen mx-auto flex justify-center items-center">
-        <div className="w-full max-w-md">
-          <div className="bg-white rounded-lg shadow-lg p-8">
-            <h1 className="text-3xl font-bold text-center mb-5">
-              Student Sign up
-            </h1>
-            <form className="space-y-4">
-              <div className="flex items-center space-x-2">
-                <i className="fas fa-user fa-lg me-3 fa-fw"></i>
-                <div className="flex-grow">
+    <>
+      <Navbar />
+      <section className="bg-light min-vh-100 d-flex align-items-center justify-content-center">
+        {/* Register Container */}
+        <div className="container bg-white rounded-3 shadow-lg p-5">
+          {/* Form */}
+          <div className="row">
+            <div className="col-md-6 px-4">
+              <h2 className="font-bold display-4">Student Register</h2>
+              <p className="text-base mt-2">For New Members, Register</p>
+              <form className="d-flex flex-column gap-2">
+                <input
+                  className="form-control p-2 mt-3 rounded border"
+                  type="text"
+                  name="username"
+                  placeholder="Username"
+                />
+                <input
+                  className="form-control p-2 mt-3 rounded border"
+                  type="text"
+                  name="Department"
+                  placeholder="Department"
+                />
+                <input
+                  className="form-control p-2 mt-3 rounded border"
+                  type="number"
+                  name="Age"
+                  placeholder="Age"
+                />
+                <input
+                  className="form-control p-2 mt-3 rounded border"
+                  type="email"
+                  name="Email"
+                  placeholder="Email"
+                />
+                <div className="">
                   <input
-                    type="text"
-                    id="form3Example1c"
-                    className="w-full border rounded py-2 px-3 focus:outline-none focus:border-blue-500"
-                  />
-                  <label
-                    className="block text-sm text-gray-600"
-                    htmlFor="form3Example1c"
-                  >
-                    Your Name
-                  </label>
-                </div>
-              </div>
-              <div className="flex items-center space-x-2">
-                <i className="fas fa-envelope fa-lg me-3 fa-fw"></i>
-                <div className="flex-grow">
-                  <input
-                    type="email"
-                    id="form3Example3c"
-                    className="w-full border rounded py-2 px-3 focus:outline-none focus:border-blue-500"
-                  />
-                  <label
-                    className="block text-sm text-gray-600"
-                    htmlFor="form3Example3c"
-                  >
-                    Your Email
-                  </label>
-                </div>
-              </div>
-              <div className="flex items-center space-x-2">
-                <i className="fas fa-lock fa-lg me-3 fa-fw"></i>
-                <div className="flex-grow">
-                  <input
+                    className="form-control p-2 mt-3 rounded border"
                     type="password"
-                    id="form3Example4c"
-                    className="w-full border rounded py-2 px-3 focus:outline-none focus:border-blue-500"
+                    name="password"
+                    placeholder="Password"
                   />
-                  <label
-                    className="block text-sm text-gray-600"
-                    htmlFor="form3Example4c"
-                  >
-                    Password
-                  </label>
                 </div>
-              </div>
-              <div className="flex items-center space-x-2">
-                <i className="fas fa-key fa-lg me-3 fa-fw"></i>
-                <div className="flex-grow">
-                  <input
-                    type="password"
-                    id="form3Example4cd"
-                    className="w-full border rounded py-2 px-3 focus:outline-none focus:border-blue-500"
-                  />
-                  <label
-                    className="block text-sm text-gray-600"
-                    htmlFor="form3Example4cd"
-                  >
-                    Repeat your password
-                  </label>
+                <input
+                  className="form-control p-2 mt-3 rounded border"
+                  type="password"
+                  name="cpassword"
+                  placeholder="Confirm Password"
+                />
+                <div className="d-flex mt-3">
+                  <Link to="/" className="me-3">
+                    <button className="btn btn-primary w-full rounded-pill">Register</button>
+                  </Link>
+                  <Link to="/student/login">
+                    <button className="btn btn-primary w-full rounded-pill">Login</button>
+                  </Link>
                 </div>
-              </div>
-              {/* <div className="flex items-center space-x-2">
-                                    <input
-                                        className="form-check-input me-2"
-                                        type="checkbox"
-                                        value=""
-                                        id="form2Example3c"
-                                    />
-                                    <label className="text-sm text-gray-600" htmlFor="form2Example3c">
-                                        I agree to all statements in <a href="#!">Terms of service</a>
-                                    </label>
-                                </div> */}
-              <div className="text-center">
-                <button
-                  type="button"
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
-                >
-                  Register
-                </button>
-              </div>
-            </form>
+              </form>
+            </div>
+            {/* Image */}
+            <div className="col-md-6 d-md-block d-none">
+              <img
+                className="img-fluid"
+                src="https://colorlib.com/etc/regform/colorlib-regform-7/images/signup-image.jpg"
+                alt=""
+              />
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   )
 }
 
