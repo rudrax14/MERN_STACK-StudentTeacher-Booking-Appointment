@@ -22,18 +22,17 @@ const Navbar = () => {
                             </li>
 
                         </ul>
-
                         {/* <ProfileDropdown /> */}
-                        <div className='mx-4'>
-                            <div class="dropdown">
-                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Dropdown link
+                        <div className='mx-5'>
+                            <div className="dropdown">
+                                <a className="btn btn-secondary dropdown-toggle " href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Profile Name
                                 </a>
 
-                                <ul class="dropdown-menu m">
-                                    <li><a class="dropdown-item" href="#">Action</a></li>
-                                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                <ul className="dropdown-menu">
+                                    <li><a className="dropdown-item" href="#">Action</a></li>
+                                    <li><a className="dropdown-item" href="#">Another action</a></li>
+                                    <li><a className="dropdown-item" href="#">Something else here</a></li>
                                 </ul>
                             </div>
                         </div>

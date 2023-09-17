@@ -9,7 +9,7 @@ import Teachersignup from './components/Form/Signup/Teacher'
 import Teacherlogin from './components/Form/Login/Teacher'
 import LandingPage from './components/Pages/LandingPage/LandingPage';
 import TeacherDashboard from './components/Pages/Dashboard/Teacher';
-import StudentDashboard from './components/Pages/Dashboard/StudentDashboard/Home';
+import StudentDashboard from './components/Pages/Dashboard/Student';
 import AdminDashboard from './components/Pages/Dashboard/Admin';
 
 function App() {
