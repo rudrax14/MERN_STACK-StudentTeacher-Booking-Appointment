@@ -4,11 +4,10 @@ import { BsChevronRight } from 'react-icons/bs';
 
 function Teacher() {
 
-
   return (
     <>
       <Navbar />
-      <div className="header-container shadow p-3 mb-5 bg-primary text-white ">
+      <div className="header-container shadow p-3 mb-5 bg-success text-white ">
         <div className="container d-flex justify-content-center">
           <p className='fs-1'>Teacher Dashbord</p>
         </div>
@@ -24,18 +23,22 @@ function Teacher() {
             <div className="modal-body">
               <form>
                 <div class="mb-3">
-                  <label for="exampleInputEmail1" class="form-label">Subject Name</label>
-                  <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
+                  <label for="subjectName" class="form-label">Subject Name</label>
+                  <input type="text" class="form-control" id="subjectName" />
                 </div>
-                <div class="mb-3">
-                  <label for="exampleInputEmail1" class="form-label">Time Slot</label>
-            
+                <div class="mb-3 row">
+                  <label>Time Slot</label>
+                  <div className='mt-1'>
+                    <button type="button" class="btn btn-outline-secondary ">2pm-4pm</button>
+                    <button type="button" class="btn btn-outline-secondary ms-2">5pm-6pm</button>
+                    <button type="button" class="btn btn-outline-secondary ms-2">7pm-8pm</button>
+                  </div>
                 </div>
               </form>
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" className="btn btn-primary">Save changes</button>
+              <button type="button" className="btn btn-primary">Add</button>
             </div>
           </div>
         </div>
@@ -46,14 +49,14 @@ function Teacher() {
           <h2>Status</h2>
           <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit</p>
           <hr className='mt-0 mb-4' />
-          <div className="d-flex justify-content-around">
+          <div className="row justify-content-around row-cols-4 text-center gy-5">
             <div className="card bg-primary text-white h-100" style={{ width: '18rem' }}>
               <div className="card-body ">
                 <p className='fw-semibold fs-5'>Schedule Appointment</p>
                 <p className='fw-normal fs-6'>3</p>
               </div>
               <div className="card-footer d-flex" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                View Details
+                Add Appoinment
                 <span className='ms-auto ' >
                   <BsChevronRight />
                 </span>
@@ -73,7 +76,7 @@ function Teacher() {
             </div>
             <div className="card bg-success text-white h-100" style={{ width: '18rem' }}>
               <div className="card-body ">
-                <p className='fw-semibold fs-5'>Teachers Available</p>
+                <p className='fw-semibold fs-5'>All Messages</p>
                 <p className='fw-normal fs-6'>3</p>
               </div>
               <div className="card-footer d-flex">
@@ -104,7 +107,7 @@ function Teacher() {
         </h2>
         <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit</p>
         <hr className='mt-0 mb-4' />
-        <table className="table table-hover">
+        <table className="table table-hover me-5">
           <thead>
             <tr>
               <th scope="col">Sr.No</th>
@@ -119,26 +122,35 @@ function Teacher() {
             <tr>
               <th scope="row">1</th>
               <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-              <td>@mdo</td>
-              <td>@mdo</td>
+              <td>Maths</td>
+              <td>12-12-2023</td>
+              <td>2:00 Pm</td>
+              <td>
+                <button className='bg-success text-white rounded p-2 border-0 me-2'><i class="fa-solid fa-pen-to-square"></i></button>
+                <button className='bg-danger text-white rounded p-2 border-0'><i class="fa-solid fa-trash"></i></button>
+              </td>
             </tr>
             <tr>
               <th scope="row">2</th>
               <td>Jacob</td>
-              <td>Thornton</td>
-              <td>@fat</td>
-              <td>@fat</td>
-              <td>@fat</td>
+              <td>Science</td>
+              <td>13-12-2023</td>
+              <td>4:00 Pm</td>
+              <td>
+                <button className='bg-success text-white rounded p-2 border-0 me-2'><i class="fa-solid fa-pen-to-square"></i></button>
+                <button className='bg-danger text-white rounded p-2 border-0'><i class="fa-solid fa-trash"></i></button>
+              </td>
             </tr>
             <tr>
               <th scope="row">3</th>
-              <td>@twitter</td>
-              <td>@twitter</td>
-              <td>@twitter</td>
-              <td>@twitter</td>
-              <td>@twitter</td>
+              <td>Dawn</td>
+              <td>History</td>
+              <td>14-12-2023</td>
+              <td>7:00 Pm</td>
+              <td>
+                <button className='bg-success text-white rounded p-2 border-0 me-2'><i class="fa-solid fa-pen-to-square"></i></button>
+                <button className='bg-danger text-white rounded p-2 border-0'><i class="fa-solid fa-trash"></i></button>
+              </td>
             </tr>
           </tbody>
         </table>

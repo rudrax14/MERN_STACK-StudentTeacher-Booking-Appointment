@@ -17,7 +17,7 @@ function Student() {
           <h2>Status</h2>
           <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit</p>
           <hr className='mt-0 mb-4' />
-          <div className="d-flex justify-content-around">
+          <div className="row justify-content-around row-cols-4 text-center gy-5">
             <div className="card bg-primary text-white h-100" style={{ width: '18rem' }}>
               <div className="card-body ">
                 <p className='fw-semibold fs-5'>Upcoming Lectures</p>

@@ -29,7 +29,7 @@ function Student() {
                     placeholder="Password"
                   />
                 </div>
-                <div className="d-flex mt-3">
+                <div className="d-flex mt-3 ">
                   <Link to="/student/dashboard" className="me-3">
                     <button className="btn btn-primary">Login</button>
                   </Link>
