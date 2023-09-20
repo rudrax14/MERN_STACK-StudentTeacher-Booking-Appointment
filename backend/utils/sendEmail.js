@@ -1,6 +1,6 @@
 const nodeMailer = require('nodemailer')
 
-module.exports=async (email,subject,message)=>{
+module.exports=async (from,email,subject,message)=>{
    const transport = nodeMailer.createTransport ({
       
             host: "smtp.mailtrap.io",
@@ -13,7 +13,7 @@ module.exports=async (email,subject,message)=>{
     })
 
     const info = await transport.sendMail({
-        from:"abutalhasheik33@gmail.com",
+        from:from,
         to:email,
         subject:subject,
         text:message

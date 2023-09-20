@@ -1,121 +1,75 @@
+
 const User = require("../models/User");
-const AppError = require("../utils/AppError");
-const jwt = require('jsonwebtoken')
-const bcrypt = require('bcrypt');
-const catchAsync = require("../utils/catchAsync");
-const util = require('util');
 const Appointment = require("../models/Appointment");
-/* const signToken = async (id,role)=>{
-    return await jwt.sign({id,role},process.env.JWT_KEY,{
-        expiresIn:'90d'
-    })
-}
- */
-/* exports.verifyToken = catchAsync(async (req,res,next)=>{
-    
-    let token=''
-    if(req.headers.authorization && req.headers.authorization.startsWith('Bearer ')){
-        token=req.headers.authorization.split(' ')[1]
-        
+const AppError = require("../utils/AppError");
+const catchAsync = require("../utils/catchAsync");
+const sendEmail = require('../utils/sendEmail');
+
+// Helper function to check if two appointment times clash
+const checkTimeClash = (time1, time2) => {
+    const timeDiff = Math.abs(new Date(time1) - new Date(time2));
+    return timeDiff <= 1800000; // 30 minutes in milliseconds
+};
+
+// Helper function to retrieve appointments for a user within a specific date range
+const getUserAppointments = async (email, startDate, endDate) => {
+    return await Appointment.find({
+        $or: [{ sendBy: email }, { sendTo: email }],
+        status: true,
+        scheduleAt: { $gte: startDate, $lt: endDate }
+    });
+};
+
+exports.getAllAppointments = catchAsync(async (req, res) => {
+    const appointments = await getUserAppointments(req.user.email, new Date(), new Date(9999, 11, 31));
+    res.status(200).json({ appointments });
+});
+
+exports.createAppointment = catchAsync(async (req, res, next) => {
+    const { sendBy, sendTo, reason } = req.body;
+    const scheduleAt = new Date(2022, 10, 10, 2, 45, 20).toString(); // Replace with your desired date/time
+
+    const teacherAppointments = await getUserAppointments(req.user.email, new Date(2022, 10, 10), new Date(2022, 10, 11));
+    const studentAppointments = await getUserAppointments(req.body.sendTo, new Date(2022, 10, 10), new Date(2022, 10, 11));
+
+    if (teacherAppointments.length >= 3) {
+        return next(new AppError("Your schedule is packed"));
     }
-    
-    if(!token){
-        return next(new AppError('You are not logged in to gain access'))
+    if (studentAppointments.length > 0) {
+        return next(new AppError("Student's schedule is packed"));
     }
 
-    console.log(token)
-    const decoded = await util.promisify(jwt.verify)(token,process.env.JWT_KEY)
-    req.user = decoded
-    console.log(decoded)
-    next()
-    
-})
- */
-/* const verifyPassword = async (candidatepassword,userPassword)=>{
-    
-    return await bcrypt.compare(candidatepassword,userPassword)
-} */
-/* exports.login = catchAsync(async (req,res,next)=>{
-    const email = req.body.email;
-    const password = req.body.password;
-    if(!email || !password){
-        return next(new AppError('Cannot leave email id or password field blank'))
-    }
-    const user = await User.findOne({email:req.body.email})
-    if(!user){
-        return next(new AppError('User not found'))
-    }
-    const verify = await verifyPassword(password,user.password)
-    if(!verify){
-        return next(new AppError('Enter the correct password'))
-    }
-    const token = await signToken(user._id,user.roles)
-    
-    
-    res.status(201).json({
-        status:'SUCCESS',
-        message:"Login successful",
-        data:{
-            user
-        },
-        token
-    })
-}) */
+    const newAppointment = await Appointment.create({
+        sendBy,
+        sendTo,
+        reason,
+        scheduleAt,
+        status: true
+    });
 
-/* exports.updatePassword =async (req,res,next)=>{
-    const password = req.body.password;
-    const newPassword = req.body.newPassword;
-    const newPasswordConfirm = req.body.newPasswordConfirm;
+    const message = `Appointment has been scheduled at ${newAppointment.scheduleAt}. Reason: ${newAppointment.reason}`;
 
-    const user = await User.findById(req.user.id)
-    console.log(user)
-    if(!(await verifyPassword(password,user.password))){
-        return next(new AppError('Enter correct password'))
-    }
-    user.password = newPassword;
-    user.passwordConfirm = newPasswordConfirm;
-    user.save({runValidators:true})
-    res.status(201).json({
-        status:"SUCCESS",
-        message:"Password changed"
-    })
-
-}
-
- */
-
-
-exports.createAppointment = catchAsync( async (req,res,next)=>{
-    /* console.log(new Date(2022,10,10,6,13,12,0).toString())
-    const pastAppointment = await Appointment.find().sort( { createdAt:-1 } ).limit(1) */
-
-
-    const appointment = {
-        sendBy:req.body.sendBy,
-        sendTo:req.body.sendTo,
-        reason:req.body.reason,
-        scheduleAt:new Date(2022,10,10,6,13,12,0).toString(),
-        status:true
-    }
-    /* const newAppointment = await Appointment.create(appointment)
-    const newUserId = await User.findByIdAndUpdate(req.user.id,{
-        $push:{
-            appointments:newAppointment._id
-        } 
-    }) */
+    await sendEmail(sendBy, sendTo, "Appointment Booking", message);
     res.status(200).json({
-        status:'SUCCESS',
-        data:{
-            appointment
-        }
-    })
-})
+        status: 'SUCCESS',
+        data: { appointment: newAppointment }
+    });
+});
 
-exports.deleteAppointment = catchAsync(async (req,res,next)=>{
-    const appointment = await Appointment.findByIdAndDelete(req.params.id)
-    await User.findByIdAndUpdate(req.user.id,{$pull:{appointments:appointment._id}})
-    res.status(200).json({
-        status:"SUCCESS",
-        message:"Appointment deleted",
-    })
-})
+exports.approveAppointment = catchAsync(async (req, res) => {
+    await Appointment.findByIdAndUpdate(req.params.id, { status: true });
+    res.status(200).json({ message: "Approved" });
+});
+
+exports.deleteAppointment = catchAsync(async (req, res) => {
+    const appointment = await Appointment.findByIdAndDelete(req.params.id);
+    const message = `Appointment has been cancelled`;
+    await sendEmail(appointment.sendBy, req.body.mail, "Appointment Booking", message);
+    res.status(200).json({ status: "SUCCESS", message: "Appointment deleted" });
+});
+
+exports.getAllStudents = catchAsync(async (req, res) => {
+    const filter = { roles: "student", ...req.query };
+    const students = await User.find(filter).collation({ locale: 'en', strength: 2 });
+    res.status(200).json({ students });
+});

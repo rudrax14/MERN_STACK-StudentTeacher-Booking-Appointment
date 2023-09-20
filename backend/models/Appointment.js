@@ -17,17 +17,23 @@ const appointmentSchema = new mongoose.Schema({
     },
     scheduleAt:{
         type:Date,
-        required:true
+        required:true,
     },
     status:{
         type:Boolean,
         default:false
     }
+
+    
     
     
 
 })
 
+appointmentSchema.index({sendBy:1,sendTo:1,scheduleAt:1},{unique:true});
+
+
+   
 
 
 module.exports = mongoose.model('Appointment',appointmentSchema)

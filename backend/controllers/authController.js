@@ -1,89 +1,84 @@
 const User = require("../models/User");
 const AppError = require("../utils/AppError");
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const catchAsync = require("../utils/catchAsync");
-const util = require('util')
+const util = require('util');
 
+const verifyPassword = async (candidatePassword, userPassword) => {
+  return await bcrypt.compare(candidatePassword, userPassword);
+};
 
+const signToken = async (id, role, email) => {
+  return await jwt.sign({ id, role, email }, process.env.JWT_KEY, {
+    expiresIn: '90d'
+  });
+};
 
-const verifyPassword = async (candidatepassword,userPassword)=>{
-    
-    return await bcrypt.compare(candidatepassword,userPassword)
-}
+exports.signToken = signToken;
 
-const signToken = async (id,role)=>{
-    return await jwt.sign({id,role},process.env.JWT_KEY,{
-        expiresIn:'90d'
-    })
-}
+exports.login = catchAsync(async (req, res, next) => {
+  const { email, password } = req.body;
 
-exports.signToken = signToken
+  if (!email || !password) {
+    return next(new AppError('Cannot leave email or password field blank'));
+  }
 
+  const user = await User.findOne({ email });
 
-exports.login = catchAsync(async (req,res,next)=>{
-    const email = req.body.email;
-    const password = req.body.password;
-    if(!email || !password){
-        return next(new AppError('Cannot leave email id or password field blank'))
-    }
-    const user = await User.findOne({email:req.body.email})
-    if(!user){
-        return next(new AppError('User not found'))
-    }
-    const verify = await verifyPassword(password,user.password)
-    if(!verify){
-        return next(new AppError('Enter the correct password'))
-    }
-    const token = await signToken(user._id,user.roles)
-    
-    
-    res.status(201).json({
-        status:'SUCCESS',
-        message:"Login successful",
-        data:{
-            user
-        },
-        token
-    })
-})
+  if (!user) {
+    return next(new AppError('User not found'));
+  }
 
-exports.updatePassword =async (req,res,next)=>{
-    const password = req.body.password;
-    const newPassword = req.body.newPassword;
-    const newPasswordConfirm = req.body.newPasswordConfirm;
+  const isPasswordValid = await verifyPassword(password, user.password);
 
-    const user = await User.findById(req.user.id)
-    console.log(user)
-    if(!(await verifyPassword(password,user.password))){
-        return next(new AppError('Enter correct password'))
-    }
-    user.password = newPassword;
-    user.passwordConfirm = newPasswordConfirm;
-    user.save({runValidators:true})
-    res.status(201).json({
-        status:"SUCCESS",
-        message:"Password changed"
-    })
+  if (!isPasswordValid) {
+    return next(new AppError('Enter the correct password'));
+  }
 
-}
+  const token = await signToken(user._id, user.roles, user.email);
 
-exports.verifyToken = catchAsync(async (req,res,next)=>{
-    
-    let token=''
-    if(req.headers.authorization && req.headers.authorization.startsWith('Bearer ')){
-        token=req.headers.authorization.split(' ')[1]
-        
-    }
-    
-    if(!token){
-        return next(new AppError('You are not logged in to gain access'))
-    }
+  res.status(201).json({
+    status: 'SUCCESS',
+    message: "Login successful",
+    data: { user },
+    token
+  });
+});
 
-    console.log(token)
-    const decoded = await util.promisify(jwt.verify)(token,process.env.JWT_KEY)
-    req.user = decoded
-    console.log(decoded)
-    next()
-    
-})
+exports.updatePassword = async (req, res, next) => {
+  const { password, newPassword, newPasswordConfirm } = req.body;
+
+  const user = await User.findById(req.user.id);
+
+  if (!(await verifyPassword(password, user.password))) {
+    return next(new AppError('Enter correct password'));
+  }
+
+  user.password = newPassword;
+  user.passwordConfirm = newPasswordConfirm;
+  user.save({ runValidators: true });
+
+  res.status(201).json({
+    status: "SUCCESS",
+    message: "Password changed"
+  });
+};
+
+exports.verifyToken = catchAsync(async (req, res, next) => {
+  let token = '';
+
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+    token = req.headers.authorization.split(' ')[1];
+  }
+
+  if (!token) {
+    return next(new AppError('You are not logged in to gain access'));
+  }
+
+  const decoded = await util.promisify(jwt.verify)(token, process.env.JWT_KEY);
+
+  req.user = decoded;
+
+  next();
+});

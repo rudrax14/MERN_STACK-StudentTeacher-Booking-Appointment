@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
     },
     department:{
         type:String,
-        required:[true,"Password field is required"]
+        required:[true,"Department field is required"]
 
     },
     subject:{
@@ -45,14 +45,18 @@ passwordConfirm:{
         },
         message:"Password and password confirm field must have same values"
     }
-},
+},  
 appointments:[
     {
         type:mongoose.Schema.ObjectId,
         ref:"Appointment"
     }
     
-]
+],
+admissionStatus:{
+    type:Boolean,
+    default:false
+}
 
 })
 
@@ -70,12 +74,24 @@ userSchema.pre('save',async function(next){
    next()
 
 })
+
+
 userSchema.pre('save',async function(next){
    if(this.id==='63bb0fa50df0b831f34e98a6') return next()
    if(this.roles==='admin') return next(new AppError('You are not the admin'))
    next()
 
 })
+
+userSchema.index(
+    { department: 1,roles:1,admissionStatus:1 },
+    { 
+      collation: {
+        locale: 'en',
+        strength: 2
+      }
+    }
+  );
 
 
 
