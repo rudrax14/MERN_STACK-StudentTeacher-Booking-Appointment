@@ -3,6 +3,18 @@ import { Link } from "react-router-dom";
 import Navbar from "../../UI/Navbar";
 
 function Student() {
+  const notify = () => {
+    toast.success('Logout', {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  }
   return (
     <>
       <Navbar />

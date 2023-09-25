@@ -1,15 +1,40 @@
-import React from 'react';
-import { useState } from "react";
+import React, { useState } from 'react';
 import Navbar from '../../UI/Navbar';
-import { BsChevronRight } from "react-icons/bs";
+import { BsChevronRight } from 'react-icons/bs';
 import { toast } from 'react-toastify';
 
 function Student() {
+  const [selectedTeacher, setSelectedTeacher] = useState(null);
+  const [selectedSubject, setSelectedSubject] = useState(null);
+  const [lectureDetails, setLectureDetails] = useState([]);
+  const [teachers, setTeachers] = useState([
+    { name: 'Teacher Name 1', subject: 'Subject Description 1' },
+    { name: 'Teacher Name 2', subject: 'Subject Description 2' },
+    // Add more teachers as needed
+  ]);
 
+  const showToast = (message) => {
+    toast.success(message);
+  };
 
-  const notify = () => {
-    toast.success('Booked')
-  }
+  const handleTeacherClick = (teacherName, subject) => {
+    setSelectedTeacher(teacherName);
+    setSelectedSubject(subject);
+
+    // Add the selected teacher and subject to the lecture details table
+    setLectureDetails((prevDetails) => [
+      ...prevDetails,
+      {
+        teacher: teacherName,
+        subject: subject,
+      },
+    ]);
+
+    // Remove the booked teacher from the list of teachers
+    setTeachers((prevTeachers) =>
+      prevTeachers.filter((teacher) => teacher.name !== teacherName)
+    );
+  };
 
   return (
     <>
@@ -77,75 +102,76 @@ function Student() {
           </div >
         </div >
       </div>
-      {/* container */}
+
+
       <div className="container py-4">
         <h2>Your Upcoming Lectures Details</h2>
         <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit</p>
-        <hr className='mt-0 mb-4' />
+        <hr className="mt-0 mb-4" />
         <table className="table table-hover">
           <thead>
             <tr>
               <th scope="col">Sr.No</th>
-              <th scope="col">Name</th>
+              <th scope="col">Teacher</th>
               <th scope="col">Subject</th>
-              <th scope="col">Date</th>
-              <th scope="col">Join Time</th>
-              <th scope="col">Details</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>@mdo</td>
-              <td>@mdo</td>
-              <td>@mdo</td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Jacob</td>
-              <td>Thornton</td>
-              <td>@fat</td>
-              <td>@fat</td>
-              <td>@fat</td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td>@twitter</td>
-              <td>@twitter</td>
-              <td>@twitter</td>
-              <td>@twitter</td>
-              <td>@twitter</td>
-            </tr>
+            {lectureDetails.map((detail, index) => (
+              <tr key={index}>
+                <td>{index + 1}</td>
+                <td>{detail.teacher}</td>
+                <td>{detail.subject}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
-      {/* teachers */}
-      <div className="container py-4 ">
-        <div className="teacher">
-          <h2>All Teachers</h2>
+      <div className="container py-4">
+        <div className="pagecontent">
+          <h2>Status</h2>
           <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit</p>
-          <hr className='mt-0 mb-4' />
-          <div className="container col-6 mb-4">
-            <form className="d-flex" role="search">
-              <input className="form-control me-2" type="search" placeholder="Search For Teacher/Subject" aria-label="Search" />
-              <button className="btn btn-outline-success" type="submit">Search</button>
-            </form>
-          </div>
-          <div className="row justify-content-around row-cols-4 text-center gy-5">
-            <div className="card" style={{ width: '18rem' }}>
-              <img src="https://static.vecteezy.com/system/resources/previews/002/406/452/non_2x/female-teacher-teaching-a-lesson-at-the-school-free-vector.jpg" className="card-img-top" alt="..." style={{ height: '256px' }} />
-              <div className="card-body">
-                <h5 className="card-title">Teacher Name</h5>
-                <p className="card-text">Subject Description</p>
-                <div className='d-flex justify-content-around'>
-                  <button className='bg-primary text-white rounded p-2 border-0' onClick={notify}>Book Lectures</button>
-                  <button className='bg-primary text-white rounded p-2 border-0' >Message</button>
+          <hr className="mt-0 mb-4" />
+          <div
+            className="d-flex flex-wrap justify-content-center"
+            style={{ gap: '1rem' }}
+          >
+            {teachers.map((teacher, index) => (
+              <div className="card" style={{ width: '18rem' }} key={index}>
+                <img
+                  src="https://static.vecteezy.com/system/resources/previews/002/406/452/non_2x/female-teacher-teaching-a-lesson-at-the-school-free-vector.jpg"
+                  className="card-img-top"
+                  alt="..."
+                  style={{ height: '256px' }}
+                />
+                <div className="card-body">
+                  <h5
+                    className="card-title"
+                    onClick={() =>
+                      handleTeacherClick(teacher.name, teacher.subject)
+                    }
+                  >
+                    {teacher.name}
+                  </h5>
+                  <p className="card-text">{teacher.subject}</p>
+                  <div className="d-flex justify-content-around">
+                    <button
+                      className="bg-primary text-white rounded p-2 border-0"
+                      onClick={() => {
+                        handleTeacherClick(teacher.name, teacher.subject);
+                        showToast('Booked');
+                      }}
+                    >
+                      Book Lectures
+                    </button>
+                    <button className="bg-primary text-white rounded p-2 border-0">
+                      Message
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div >
+            ))}
+          </div>
         </div>
       </div>
     </>

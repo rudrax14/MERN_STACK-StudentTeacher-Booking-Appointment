@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Toast from '../Toasty';
 import { toast } from 'react-toastify';
 const Navbar = () => {
 
-    const notify = () => {
-        toast.success('Logout')
-    }
+    const showToast = (message) => {
+        toast.success(message);
+    };
 
 
     return (
@@ -45,12 +46,12 @@ const Navbar = () => {
                         </div> */}
                         {/* logout */}
 
-                        <Link className='text-white me-2 fs-3' type="button" to="/" onClick={notify}>
+                        <Link className='text-white me-2 fs-3' type="button" to="/" onClick={() => showToast('Logout')}>
                             <i class="fa-solid fa-right-from-bracket"></i>
                         </Link>
                     </div>
                 </div>
-            </nav>
+            </nav >
         </>
     );
 }

@@ -1,17 +1,44 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from '../../UI/Navbar';
 import { BsChevronRight } from 'react-icons/bs';
 
 function Teacher() {
+  const [cards, setCards] = useState([
+    { id: 1, name: 'Student Name', subject: 'Subject Description' },
+    { id: 2, name: 'Another Student', subject: 'Another Subject' },
+  ]);
+
+  const [appointments, setAppointments] = useState([]);
+
+  const handleReject = (cardId) => {
+    setCards(cards.filter(card => card.id !== cardId));
+  };
+
+  const handleApprove = (card) => {
+    setAppointments(prevAppointments => [
+      ...prevAppointments,
+      {
+        id: card.id,
+        name: card.name,
+        subject: card.subject,
+        date: 'New Date', // You can modify this based on your requirements
+        time: 'New Time'  // You can modify this based on your requirements
+      }
+    ]);
+
+    // Remove the approved card
+    setCards(cards.filter(c => c.id !== card.id));
+  };
 
   return (
     <>
       <Navbar />
       <div className="header-container shadow p-3 mb-5 bg-success text-white ">
         <div className="container d-flex justify-content-center">
-          <p className='fs-1'>Teacher Dashbord</p>
+          <p className='fs-1'>Teacher Dashboard</p>
         </div>
       </div>
+
       {/* modal */}
       <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div className="modal-dialog">
@@ -102,9 +129,9 @@ function Teacher() {
         </div >
       </div>
       {/* container */}
+
       <div className="container py-4">
-        <h2>Your All Upcoming Appointment Details
-        </h2>
+        <h2>Your All Upcoming Appointment Details</h2>
         <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit</p>
         <hr className='mt-0 mb-4' />
         <table className="table table-hover me-5">
@@ -119,148 +146,47 @@ function Teacher() {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Maths</td>
-              <td>12-12-2023</td>
-              <td>2:00 Pm</td>
-              <td>
-                <button className='bg-success text-white rounded p-2 border-0 me-2'><i class="fa-solid fa-pen-to-square"></i></button>
-                <button className='bg-danger text-white rounded p-2 border-0'><i class="fa-solid fa-trash"></i></button>
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Jacob</td>
-              <td>Science</td>
-              <td>13-12-2023</td>
-              <td>4:00 Pm</td>
-              <td>
-                <button className='bg-success text-white rounded p-2 border-0 me-2'><i class="fa-solid fa-pen-to-square"></i></button>
-                <button className='bg-danger text-white rounded p-2 border-0'><i class="fa-solid fa-trash"></i></button>
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td>Dawn</td>
-              <td>History</td>
-              <td>14-12-2023</td>
-              <td>7:00 Pm</td>
-              <td>
-                <button className='bg-success text-white rounded p-2 border-0 me-2'><i class="fa-solid fa-pen-to-square"></i></button>
-                <button className='bg-danger text-white rounded p-2 border-0'><i class="fa-solid fa-trash"></i></button>
-              </td>
-            </tr>
+            {appointments.map((appointment, index) => (
+              <tr key={index}>
+                <td>{index + 1}</td>
+                <td>{appointment.name}</td>
+                <td>{appointment.subject}</td>
+                <td>{appointment.date}</td>
+                <td>{appointment.time}</td>
+                <td>
+                  <button className='bg-success text-white rounded p-2 border-0 me-2'><i className="fa-solid fa-pen-to-square"></i></button>
+                  <button className='bg-danger text-white rounded p-2 border-0'><i className="fa-solid fa-trash"></i></button>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
-      {/* teachers */}
-      <div className="container py-4 ">
-        <div className="teacher">
+
+      <div className="container py-4">
+        <div className="pagecontent">
           <h2>Approve/cancel Appointment</h2>
           <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit</p>
           <hr className='mt-0 mb-4' />
-          <div className="container col-6 mb-4">
-            <form className="d-flex" role="search">
-              <input className="form-control me-2" type="search" placeholder="Search For Student/Subject" aria-label="Search" />
-              <button className="btn btn-outline-success" type="submit">Search</button>
-            </form>
+          <div className="d-flex flex-wrap justify-content-center">
+            {cards.map(card => (
+              <div className="card m-3" key={card.id} style={{ width: '18rem' }}>
+                <img src="https://static.vecteezy.com/system/resources/previews/001/942/923/large_2x/student-boy-with-school-suitcase-back-to-school-free-vector.jpg" className="card-img-top" alt="..." style={{ height: '256px' }} />
+                <div className="card-body">
+                  <h5 className="card-title">{card.name}</h5>
+                  <p className="card-text">{card.subject}</p>
+                  <div className='d-flex justify-content-around'>
+                    <button className='bg-success text-white rounded p-2 border-0' onClick={() => handleApprove(card)}>Approve</button>
+                    <button className='bg-danger text-white rounded p-2 border-0' onClick={() => handleReject(card.id)}>Reject</button>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
-          <div className="row justify-content-around row-cols-4 text-center gy-5">
-            <div className="card" style={{ width: '18rem' }}>
-              <img src="https://static.vecteezy.com/system/resources/previews/001/942/923/large_2x/student-boy-with-school-suitcase-back-to-school-free-vector.jpg" className="card-img-top" alt="..." style={{ height: '256px' }} />
-              <div className="card-body">
-                <h5 className="card-title">Student Name</h5>
-                <p className="card-text">Subject Description</p>
-                <div className='d-flex justify-content-around'>
-                  <button className='bg-success text-white rounded p-2 border-0'>Approve</button>
-                  <button className='bg-danger text-white rounded p-2 border-0'>Rejected</button>
-                </div>
-              </div>
-            </div>
-            <div className="card" style={{ width: '18rem' }}>
-              <img src="https://static.vecteezy.com/system/resources/previews/001/942/923/large_2x/student-boy-with-school-suitcase-back-to-school-free-vector.jpg" className="card-img-top" alt="..." style={{ height: '256px' }} />
-              <div className="card-body">
-                <h5 className="card-title">Student Name</h5>
-                <p className="card-text">Subject Description</p>
-                <div className='d-flex justify-content-around'>
-                  <button className='bg-success text-white rounded p-2 border-0'>Approve</button>
-                  <button className='bg-danger text-white rounded p-2 border-0'>Rejected</button>
-                </div>
-              </div>
-            </div>
-            <div className="card" style={{ width: '18rem' }}>
-              <img src="https://static.vecteezy.com/system/resources/previews/001/942/923/large_2x/student-boy-with-school-suitcase-back-to-school-free-vector.jpg" className="card-img-top" alt="..." style={{ height: '256px' }} />
-              <div className="card-body">
-                <h5 className="card-title">Student Name</h5>
-                <p className="card-text">Subject Description</p>
-                <div className='d-flex justify-content-around'>
-                  <button className='bg-success text-white rounded p-2 border-0'>Approve</button>
-                  <button className='bg-danger text-white rounded p-2 border-0'>Rejected</button>
-                </div>
-              </div>
-            </div>
-            <div className="card" style={{ width: '18rem' }}>
-              <img src="https://static.vecteezy.com/system/resources/previews/001/942/923/large_2x/student-boy-with-school-suitcase-back-to-school-free-vector.jpg" className="card-img-top" alt="..." style={{ height: '256px' }} />
-              <div className="card-body">
-                <h5 className="card-title">Student Name</h5>
-                <p className="card-text">Subject Description</p>
-                <div className='d-flex justify-content-around'>
-                  <button className='bg-success text-white rounded p-2 border-0'>Approve</button>
-                  <button className='bg-danger text-white rounded p-2 border-0'>Rejected</button>
-                </div>
-              </div>
-            </div>
-            <div className="card" style={{ width: '18rem' }}>
-              <img src="https://static.vecteezy.com/system/resources/previews/001/942/923/large_2x/student-boy-with-school-suitcase-back-to-school-free-vector.jpg" className="card-img-top" alt="..." style={{ height: '256px' }} />
-              <div className="card-body">
-                <h5 className="card-title">Student Name</h5>
-                <p className="card-text">Subject Description</p>
-                <div className='d-flex justify-content-around'>
-                  <button className='bg-success text-white rounded p-2 border-0'>Approve</button>
-                  <button className='bg-danger text-white rounded p-2 border-0'>Rejected</button>
-                </div>
-              </div>
-            </div>
-            <div className="card" style={{ width: '18rem' }}>
-              <img src="https://static.vecteezy.com/system/resources/previews/001/942/923/large_2x/student-boy-with-school-suitcase-back-to-school-free-vector.jpg" className="card-img-top" alt="..." style={{ height: '256px' }} />
-              <div className="card-body">
-                <h5 className="card-title">Student Name</h5>
-                <p className="card-text">Subject Description</p>
-                <div className='d-flex justify-content-around'>
-                  <button className='bg-success text-white rounded p-2 border-0'>Approve</button>
-                  <button className='bg-danger text-white rounded p-2 border-0'>Rejected</button>
-                </div>
-              </div>
-            </div>
-            <div className="card" style={{ width: '18rem' }}>
-              <img src="https://static.vecteezy.com/system/resources/previews/001/942/923/large_2x/student-boy-with-school-suitcase-back-to-school-free-vector.jpg" className="card-img-top" alt="..." style={{ height: '256px' }} />
-              <div className="card-body">
-                <h5 className="card-title">Student Name</h5>
-                <p className="card-text">Subject Description</p>
-                <div className='d-flex justify-content-around'>
-                  <button className='bg-success text-white rounded p-2 border-0'>Approve</button>
-                  <button className='bg-danger text-white rounded p-2 border-0'>Rejected</button>
-                </div>
-              </div>
-            </div>
-            <div className="card" style={{ width: '18rem' }}>
-              <img src="https://static.vecteezy.com/system/resources/previews/001/942/923/large_2x/student-boy-with-school-suitcase-back-to-school-free-vector.jpg" className="card-img-top" alt="..." style={{ height: '256px' }} />
-              <div className="card-body">
-                <h5 className="card-title">Student Name</h5>
-                <p className="card-text">Subject Description</p>
-                <div className='d-flex justify-content-around'>
-                  <button className='bg-success text-white rounded p-2 border-0'>Approve</button>
-                  <button className='bg-danger text-white rounded p-2 border-0'>Rejected</button>
-                </div>
-              </div>
-            </div>
-          </div >
         </div>
       </div>
     </>
-  )
+  );
 }
 
-export default Teacher
+export default Teacher;
