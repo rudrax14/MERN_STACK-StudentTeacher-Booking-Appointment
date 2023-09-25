@@ -1,5 +1,7 @@
 import './App.css'
 // index.js or another appropriate file
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -27,6 +29,7 @@ function App() {
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="*" element={<h1>404 Not Found</h1>} />
         </Routes>
+        <ToastContainer />
       </BrowserRouter>
     </>
   )

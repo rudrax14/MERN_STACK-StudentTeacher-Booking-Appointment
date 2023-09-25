@@ -1,6 +1,13 @@
 import React from 'react';
-
+import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 const Navbar = () => {
+
+    const notify = () => {
+        toast.success('Logout')
+    }
+
+
     return (
         <>
             <nav className="navbar navbar-dark bg-dark sticky-top navbar-expand-sm">
@@ -37,9 +44,10 @@ const Navbar = () => {
                             </div>
                         </div> */}
                         {/* logout */}
-                        <div className='text-white me-2 fs-3' type="button">
+
+                        <Link className='text-white me-2 fs-3' type="button" to="/" onClick={notify}>
                             <i class="fa-solid fa-right-from-bracket"></i>
-                        </div>
+                        </Link>
                     </div>
                 </div>
             </nav>

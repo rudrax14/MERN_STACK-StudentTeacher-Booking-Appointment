@@ -1,8 +1,16 @@
 import React from 'react';
+import { useState } from "react";
 import Navbar from '../../UI/Navbar';
 import { BsChevronRight } from "react-icons/bs";
+import { toast } from 'react-toastify';
 
 function Student() {
+
+
+  const notify = () => {
+    toast.success('Booked')
+  }
+
   return (
     <>
       <Navbar />
@@ -132,65 +140,9 @@ function Student() {
                 <h5 className="card-title">Teacher Name</h5>
                 <p className="card-text">Subject Description</p>
                 <div className='d-flex justify-content-around'>
-                  <button className='bg-primary text-white rounded p-2 border-0'>Book Lectures</button>
-                  <button className='bg-primary text-white rounded p-2 border-0'>Message</button>
+                  <button className='bg-primary text-white rounded p-2 border-0' onClick={notify}>Book Lectures</button>
+                  <button className='bg-primary text-white rounded p-2 border-0' >Message</button>
                 </div>
-              </div>
-            </div>
-            <div className="card" style={{ width: '18rem' }}>
-              <img src="https://static.vecteezy.com/system/resources/previews/002/406/452/non_2x/female-teacher-teaching-a-lesson-at-the-school-free-vector.jpg" className="card-img-top" alt="..." style={{ height: '256px' }} />
-              <div className="card-body">
-                <h5 className="card-title">Teacher Name</h5>
-                <p className="card-text">Subject Description</p>
-                <a href="/" className="btn btn-primary">Book Session</a>
-              </div>
-            </div>
-            <div className="card" style={{ width: '18rem' }}>
-              <img src="https://static.vecteezy.com/system/resources/previews/002/406/452/non_2x/female-teacher-teaching-a-lesson-at-the-school-free-vector.jpg" className="card-img-top" alt="..." style={{ height: '256px' }} />
-              <div className="card-body">
-                <h5 className="card-title">Teacher Name</h5>
-                <p className="card-text">Subject Description</p>
-                <a href="/" className="btn btn-primary">Book Session</a>
-              </div>
-            </div>
-            <div className="card" style={{ width: '18rem' }}>
-              <img src="https://static.vecteezy.com/system/resources/previews/002/406/452/non_2x/female-teacher-teaching-a-lesson-at-the-school-free-vector.jpg" className="card-img-top" alt="..." style={{ height: '256px' }} />
-              <div className="card-body">
-                <h5 className="card-title">Teacher Name</h5>
-                <p className="card-text">Subject Description</p>
-                <a href="/" className="btn btn-primary">Book Session</a>
-              </div>
-            </div>
-            <div className="card" style={{ width: '18rem' }}>
-              <img src="https://static.vecteezy.com/system/resources/previews/002/406/452/non_2x/female-teacher-teaching-a-lesson-at-the-school-free-vector.jpg" className="card-img-top" alt="..." style={{ height: '256px' }} />
-              <div className="card-body">
-                <h5 className="card-title">Teacher Name</h5>
-                <p className="card-text">Subject Description</p>
-                <a href="/" className="btn btn-primary">Book Session</a>
-              </div>
-            </div>
-            <div className="card" style={{ width: '18rem' }}>
-              <img src="https://static.vecteezy.com/system/resources/previews/002/406/452/non_2x/female-teacher-teaching-a-lesson-at-the-school-free-vector.jpg" className="card-img-top" alt="..." style={{ height: '256px' }} />
-              <div className="card-body">
-                <h5 className="card-title">Teacher Name</h5>
-                <p className="card-text">Subject Description</p>
-                <a href="/" className="btn btn-primary">Book Session</a>
-              </div>
-            </div>
-            <div className="card" style={{ width: '18rem' }}>
-              <img src="https://static.vecteezy.com/system/resources/previews/002/406/452/non_2x/female-teacher-teaching-a-lesson-at-the-school-free-vector.jpg" className="card-img-top" alt="..." style={{ height: '256px' }} />
-              <div className="card-body">
-                <h5 className="card-title">Teacher Name</h5>
-                <p className="card-text">Subject Description</p>
-                <a href="/" className="btn btn-primary">Book Session</a>
-              </div>
-            </div>
-            <div className="card" style={{ width: '18rem' }}>
-              <img src="https://static.vecteezy.com/system/resources/previews/002/406/452/non_2x/female-teacher-teaching-a-lesson-at-the-school-free-vector.jpg" className="card-img-top" alt="..." style={{ height: '256px' }} />
-              <div className="card-body">
-                <h5 className="card-title">Teacher Name</h5>
-                <p className="card-text">Subject Description</p>
-                <a href="/" className="btn btn-primary">Book Session</a>
               </div>
             </div>
           </div >
