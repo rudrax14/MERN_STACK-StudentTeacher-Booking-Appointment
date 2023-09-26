@@ -21,12 +21,18 @@ function Student() {
     setSelectedTeacher(teacherName);
     setSelectedSubject(subject);
 
-    // Add the selected teacher and subject to the lecture details table
+    // Get the current date and time
+    const currentDate = new Date().toLocaleDateString();
+    const currentTime = new Date().toLocaleTimeString();
+
+    // Add the selected teacher, subject, date, and time to the lecture details table
     setLectureDetails((prevDetails) => [
       ...prevDetails,
       {
         teacher: teacherName,
         subject: subject,
+        date: currentDate,
+        time: currentTime,
       },
     ]);
 
@@ -34,6 +40,7 @@ function Student() {
     setTeachers((prevTeachers) =>
       prevTeachers.filter((teacher) => teacher.name !== teacherName)
     );
+
   };
 
   return (
@@ -114,6 +121,8 @@ function Student() {
               <th scope="col">Sr.No</th>
               <th scope="col">Teacher</th>
               <th scope="col">Subject</th>
+              <th scope="col">Date</th>
+              <th scope="col">Time</th>
             </tr>
           </thead>
           <tbody>
@@ -122,6 +131,8 @@ function Student() {
                 <td>{index + 1}</td>
                 <td>{detail.teacher}</td>
                 <td>{detail.subject}</td>
+                <td>{detail.date}</td>
+                <td>{detail.time}</td>
               </tr>
             ))}
           </tbody>
