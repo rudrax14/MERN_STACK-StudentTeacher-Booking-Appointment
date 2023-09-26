@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Navbar from '../../UI/Navbar';
 import { BsChevronRight } from 'react-icons/bs';
 import { toast } from 'react-toastify';
@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 function Student() {
   const [selectedTeacher, setSelectedTeacher] = useState(null);
   const [selectedSubject, setSelectedSubject] = useState(null);
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
   const [lectureDetails, setLectureDetails] = useState([]);
   const [teachers, setTeachers] = useState([
     { name: 'Teacher Name 1', subject: 'Subject Description 1' },
@@ -17,99 +18,143 @@ function Student() {
     toast.success(message);
   };
 
+  const modalRef = useRef();
+
   const handleTeacherClick = (teacherName, subject) => {
     setSelectedTeacher(teacherName);
     setSelectedSubject(subject);
+    setIsModalOpen(true);
+  };
 
-    // Get the current date and time
-    const currentDate = new Date().toLocaleDateString();
-    const currentTime = new Date().toLocaleTimeString();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-    // Add the selected teacher, subject, date, and time to the lecture details table
-    setLectureDetails((prevDetails) => [
-      ...prevDetails,
-      {
-        teacher: teacherName,
-        subject: subject,
-        date: currentDate,
-        time: currentTime,
-      },
-    ]);
+  const handleBooked = () => {
+    if (selectedTeacher && selectedSubject && selectedTimeSlot) {
+      const currentDate = new Date().toLocaleDateString();
+      const currentTime = new Date().toLocaleTimeString();
 
-    // Remove the booked teacher from the list of teachers
-    setTeachers((prevTeachers) =>
-      prevTeachers.filter((teacher) => teacher.name !== teacherName)
-    );
+      setLectureDetails((prevDetails) => [
+        ...prevDetails,
+        {
+          teacher: selectedTeacher,
+          subject: selectedSubject,
+          date: currentDate,
+          time: currentTime,
+          timeSlot: selectedTimeSlot,
+        },
+      ]);
 
+      setTeachers((prevTeachers) =>
+        prevTeachers.filter((teacher) => teacher.name !== selectedTeacher)
+      );
+
+      showToast('Lecture booked successfully');
+
+      // Reset selections
+      setSelectedTeacher(null);
+      setSelectedSubject(null);
+      setSelectedTimeSlot(null);
+
+      setIsModalOpen(false); // Close the modal
+    } else {
+      showToast('Please select a time slot.');
+    }
   };
 
   return (
     <>
       <Navbar />
-      <div className="header-container shadow p-3 mb-5 bg-primary text-white ">
-        <div className="container d-flex justify-content-center">
-          <p className='fs-1'>Student Dashbord</p>
+      {/* modal */}
+      <div
+        className={`modal fade ${isModalOpen ? 'show' : ''}`}
+        id="exampleModal"
+        tabIndex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden={!isModalOpen}
+        style={{ display: isModalOpen ? 'block' : 'none' }}
+        ref={modalRef}
+      >
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h1 className="modal-title fs-5" id="exampleModalLabel">
+                Update Lectures
+              </h1>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+                onClick={() => setIsModalOpen(false)}
+              ></button>
+            </div>
+            <div className="modal-body">
+              <form>
+                <div className="mb-3 row">
+                  <label>Time Slot</label>
+                  <div className="mt-1">
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary"
+                      onClick={() => setSelectedTimeSlot('2pm-4pm')}
+                    >
+                      2pm-4pm
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary ms-2"
+                      onClick={() => setSelectedTimeSlot('5pm-6pm')}
+                    >
+                      5pm-6pm
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary ms-2"
+                      onClick={() => setSelectedTimeSlot('7pm-8pm')}
+                    >
+                      7pm-8pm
+                    </button>
+                  </div>
+                </div>
+              </form>
+              {selectedTeacher && selectedSubject && selectedTimeSlot && (
+                <div>
+                  <p>Selected Teacher: {selectedTeacher}</p>
+                  <p>Selected Subject: {selectedSubject}</p>
+                  <p>Selected Time Slot: {selectedTimeSlot}</p>
+                </div>
+              )}
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-bs-dismiss="modal"
+                onClick={() => setIsModalOpen(false)}
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                className="btn btn-primary"
+                data-bs-dismiss="modal"
+                onClick={() => {
+                  handleBooked();
+                  setIsModalOpen(false);
+                }}
+              >
+                Add
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-      {/* container */}
-      <div className="container py-4">
-        <div className="pagecontent">
-          <h2>Status</h2>
-          <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit</p>
-          <hr className='mt-0 mb-4' />
-          <div className="row justify-content-around row-cols-4 text-center gy-5">
-            <div className="card bg-primary text-white h-100" style={{ width: '18rem' }}>
-              <div className="card-body ">
-                <p className='fw-semibold fs-5'>Upcoming Lectures</p>
-                <p className='fw-normal fs-6'>3</p>
-              </div>
-              <div className="card-footer d-flex">
-                View Details
-                <span className='ms-auto'>
-                  <BsChevronRight />
-                </span>
-              </div>
-            </div>
-            <div className="card bg-warning text-black h-100" style={{ width: '18rem' }}>
-              <div className="card-body ">
-                <p className='fw-semibold fs-5'>Upcoming Lectures</p>
-                <p className='fw-normal fs-6'>3</p>
-              </div>
-              <div className="card-footer d-flex">
-                View Details
-                <span className='ms-auto'>
-                  <BsChevronRight />
-                </span>
-              </div>
-            </div>
-            <div className="card bg-success text-white h-100" style={{ width: '18rem' }}>
-              <div className="card-body ">
-                <p className='fw-semibold fs-5'>Teachers Available</p>
-                <p className='fw-normal fs-6'>3</p>
-              </div>
-              <div className="card-footer d-flex">
-                View Details
-                <span className='ms-auto'>
-                  <BsChevronRight />
-                </span>
-              </div>
-            </div>
-            <div className="card bg-danger text-white h-100" style={{ width: '18rem' }}>
-              <div className="card-body ">
-                <p className='fw-semibold fs-5'>Lectures Missed</p>
-                <p className='fw-normal fs-6'>3</p>
-              </div>
-              <div className="card-footer d-flex">
-                View Details
-                <span className='ms-auto'>
-                  <BsChevronRight />
-                </span>
-              </div>
-            </div>
-          </div >
-        </div >
+      {/* header */}
+      <div className="header-container shadow p-3 mb-5 bg-primary text-white">
+        <div className="container d-flex justify-content-center">
+          <p className='fs-1'>Student Dashboard</p>
+        </div>
       </div>
-
 
       <div className="container py-4">
         <h2>Your Upcoming Lectures Details</h2>
@@ -122,6 +167,7 @@ function Student() {
               <th scope="col">Teacher</th>
               <th scope="col">Subject</th>
               <th scope="col">Date</th>
+              <th scope="col">Time Slot</th>
               <th scope="col">Time</th>
             </tr>
           </thead>
@@ -132,15 +178,18 @@ function Student() {
                 <td>{detail.teacher}</td>
                 <td>{detail.subject}</td>
                 <td>{detail.date}</td>
+                <td>{detail.timeSlot}</td>
                 <td>{detail.time}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      {/* container */}
       <div className="container py-4">
         <div className="pagecontent">
-          <h2>Status</h2>
+          <h2>All teachers</h2>
           <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit</p>
           <hr className="mt-0 mb-4" />
           <div
@@ -168,10 +217,11 @@ function Student() {
                   <div className="d-flex justify-content-around">
                     <button
                       className="bg-primary text-white rounded p-2 border-0"
-                      onClick={() => {
-                        handleTeacherClick(teacher.name, teacher.subject);
-                        showToast('Booked');
-                      }}
+                      data-bs-toggle="modal"
+                      data-bs-target="#exampleModal"
+                      onClick={() =>
+                        handleTeacherClick(teacher.name, teacher.subject)
+                      }
                     >
                       Book Lectures
                     </button>
@@ -185,6 +235,7 @@ function Student() {
           </div>
         </div>
       </div>
+
     </>
   );
 }
