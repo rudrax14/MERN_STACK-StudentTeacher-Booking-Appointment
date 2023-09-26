@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Navbar from '../../UI/Navbar';
 import { BsChevronRight } from 'react-icons/bs';
+import Alert from '../../Alert';
 
 function Admin() {
   const [teacherName, setTeacherName] = useState('');
@@ -26,12 +27,17 @@ function Admin() {
   const [students, setStudents] = useState([
     { id: 1, name: 'Student 1', subject: 'Subject A', description: 'Student Deatils ' },
     { id: 2, name: 'Student 2', subject: 'Subject B', description: 'Student Details 2' },
-    // ... Add more students as needed
+
   ]);
 
   const handleApproveReject = (id) => {
     const updatedStudents = students.filter(student => student.id !== id);
     setStudents(updatedStudents);
+  };
+
+  const handleDeleteTeacher = (index) => {
+    const updatedTeachers = teachers.filter((teacher, i) => i !== index);
+    setTeachers(updatedTeachers);
   };
   return (
     <>
@@ -103,25 +109,30 @@ function Admin() {
               </form>
             </div>
             <div className="modal-footer">
-              <button
-                type="button"
-                className="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Close
-              </button>
+
+
               <button
                 type="button"
                 className="btn btn-primary"
-                onClick={handleAddTeacher}
+                onClick={() => {
+                  if (teacherName && subjectName && department) {
+                    handleAddTeacher();
+                    Alert('Teacher Added', 'success');
+                  } else {
+                    // Display an alert or handle empty fields case
+                    Alert('Please fill in all fields', 'error');
+                  }
+                }}
                 data-bs-dismiss="modal"
+                disabled={!teacherName || !subjectName || !department} // Disable the button if any field is empty
               >
                 Add
               </button>
+
             </div>
           </div>
         </div>
-      </div>
+      </div >
 
       <div className="container py-4">
         <div className="pagecontent">
@@ -157,8 +168,7 @@ function Admin() {
               <th scope="col">Name</th>
               <th scope="col">Subject</th>
               <th scope="col">Department</th>
-              <th scope="col"></th>
-              <th scope="col">Details</th>
+              <th scope="col">Modify</th>
             </tr>
           </thead>
           <tbody>
@@ -168,18 +178,24 @@ function Admin() {
                 <td>{teacher.teacherName}</td>
                 <td>{teacher.subjectName}</td>
                 <td>{teacher.department}</td>
-                <td></td>
                 <td>
-                  <button className="bg-success text-white rounded p-2 border-0 me-2">
+                  {/* <button
+                    className="bg-success text-white rounded p-2 border-0 me-2"
+                    onClick={() => handleEditTeacher(index)}
+                  >
                     <i className="fa-solid fa-pen-to-square"></i>
-                  </button>
-                  <button className="bg-danger text-white rounded p-2 border-0">
+                  </button> */}
+                  <button
+                    className="bg-danger text-white rounded p-2 border-0"
+                    onClick={() => handleDeleteTeacher(index)}
+                  >
                     <i className="fa-solid fa-trash"></i>
                   </button>
                 </td>
               </tr>
             ))}
           </tbody>
+
         </table>
       </div>
 
@@ -199,13 +215,13 @@ function Admin() {
                     <div className='d-flex justify-content-around'>
                       <button
                         className='bg-success text-white rounded p-2 border-0'
-                        onClick={() => handleApproveReject(student.id)}
+                        onClick={() => { handleApproveReject(student.id); Alert('Student Approved', 'success') }}
                       >
                         Approve
                       </button>
                       <button
                         className='bg-danger text-white rounded p-2 border-0'
-                        onClick={() => handleApproveReject(student.id)}
+                        onClick={() => { handleApproveReject(student.id); Alert('Student Rejected', 'info') }}
                       >
                         Reject
                       </button>
@@ -216,7 +232,7 @@ function Admin() {
             ))}
           </div>
         </div>
-      </div>
+      </div >
     </>
   );
 }

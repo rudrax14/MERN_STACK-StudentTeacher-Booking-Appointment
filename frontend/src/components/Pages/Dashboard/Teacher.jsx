@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Navbar from '../../UI/Navbar';
 import { BsChevronRight } from 'react-icons/bs';
+import Alert from '../../Alert';
 
 function Teacher() {
   const [cards, setCards] = useState([
@@ -15,14 +16,23 @@ function Teacher() {
   };
 
   const handleApprove = (card) => {
+    const currentDate = new Date().toLocaleDateString();
+    const currentTime = new Date().toLocaleTimeString();
     setAppointments(prevAppointments => [
       ...prevAppointments,
+      // {
+      //   id: card.id,
+      //   name: card.name,
+      //   subject: card.subject,
+      //   date: 'Date',
+      //   time: 'Time'
+      // }
       {
         id: card.id,
         name: card.name,
         subject: card.subject,
-        date: 'New Date', // You can modify this based on your requirements
-        time: 'New Time'  // You can modify this based on your requirements
+        date: currentDate,
+        time: currentTime
       }
     ]);
 
@@ -142,7 +152,7 @@ function Teacher() {
               <th scope="col">Subject</th>
               <th scope="col">Date</th>
               <th scope="col">Join Time</th>
-              <th scope="col">Details</th>
+              {/* <th scope="col">Details</th> */}
             </tr>
           </thead>
           <tbody>
@@ -153,10 +163,10 @@ function Teacher() {
                 <td>{appointment.subject}</td>
                 <td>{appointment.date}</td>
                 <td>{appointment.time}</td>
-                <td>
+                {/* <td>
                   <button className='bg-success text-white rounded p-2 border-0 me-2'><i className="fa-solid fa-pen-to-square"></i></button>
                   <button className='bg-danger text-white rounded p-2 border-0'><i className="fa-solid fa-trash"></i></button>
-                </td>
+                </td> */}
               </tr>
             ))}
           </tbody>
@@ -176,15 +186,23 @@ function Teacher() {
                   <h5 className="card-title">{card.name}</h5>
                   <p className="card-text">{card.subject}</p>
                   <div className='d-flex justify-content-around'>
-                    <button className='bg-success text-white rounded p-2 border-0' onClick={() => handleApprove(card)}>Approve</button>
-                    <button className='bg-danger text-white rounded p-2 border-0' onClick={() => handleReject(card.id)}>Reject</button>
+                    <button
+                      className='bg-success text-white rounded p-2 border-0'
+                      onClick={() => {
+                        handleApprove(card);
+                        Alert('Added', 'success');
+                      }}
+                    >
+                      Approve
+                    </button>
+                    <button className='bg-danger text-white rounded p-2 border-0' onClick={() => { handleReject(card.id); Alert('Removed', 'warning'); }}>Reject</button>
                   </div>
                 </div>
               </div>
             ))}
           </div>
         </div>
-      </div>
+      </div >
     </>
   );
 }

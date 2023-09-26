@@ -1,74 +1,77 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../../UI/Navbar";
+import Alert from '../../Alert';
 
 function Student() {
   return (
     <>
       <Navbar />
-      <section className="bg-light min-vh-100 d-flex align-items-center justify-content-center">
+      <section className="mt-4">
         {/* Register Container */}
-        <div className="container bg-white rounded-3 shadow-lg p-5">
+        <div className="container bg-white rounded-2 shadow-lg p-5 w-50">
           {/* Form */}
           <div className="row">
-            <div className="col-md-6 px-4">
-              <h2 className="font-bold display-4">Student Register</h2>
-              <p className="text-base mt-2">For New Members, Register</p>
-              <form className="d-flex flex-column gap-2">
+            <div className="col-md-6">
+              <h2 className="font-bold text-2xl">Student Register</h2>
+              {/* <p className="text-sm mt-3">Easy Register</p> */}
+              <form className="d-flex flex-column gap-3">
                 <input
-                  className="form-control p-2 mt-3 rounded border"
+                  className="form-control mt-4"
                   type="text"
-                  name="username"
-                  placeholder="Username"
+                  name="name"
+                  placeholder="Name"
                 />
                 <input
-                  className="form-control p-2 mt-3 rounded border"
+                  className="form-control mt-2"
                   type="text"
-                  name="Department"
-                  placeholder="Department"
+                  name="subject"
+                  placeholder="Subject"
                 />
                 <input
-                  className="form-control p-2 mt-3 rounded border"
+                  className="form-control mt-2"
                   type="number"
-                  name="Age"
+                  name="age"
                   placeholder="Age"
                 />
                 <input
-                  className="form-control p-2 mt-3 rounded border"
+                  className="form-control mt-2"
                   type="email"
                   name="Email"
                   placeholder="Email"
                 />
-                <div className="">
+                <div className="form-group">
                   <input
-                    className="form-control p-2 mt-3 rounded border"
+                    className="form-control mt-2"
                     type="password"
                     name="password"
                     placeholder="Password"
                   />
                 </div>
-                <input
-                  className="form-control p-2 mt-3 rounded border"
-                  type="password"
-                  name="cpassword"
-                  placeholder="Confirm Password"
-                />
-                <div className="d-flex mt-3">
-                  <Link to="/" className="me-3">
-                    <button className="btn btn-primary w-full rounded-pill">Register</button>
+                <div className="form-group">
+                  <input
+                    className="form-control mt-2"
+                    type="password"
+                    name="cpassword"
+                    placeholder="Confirm Password"
+                  />
+                </div>
+                <div className="d-flex mt-3 ">
+                  <Link to="/student/dashboard" className="me-3">
+                    <button className="btn btn-primary" onClick={() => Alert('Register Successfully', 'success')}>Register</button>
                   </Link>
-                  <Link to="/student/login">
-                    <button className="btn btn-primary w-full rounded-pill">Login</button>
+                  <Link to="/student/login" >
+                    <button className="btn btn-primary" >Login</button>
                   </Link>
                 </div>
               </form>
             </div>
             {/* Image */}
-            <div className="col-md-6 d-md-block d-none">
+            <div className="col-md-6 d-md-block d-none d-flex justify-content-center">
               <img
                 className="img-fluid"
-                src="https://colorlib.com/etc/regform/colorlib-regform-7/images/signup-image.jpg"
-                alt=""
+                src="https://colorlib.com/etc/regform/colorlib-regform-7/images/signin-image.jpg"
+                alt="img error"
               />
             </div>
           </div>

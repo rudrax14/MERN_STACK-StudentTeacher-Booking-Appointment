@@ -1,20 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../../UI/Navbar";
+import Alert from '../../Alert';
 
 function Student() {
-  const notify = () => {
-    toast.success('Logout', {
-      position: "top-right",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
-  }
   return (
     <>
       <Navbar />
@@ -43,7 +32,7 @@ function Student() {
                 </div>
                 <div className="d-flex mt-3 ">
                   <Link to="/student/dashboard" className="me-3">
-                    <button className="btn btn-primary">Login</button>
+                    <button className="btn btn-primary" onClick={() => Alert('Logged in', 'success')}>Login</button>
                   </Link>
                   <Link to="/student/signup">
                     <button className="btn btn-primary">Register</button>

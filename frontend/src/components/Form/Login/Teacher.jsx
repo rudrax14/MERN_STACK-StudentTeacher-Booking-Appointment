@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../../UI/Navbar";
+import Alert from '../../Alert';
 
 function Teacher() {
   return (
@@ -31,7 +32,7 @@ function Teacher() {
                 </div>
                 <div className="d-flex mt-3">
                   <Link to="/teacher/dashboard" className="me-3">
-                    <button className="btn btn-primary">Login</button>
+                    <button className="btn btn-primary" onClick={() => Alert('Logged in', 'success')}>Login</button>
                   </Link>
 
                 </div>
