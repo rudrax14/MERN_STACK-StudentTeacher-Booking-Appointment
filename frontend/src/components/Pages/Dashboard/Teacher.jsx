@@ -5,8 +5,8 @@ import Alert from '../../Alert';
 
 function Teacher() {
   const [cards, setCards] = useState([
-    { id: 1, name: 'Student Name', subject: 'Subject Description' },
-    { id: 2, name: 'Another Student', subject: 'Another Subject' },
+    { id: 1, name: 'Student Name', subject: 'Subject Description', time: '2pm-5pm' },
+    { id: 2, name: 'Another Student', subject: 'Another Subject', time: '7pm-8pm' },
   ]);
 
   const [appointments, setAppointments] = useState([]);
@@ -43,13 +43,14 @@ function Teacher() {
   return (
     <>
       <Navbar />
+      {/* header */}
       <div className="header-container shadow p-3 mb-5 bg-success text-white ">
         <div className="container d-flex justify-content-center">
           <p className='fs-1'>Teacher Dashboard</p>
         </div>
       </div>
 
-      {/* modal */}
+      {/* teacher slot modal */}
       <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div className="modal-dialog">
           <div className="modal-content">
@@ -80,7 +81,29 @@ function Teacher() {
           </div>
         </div>
       </div>
-      {/* container */}
+      {/* student message modal */}
+      <div className="modal fade" id="messageModal" tabIndex="-1" role="dialog">
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Message Modal</h5>
+
+            </div>
+            <div className="modal-body">
+              <p>Modal body text goes here for Message.</p>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                Close
+              </button>
+              {/* <button type="button" className="btn btn-primary" data-bs-dismiss="modal">
+                Send Message
+              </button> */}
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* dashbord container */}
       <div className="container py-4">
         <div className="pagecontent">
           <h2>Status</h2>
@@ -138,7 +161,7 @@ function Teacher() {
           </div >
         </div >
       </div>
-      {/* container */}
+      {/* table info container */}
 
       <div className="container py-4">
         <h2>Your All Upcoming Appointment Details</h2>
@@ -172,7 +195,7 @@ function Teacher() {
           </tbody>
         </table>
       </div>
-
+      {/* student card container */}
       <div className="container py-4">
         <div className="pagecontent">
           <h2>Approve/cancel Appointment</h2>
@@ -185,6 +208,7 @@ function Teacher() {
                 <div className="card-body">
                   <h5 className="card-title">{card.name}</h5>
                   <p className="card-text">{card.subject}</p>
+                  <p className="card-text">Time Slot - {card.time}</p>
                   <div className='d-flex justify-content-around'>
                     <button
                       className='bg-success text-white rounded p-2 border-0'
@@ -196,6 +220,14 @@ function Teacher() {
                       Approve
                     </button>
                     <button className='bg-danger text-white rounded p-2 border-0' onClick={() => { handleReject(card.id); Alert('Removed', 'warning'); }}>Reject</button>
+                    <button type="button" class="btn btn-primary position-relative" data-bs-toggle="modal"
+                      data-bs-target="#messageModal">
+                      Inbox
+                      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        99+
+                        <span class="visually-hidden">unread messages</span>
+                      </span>
+                    </button>
                   </div>
                 </div>
               </div>

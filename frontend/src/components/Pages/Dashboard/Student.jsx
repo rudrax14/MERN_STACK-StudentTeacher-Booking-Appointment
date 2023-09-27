@@ -64,7 +64,7 @@ function Student() {
   return (
     <>
       <Navbar />
-      {/* modal */}
+      {/* time slot modal */}
       <div
         className={`modal fade ${isModalOpen ? 'show' : ''}`}
         id="exampleModal"
@@ -95,21 +95,21 @@ function Student() {
                   <div className="mt-1">
                     <button
                       type="button"
-                      className="btn btn-outline-secondary"
+                      className={`btn ${selectedTimeSlot === '2pm-4pm' ? 'btn-primary' : 'btn-outline-secondary'}`}
                       onClick={() => setSelectedTimeSlot('2pm-4pm')}
                     >
                       2pm-4pm
                     </button>
                     <button
                       type="button"
-                      className="btn btn-outline-secondary ms-2"
+                      className={`btn ${selectedTimeSlot === '5pm-6pm' ? 'btn-primary' : 'btn-outline-secondary'} ms-2`}
                       onClick={() => setSelectedTimeSlot('5pm-6pm')}
                     >
                       5pm-6pm
                     </button>
                     <button
                       type="button"
-                      className="btn btn-outline-secondary ms-2"
+                      className={`btn ${selectedTimeSlot === '7pm-8pm' ? 'btn-primary' : 'btn-outline-secondary'} ms-2`}
                       onClick={() => setSelectedTimeSlot('7pm-8pm')}
                     >
                       7pm-8pm
@@ -139,11 +139,37 @@ function Student() {
                 className="btn btn-primary"
                 data-bs-dismiss="modal"
                 onClick={() => {
-                  handleBooked();
-                  setIsModalOpen(false);
+                  if (selectedTimeSlot) {
+                    handleBooked();
+                    setIsModalOpen(false);
+                  }
                 }}
+                disabled={!selectedTimeSlot}  // Disable the button if no time slot selected
               >
                 Add
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* message modal */}
+      <div className="modal fade" id="messageModal" tabIndex="-1" role="dialog">
+        <div className="modal-dialog" role="document">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Message Modal</h5>
+
+            </div>
+            <div className="modal-body">
+              <p>Modal body text goes here for Message.</p>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                Close
+              </button>
+              <button type="button" className="btn btn-primary" data-bs-dismiss="modal">
+                Send Message
               </button>
             </div>
           </div>
@@ -156,6 +182,7 @@ function Student() {
         </div>
       </div>
 
+      {/* info table */}
       <div className="container py-4">
         <h2>Your Upcoming Lectures Details</h2>
         <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit</p>
@@ -168,7 +195,7 @@ function Student() {
               <th scope="col">Subject</th>
               <th scope="col">Date</th>
               <th scope="col">Time Slot</th>
-              <th scope="col">Time</th>
+              <th scope="col">Booking Time</th>
             </tr>
           </thead>
           <tbody>
@@ -186,7 +213,7 @@ function Student() {
         </table>
       </div>
 
-      {/* container */}
+      {/* card container */}
       <div className="container py-4">
         <div className="pagecontent">
           <h2>All teachers</h2>
@@ -225,7 +252,12 @@ function Student() {
                     >
                       Book Lectures
                     </button>
-                    <button className="bg-primary text-white rounded p-2 border-0">
+                    <button
+                      className="bg-primary text-white rounded p-2 border-0"
+                      type="button"
+                      data-bs-toggle="modal"
+                      data-bs-target="#messageModal"
+                    >
                       Message
                     </button>
                   </div>

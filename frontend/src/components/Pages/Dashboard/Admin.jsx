@@ -27,6 +27,11 @@ function Admin() {
   const [students, setStudents] = useState([
     { id: 1, name: 'Student 1', subject: 'Subject A', description: 'Student Deatils ' },
     { id: 2, name: 'Student 2', subject: 'Subject B', description: 'Student Details 2' },
+    { id: 3, name: 'Student 2', subject: 'Subject B', description: 'Student Details 2' },
+    { id: 4, name: 'Student 2', subject: 'Subject B', description: 'Student Details 2' },
+    { id: 5, name: 'Student 2', subject: 'Subject B', description: 'Student Details 2' },
+    { id: 6, name: 'Student 2', subject: 'Subject B', description: 'Student Details 2' },
+    { id: 7, name: 'Student 2', subject: 'Subject B', description: 'Student Details 2' },
 
   ]);
 
