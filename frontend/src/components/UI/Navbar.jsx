@@ -41,7 +41,7 @@ const Navbar = () => {
                         {/* logout */}
 
                         <Link className='text-white me-2 fs-3' type="button" to="/" onClick={() => Alert('Logout', 'success')}>
-                            <i class="fa-solid fa-right-from-bracket"></i>
+                            <i className="fa-solid fa-right-from-bracket"></i>
                         </Link>
                     </div>
                 </div>

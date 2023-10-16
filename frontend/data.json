@@ -1,0 +1,6 @@
+{
+    "teachers": [
+      { "name": "Teacher Name 1", "subject": "Subject Description 1" },
+      { "name": "Teacher Name 2", "subject": "Subject Description 2" }
+    ]
+  }

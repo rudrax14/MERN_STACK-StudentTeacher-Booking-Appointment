@@ -60,16 +60,16 @@ function Teacher() {
             </div>
             <div className="modal-body">
               <form>
-                <div class="mb-3">
-                  <label for="subjectName" class="form-label">Subject Name</label>
-                  <input type="text" class="form-control" id="subjectName" />
+                <div className="mb-3">
+                  <label htmlFor="subjectName" className="form-label">Subject Name</label>
+                  <input type="text" className="form-control" id="subjectName" />
                 </div>
-                <div class="mb-3 row">
+                <div className="mb-3 row">
                   <label>Time Slot</label>
                   <div className='mt-1'>
-                    <button type="button" class="btn btn-outline-secondary ">2pm-4pm</button>
-                    <button type="button" class="btn btn-outline-secondary ms-2">5pm-6pm</button>
-                    <button type="button" class="btn btn-outline-secondary ms-2">7pm-8pm</button>
+                    <button type="button" className="btn btn-outline-secondary ">2pm-4pm</button>
+                    <button type="button" className="btn btn-outline-secondary ms-2">5pm-6pm</button>
+                    <button type="button" className="btn btn-outline-secondary ms-2">7pm-8pm</button>
                   </div>
                 </div>
               </form>
@@ -220,12 +220,12 @@ function Teacher() {
                       Approve
                     </button>
                     <button className='bg-danger text-white rounded p-2 border-0' onClick={() => { handleReject(card.id); Alert('Removed', 'warning'); }}>Reject</button>
-                    <button type="button" class="btn btn-primary position-relative" data-bs-toggle="modal"
+                    <button type="button" className="btn btn-primary position-relative" data-bs-toggle="modal"
                       data-bs-target="#messageModal">
                       Inbox
-                      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                      <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                         99+
-                        <span class="visually-hidden">unread messages</span>
+                        <span className="visually-hidden">unread messages</span>
                       </span>
                     </button>
                   </div>

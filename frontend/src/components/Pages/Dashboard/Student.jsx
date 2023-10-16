@@ -1,18 +1,14 @@
 import React, { useState, useRef } from 'react';
 import Navbar from '../../UI/Navbar';
-import { BsChevronRight } from 'react-icons/bs';
+// import { BsChevronRight } from 'react-icons/bs';
 import { toast } from 'react-toastify';
-
+import teachersData from '../../../../data.json';
 function Student() {
   const [selectedTeacher, setSelectedTeacher] = useState(null);
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
   const [lectureDetails, setLectureDetails] = useState([]);
-  const [teachers, setTeachers] = useState([
-    { name: 'Teacher Name 1', subject: 'Subject Description 1' },
-    { name: 'Teacher Name 2', subject: 'Subject Description 2' },
-    // Add more teachers as needed
-  ]);
+  const [teachers, setTeachers] = useState(teachersData.teachers);
 
   const showToast = (message) => {
     toast.success(message);
@@ -273,3 +269,5 @@ function Student() {
 }
 
 export default Student;
+
+
