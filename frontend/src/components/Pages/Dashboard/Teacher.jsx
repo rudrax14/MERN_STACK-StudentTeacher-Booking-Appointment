@@ -2,12 +2,9 @@ import React, { useState } from 'react';
 import Navbar from '../../UI/Navbar';
 import { BsChevronRight } from 'react-icons/bs';
 import Alert from '../../Alert';
-
+import StudentData from '../../../../data.json';
 function Teacher() {
-  const [cards, setCards] = useState([
-    { id: 1, name: 'Student Name', subject: 'Subject Description', time: '2pm-5pm' },
-    { id: 2, name: 'Another Student', subject: 'Another Subject', time: '7pm-8pm' },
-  ]);
+  const [cards, setCards] = useState(StudentData.studentBookings)
 
   const [appointments, setAppointments] = useState([]);
 

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Navbar from '../../UI/Navbar';
 import { BsChevronRight } from 'react-icons/bs';
 import Alert from '../../Alert';
-
+import StudentData from '../../../../data.json';
 function Admin() {
   const [teacherName, setTeacherName] = useState('');
   const [subjectName, setSubjectName] = useState('');
@@ -24,16 +24,7 @@ function Admin() {
 
 
 
-  const [students, setStudents] = useState([
-    { id: 1, name: 'Student 1', subject: 'Subject A', description: 'Student Deatils ' },
-    { id: 2, name: 'Student 2', subject: 'Subject B', description: 'Student Details 2' },
-    { id: 3, name: 'Student 2', subject: 'Subject B', description: 'Student Details 2' },
-    { id: 4, name: 'Student 2', subject: 'Subject B', description: 'Student Details 2' },
-    { id: 5, name: 'Student 2', subject: 'Subject B', description: 'Student Details 2' },
-    { id: 6, name: 'Student 2', subject: 'Subject B', description: 'Student Details 2' },
-    { id: 7, name: 'Student 2', subject: 'Subject B', description: 'Student Details 2' },
-
-  ]);
+  const [students, setStudents] = useState(StudentData.studentApprovals)
 
   const handleApproveReject = (id) => {
     const updatedStudents = students.filter(student => student.id !== id);
