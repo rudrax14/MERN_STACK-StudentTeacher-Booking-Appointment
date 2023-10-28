@@ -1,3 +1,5 @@
 # Student-Teacher-Appointment-Backend
+
 .env file
-DB_URL=
+db_conn=''
+JWT_KEY =
