@@ -12,10 +12,10 @@ function Student() {
   const [formData, setFormData] = useState({
     name: '',
     email: "",
-    password: "",
     age: '',
-    subject: '',
-    cpassword: "",
+    department: '',
+    password: "",
+    passwordConfirm: "",
   });
 
   function changeHandler(event) {
@@ -30,13 +30,58 @@ function Student() {
   }
 
 
+  // function submitHandler(event) {
+  //   event.preventDefault();
+  //   console.log("Form Data")
+  //   console.log(formData);
+  //   navigate("/student/dashboard")
+  //   Alert('Signed Up', 'success')
+  // }
+
+
   function submitHandler(event) {
     event.preventDefault();
-    console.log("Form Data")
+    console.log("Form Data");
     console.log(formData);
-    navigate("/student/dashboard")
-    Alert('Signed Up', 'success')
+
+    const requestData = {
+      email: formData.email,
+      name: formData.name,
+      department: formData.department,
+      age: formData.age,
+      password: formData.password,
+      passwordConfirm: formData.passwordConfirm,
+    };
+
+    fetch("http://localhost:5000/api/v1/student/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.token) {
+          // Save the JWT token in localStorage
+          localStorage.setItem("token", data.token);
+          console.log("token", data.token);
+
+
+          // Navigate to the student dashboard
+          navigate("/student/dashboard");
+          Alert('Logged in', 'success');
+        } else {
+          // Handle registration errors or show appropriate error messages.
+          Alert('Failed to register', 'error');
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        // Handle network errors or other issues.
+      });
   }
+
 
   return (
     <>
@@ -61,10 +106,10 @@ function Student() {
                 <input
                   className="form-control mt-2"
                   type="text"
-                  name="subject"
-                  value={formData.subject}
+                  name="department"
+                  value={formData.department}
                   onChange={changeHandler}
-                  placeholder="Subject"
+                  placeholder="Department"
                 />
                 <input
                   className="form-control mt-2"
@@ -96,9 +141,9 @@ function Student() {
                   <input
                     className="form-control mt-2"
                     type="password"
-                    value={formData.cpassword}
+                    value={formData.passwordConfirm}
                     onChange={changeHandler}
-                    name="cpassword"
+                    name="passwordConfirm"
                     placeholder="Confirm Password"
                   />
                 </div>
