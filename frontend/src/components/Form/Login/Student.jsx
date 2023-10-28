@@ -28,23 +28,20 @@ function Student() {
         email: formData.email,
         password: formData.password,
       });
+
       const { token } = response.data;
       localStorage.setItem('jwtToken', token);
-      console.log('jwtToken', token);
       navigate("/student/dashboard");
       Alert('Logged in', 'success');
-      console.log("Form Data")
     } catch (error) {
-      // Log the specific error message to help with debugging
-      console.error("Axios Error:", error.message);
-
-      // Check if the error has a response object for more details
+      // Handle the error by displaying the error message
       if (error.response) {
-        console.error("Response Data:", error.response.data);
+        const errorMessage = error.response.data.message; // Assuming your error response has a 'message' field
+        Alert(errorMessage, 'error');
+      } else {
+        // Handle other types of errors
+        Alert('Login failed', 'error');
       }
-
-      // Handle the error as needed
-      Alert('Login failed', 'error');
     }
   }
 
