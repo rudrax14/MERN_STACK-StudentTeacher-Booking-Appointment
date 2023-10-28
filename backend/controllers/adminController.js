@@ -5,8 +5,11 @@ const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const sendEmail = require('../utils/sendEmail');
 
+
 exports.setRole = function (role) {
+  
   return (req, res, next) => {
+    
     req.body.roles = role;
     next();
   };
@@ -30,6 +33,7 @@ const filterObj = (obj) => {
 
 exports.allow = (...roles) => {
   return (req, res, next) => {
+    
     if (roles.includes(req.user.role)) {
       next();
     } else {
@@ -39,7 +43,9 @@ exports.allow = (...roles) => {
 };
 
 exports.createTeacher = catchAsync(async (req, res, next) => {
+  
   const password = oneTimePasswordCreator();
+  
   const user = {
     email: req.body.email,
     name: req.body.name,
@@ -52,11 +58,11 @@ exports.createTeacher = catchAsync(async (req, res, next) => {
   };
 
   const newUser = await User.create(user);
-  await sendEmail(
+  /* await sendEmail(
     newUser.email,
-    'Password created',
+    'Password created', 
     `This is an auto-generated password. You can create your own password after logging in: ${password}`
-  );
+  ); */
 
   return res.status(200).json({
     status: 'SUCCESS',
@@ -67,7 +73,7 @@ exports.createTeacher = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllTeachers = catchAsync(async (req, res, next) => {
-  const users = await User.find().populate('appointments');
+  const users = await User.find({roles:'teacher'}).populate('appointments');
 
   res.status(200).json({
     status: 'SUCCESS',
