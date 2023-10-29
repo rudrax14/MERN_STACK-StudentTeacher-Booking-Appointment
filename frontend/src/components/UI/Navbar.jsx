@@ -3,6 +3,13 @@ import { Link } from 'react-router-dom';
 import Alert from '../Alert';
 const Navbar = () => {
 
+    const changeHandler = () => {
+        Alert('Logout', 'success')
+        localStorage.removeItem('Teacher jwtToken')
+        localStorage.removeItem('Student jwtToken')
+        localStorage.removeItem('jwtToken')
+    }
+
     return (
         <>
             <nav className="navbar navbar-dark bg-dark sticky-top navbar-expand-sm">
@@ -40,7 +47,7 @@ const Navbar = () => {
                         </div> */}
                         {/* logout */}
 
-                        <Link className='text-white me-2 fs-3' type="button" to="/" onClick={() => Alert('Logout', 'success')}>
+                        <Link className='text-white me-2 fs-3' type="button" to="/" onClick={changeHandler}>
                             <i className="fa-solid fa-right-from-bracket"></i>
                         </Link>
                     </div>

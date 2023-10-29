@@ -8,11 +8,8 @@ function Student() {
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
   const [lectureDetails, setLectureDetails] = useState([]);
+  // data coming
   const [teachers, setTeachers] = useState(teachersData.teachers);
-
-  const showToast = (message) => {
-    toast.success(message);
-  };
 
   const modalRef = useRef();
 
@@ -44,7 +41,7 @@ function Student() {
         prevTeachers.filter((teacher) => teacher.name !== selectedTeacher)
       );
 
-      showToast('Lecture booked successfully');
+      toast.success('Lecture booked successfully');
 
       // Reset selections
       setSelectedTeacher(null);
@@ -53,13 +50,13 @@ function Student() {
 
       setIsModalOpen(false); // Close the modal
     } else {
-      showToast('Please select a time slot.');
+      toast.success('Please select a time slot.');
     }
   };
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       {/* time slot modal */}
       <div
         className={`modal fade ${isModalOpen ? 'show' : ''}`}

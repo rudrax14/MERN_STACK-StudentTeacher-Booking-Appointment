@@ -39,7 +39,7 @@ function Teacher() {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       {/* header */}
       <div className="header-container shadow p-3 mb-5 bg-success text-white ">
         <div className="container d-flex justify-content-center">

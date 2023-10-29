@@ -37,7 +37,7 @@ function Student() {
       // console.log('Role:', response.data.data.user.roles);
       // console.log(response);
       const { token } = response.data;
-      localStorage.setItem('jwtToken', token);
+      localStorage.setItem('Student jwtToken', token);
       navigate("/student/dashboard");
       Alert('Logged in', 'success');
     } catch (error) {
@@ -60,7 +60,7 @@ function Student() {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <section className="bg-light min-vh-100 d-flex align-items-center justify-content-center">
         {/* Register Container */}
         <div className="container bg-white rounded-2 shadow-lg p-5 w-50">

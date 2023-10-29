@@ -35,7 +35,7 @@ function Teacher() {
       const { token } = response.data;
 
       // Store the JWT token in local storage or state for authentication
-      localStorage.setItem('jwtToken', token);
+      localStorage.setItem('Teachers jwtToken', token);
 
       // Redirect to the teacher dashboard
       navigate("/teacher/dashboard");
@@ -52,7 +52,7 @@ function Teacher() {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <section className="bg-light min-vh-100 d-flex align-items-center justify-content-center overflow-y-hidden">
         <div className="container bg-white rounded-2 shadow-lg p-5 w-50">
           <div className="row">

@@ -37,14 +37,14 @@ function admin() {
       }
       const { token } = response.data;
       localStorage.setItem('jwtToken', token);
-      // console.log(jwtToken);
+      console.log(token);
       navigate("/admin/dashboard");
       Alert('Logged in', 'success');
 
 
 
       // Check if a JWT token is present in localStorage
-      const jwtToken = localStorage.getItem("token");
+      const jwtToken = token
 
       if (jwtToken) {
         console.log("JWT token:", jwtToken);
@@ -67,7 +67,7 @@ function admin() {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <section className="bg-light min-vh-100 d-flex align-items-center justify-content-center">
         {/* Register Container */}
         <div className="container bg-white rounded-2 shadow-lg p-5 w-50">

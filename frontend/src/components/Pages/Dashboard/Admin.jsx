@@ -69,13 +69,13 @@ function Admin() {
     console.log('Form Data');
     console.log(formData);
 
-    const jwtToken = localStorage.getItem('token');
 
-    if (jwtToken) {
-      console.log('JWT token:', jwtToken);
-    } else {
-      console.log('No JWT token found.');
-    }
+
+    // if (jwtToken) {
+    //   console.log('JWT token:', jwtToken);
+    // } else {
+    //   console.log('No JWT token found.');
+    // }
 
     const requestData = {
       email: formData.email,
@@ -89,28 +89,22 @@ function Admin() {
 
     try {
       // Make a POST request using Axios
+      const jwtToken = localStorage.getItem('jwtToken');
       const response = await axios.post('http://localhost:5000/api/v1/admin', requestData, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${jwtToken}`,
         },
       });
-
-      const responseJson = response.data;
-
-      if (responseJson.token) {
-        localStorage.setItem('token', responseJson.token);
-        navigate('/admin/dashboard');
-        Alert('Logged in', 'success');
-      } else {
-        Alert('Failed to register', 'error');
-      }
+      navigate("/admin/dashboard");
+      Alert('Teacher Added', 'success');
     } catch (error) {
       if (error.response) {
+        console.log(error.response)
         const errorMessage = error.response.data.message;
         Alert(errorMessage, 'error');
       } else {
-        Alert('Login failed', 'error');
+        Alert('Something Gone Wrong', 'error');
       }
     }
   }
@@ -124,7 +118,7 @@ function Admin() {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="header-container shadow p-3 mb-5 bg-danger text-white">
         <div className="container d-flex justify-content-center">
           <p className="fs-1">Admin Dashboard</p>

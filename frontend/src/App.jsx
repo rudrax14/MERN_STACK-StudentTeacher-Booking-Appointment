@@ -10,10 +10,12 @@ import TeacherDashboard from './components/Pages/Dashboard/Teacher';
 import StudentDashboard from './components/Pages/Dashboard/Student';
 import AdminDashboard from './components/Pages/Dashboard/Admin';
 import AdminLogin from './components/Form/Login/Admin'
+import Navbar from './components/UI/Navbar';
 function App() {
 
   return (
     <>
+      <Navbar />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/student/login" element={<Studentlogin />} />

@@ -85,10 +85,10 @@ function Student() {
 
   return (
     <>
-      <Navbar />
-      <section className="mt-4">
+      {/* <Navbar /> */}
+      <section className="mx-auto">
         {/* Register Container */}
-        <div className="container bg-white rounded-2 shadow-lg p-5 w-50">
+        <div className="container bg-white rounded-2 shadow-lg p-5 w-50 my-5">
           {/* Form */}
           <div className="row">
             <div className="col-md-6">
@@ -148,7 +148,7 @@ function Student() {
                   />
                 </div>
                 <div className="d-flex mt-3 ">
-                  <input type="submit" value="Sign Up" className="btn btn-primary" />
+                  <input type="submit" value="Sign Up" className="btn btn-primary me-2" />
                   <Link to="/student/login" >
                     <button className="btn btn-primary" >Login</button>
                   </Link>
