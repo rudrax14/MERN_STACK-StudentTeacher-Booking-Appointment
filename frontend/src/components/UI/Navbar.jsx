@@ -5,7 +5,7 @@ const Navbar = () => {
 
     const changeHandler = () => {
         Alert('Logout', 'success')
-        localStorage.removeItem('Teacher jwtToken')
+        localStorage.removeItem('Teachers jwtToken')
         localStorage.removeItem('Student jwtToken')
         localStorage.removeItem('jwtToken')
     }

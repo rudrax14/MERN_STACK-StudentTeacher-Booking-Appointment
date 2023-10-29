@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '../../UI/Navbar';
 import { Link, useNavigate } from "react-router-dom";
 import { BsChevronRight } from 'react-icons/bs';
@@ -15,6 +15,52 @@ function Admin() {
   const [department, setDepartment] = useState('');
   const [teachers, setTeachers] = useState([]);
 
+
+
+  // teachers get
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const jwtToken = localStorage.getItem('jwtToken');
+        // Make an HTTP request to fetch data from the API using Axios
+        const response = await axios.get('http://localhost:5000/api/v1/admin', {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          }
+        });
+        // Update the state with the fetched data
+        setTeachers(response.data.data.users);
+        console.log(response.data.data.users);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+
+  // const [students, setStudents] = useState(StudentData.studentApprovals)
+  const [students, setStudents] = useState([]);
+
+  // Fetch students data
+  useEffect(() => {
+    const fetchStudents = async () => {
+      try {
+        // Make an HTTP request to fetch data from the API using Axios
+        const response = await axios.get('http://localhost:5000/api/v1/teachers'); // Replace with the correct endpoint
+        // Update the state with the fetched data
+        setStudents(response.data.students); // Assuming the response contains an array of students
+        console.log(response.data.students);
+      } catch (error) {
+        console.error('Error fetching students data:', error);
+      }
+    };
+
+    fetchStudents();
+  }, []);
+
+
   const handleAddTeacher = () => {
     const newTeacher = {
       teacherName,
@@ -28,16 +74,40 @@ function Admin() {
     setDepartment('');
   };
 
-  const [students, setStudents] = useState(StudentData.studentApprovals)
 
-  const handleApproveReject = (id) => {
-    const updatedStudents = students.filter(student => student.id !== id);
-    setStudents(updatedStudents);
-  };
 
-  const handleDeleteTeacher = (index) => {
-    const updatedTeachers = teachers.filter((teacher, i) => i !== index);
-    setTeachers(updatedTeachers);
+  // const handleApproveReject = (id) => {
+  //   const updatedStudents = students.filter(student => student.id !== id);
+  //   setStudents(updatedStudents);
+  // };
+
+  // const handleDeleteTeacher = (index) => {
+  //   const updatedTeachers = teachers.filter((teacher, i) => i !== index);
+  //   setTeachers(updatedTeachers);
+  // };
+
+
+
+  // detete teachers
+  const handleDeleteTeacher = async (_id, index) => {
+    try {
+      // Make an HTTP request to delete the teacher using Axios
+      const jwtToken = localStorage.getItem('jwtToken');
+      await axios.delete(`http://localhost:5000/api/v1/admin/${_id}`, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
+
+      // Remove the teacher from the state
+      const updatedTeachers = [...teachers];
+      updatedTeachers.splice(index, 1); // Remove the teacher at the specified index
+      setTeachers(updatedTeachers);
+      Alert('Teacher deleted successfully', 'success');
+    } catch (error) {
+      console.error('Error deleting teacher:', error);
+      Alert('Error deleting teacher', 'error');
+    }
   };
 
 
@@ -111,6 +181,26 @@ function Admin() {
 
 
 
+  // admission
+
+  // Function to update student's admission status
+  const updateStudentAdmissionStatus = async (studentId, admissionStatus) => {
+    try {
+      const jwtToken = localStorage.getItem('jwtToken');
+      const response = await axios.put(`http://localhost:5000/api/v1/teacher/${studentId}`, {
+        admissionStatus,
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
+      console.log(response.data); // Log the response from the backend
+    } catch (error) {
+      console.error('Error updating student admission status:', error);
+      Alert('Error updating student admission status', 'error');
+    }
+  };
 
 
 
@@ -164,6 +254,14 @@ function Admin() {
                   value={formData.department}
                   onChange={changeHandler}
                   placeholder="Department"
+                />
+                <input
+                  className="form-control mt-2"
+                  type="text"
+                  name="subject"
+                  value={formData.subject}
+                  onChange={changeHandler}
+                  placeholder="Subject"
                 />
                 <input
                   className="form-control mt-2"
@@ -271,8 +369,8 @@ function Admin() {
             {teachers.map((teacher, index) => (
               <tr key={index}>
                 <th scope="row">{index + 1}</th>
-                <td>{teacher.teacherName}</td>
-                <td>{teacher.subjectName}</td>
+                <td>{teacher.name}</td>
+                <td>{teacher.subject.join(', ')}</td>
                 <td>{teacher.department}</td>
                 <td>
                   {/* <button
@@ -283,7 +381,7 @@ function Admin() {
                   </button> */}
                   <button
                     className="bg-danger text-white rounded p-2 border-0"
-                    onClick={() => handleDeleteTeacher(index)}
+                    onClick={() => handleDeleteTeacher(teacher._id, index)}
                   >
                     <i className="fa-solid fa-trash"></i>
                   </button>
@@ -297,27 +395,39 @@ function Admin() {
 
       <div className="container py-4">
         <div className="teacher">
-          <h2>Approve/Reject Student</h2>
-          <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit</p>
+          <h2>Students</h2>
+          <p>List of students</p>
           <hr className='mt-0 mb-4' />
           <div className="row justify-content-center">
-            {students.map(student => (
-              <div className="col-3 mb-4" key={student.id}>
+            {students.map((student, index) => (
+              <div className="col-3 mb-4" key={student._id}>
+                {/* Render student information */}
                 <div className="card" style={{ width: '18rem' }}>
-                  <img src="https://static.vecteezy.com/system/resources/previews/001/942/923/large_2x/student-boy-with-school-suitcase-back-to-school-free-vector.jpg" className="card-img-top" alt="..." style={{ height: '256px' }} />
                   <div className="card-body">
-                    <h5 className="card-title">{student.name}</h5>
-                    <p className="card-text">{student.description}</p>
+                    <img src="https://static.vecteezy.com/system/resources/previews/001/942/923/large_2x/student-boy-with-school-suitcase-back-to-school-free-vector.jpg" className="card-img-top" alt="..." style={{ height: '256px' }} />
+                    <h5 className="card-title">Name={student.name}</h5>
+                    <p className="card-text">Department={student.department}</p>
+                    <p className="card-text">Email={student.email}</p>
                     <div className='d-flex justify-content-around'>
                       <button
                         className='bg-success text-white rounded p-2 border-0'
-                        onClick={() => { handleApproveReject(student.id); Alert('Student Approved', 'success') }}
+                        onClick={() => {
+                          handleApproveReject(student.id);
+                          Alert('Student Approved', 'success');
+                          // Update the student's admissionStatus to true
+                          updateStudentAdmissionStatus(student.id, true);
+                        }}
                       >
                         Approve
                       </button>
                       <button
                         className='bg-danger text-white rounded p-2 border-0'
-                        onClick={() => { handleApproveReject(student.id); Alert('Student Rejected', 'info') }}
+                        onClick={() => {
+                          handleApproveReject(student.id);
+                          Alert('Student Rejected', 'info');
+                          // Update the student's admissionStatus to false
+                          updateStudentAdmissionStatus(student.id, false);
+                        }}
                       >
                         Reject
                       </button>
