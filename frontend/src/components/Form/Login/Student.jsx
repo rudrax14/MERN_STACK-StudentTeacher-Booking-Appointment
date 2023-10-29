@@ -23,27 +23,34 @@ function Student() {
 
   async function submitHandler(event) {
     event.preventDefault();
+
     try {
       const response = await axios.post('http://localhost:5000/api/v1/student/login', {
         email: formData.email,
         password: formData.password,
       });
+      if (response.data.data.user.roles !== 'student') {
+        Alert('Access denied. Only students are allowed to log in.', 'error');
+        return;
+      }
 
+      // console.log('Role:', response.data.data.user.roles);
+      // console.log(response);
       const { token } = response.data;
       localStorage.setItem('jwtToken', token);
       navigate("/student/dashboard");
       Alert('Logged in', 'success');
     } catch (error) {
-      // Handle the error by displaying the error message
       if (error.response) {
         const errorMessage = error.response.data.message; // Assuming your error response has a 'message' field
         Alert(errorMessage, 'error');
       } else {
-        // Handle other types of errors
         Alert('Login failed', 'error');
       }
     }
   }
+
+
 
 
 

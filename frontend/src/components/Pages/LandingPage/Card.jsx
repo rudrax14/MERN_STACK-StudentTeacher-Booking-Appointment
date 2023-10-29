@@ -45,7 +45,7 @@ function Card() {
                         />
                         <div className="card-body text-center">
                             <h5 className="card-title">Admin</h5>
-                            <a href="/admin/dashboard" className="btn btn-primary">
+                            <a href="/admin/login" className="btn btn-primary">
                                 Let's Go
                             </a>
                         </div>

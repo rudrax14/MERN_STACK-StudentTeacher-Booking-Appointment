@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
 import Navbar from '../../UI/Navbar';
+import { Link, useNavigate } from "react-router-dom";
 import { BsChevronRight } from 'react-icons/bs';
 import Alert from '../../Alert';
 import StudentData from '../../../../data.json';
+import axios from 'axios';
 function Admin() {
+
+  const navigate = useNavigate();
+
+
   const [teacherName, setTeacherName] = useState('');
   const [subjectName, setSubjectName] = useState('');
   const [department, setDepartment] = useState('');
@@ -22,8 +28,6 @@ function Admin() {
     setDepartment('');
   };
 
-
-
   const [students, setStudents] = useState(StudentData.studentApprovals)
 
   const handleApproveReject = (id) => {
@@ -35,6 +39,89 @@ function Admin() {
     const updatedTeachers = teachers.filter((teacher, i) => i !== index);
     setTeachers(updatedTeachers);
   };
+
+
+  ///////////////////////////
+
+  const [formData, setFormData] = useState({
+    name: '',
+    email: "",
+    age: '',
+    subject: '',
+    department: '',
+    password: "",
+    passwordConfirm: "",
+  });
+
+  function changeHandler(event) {
+    const { name, value } = event.target;
+    setFormData((prevFormData) => {
+      // console.log(prevFormData);
+      return {
+        ...prevFormData,
+        [name]: value,
+      };
+    });
+  }
+
+  async function submitHandler(event) {
+    event.preventDefault();
+    console.log('Form Data');
+    console.log(formData);
+
+    const jwtToken = localStorage.getItem('token');
+
+    if (jwtToken) {
+      console.log('JWT token:', jwtToken);
+    } else {
+      console.log('No JWT token found.');
+    }
+
+    const requestData = {
+      email: formData.email,
+      name: formData.name,
+      subject: formData.subject,
+      department: formData.department,
+      age: formData.age,
+      password: formData.password,
+      passwordConfirm: formData.passwordConfirm,
+    };
+
+    try {
+      // Make a POST request using Axios
+      const response = await axios.post('http://localhost:5000/api/v1/admin', requestData, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
+
+      const responseJson = response.data;
+
+      if (responseJson.token) {
+        localStorage.setItem('token', responseJson.token);
+        navigate('/admin/dashboard');
+        Alert('Logged in', 'success');
+      } else {
+        Alert('Failed to register', 'error');
+      }
+    } catch (error) {
+      if (error.response) {
+        const errorMessage = error.response.data.message;
+        Alert(errorMessage, 'error');
+      } else {
+        Alert('Login failed', 'error');
+      }
+    }
+  }
+
+
+
+
+
+
+
+
   return (
     <>
       <Navbar />
@@ -64,68 +151,87 @@ function Admin() {
                 aria-label="Close"
               ></button>
             </div>
-            <div className="modal-body">
-              <form>
-                <div className="mb-3">
-                  <label htmlFor="teacherName" className="form-label">
-                    Teacher Name
-                  </label>
+            {/* form start */}
+            <form onSubmit={submitHandler}>
+              <div className="modal-body">
+
+                <input
+                  className="form-control"
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={changeHandler}
+                  placeholder="Name"
+                />
+                <input
+                  className="form-control mt-2"
+                  type="text"
+                  name="department"
+                  value={formData.department}
+                  onChange={changeHandler}
+                  placeholder="Department"
+                />
+                <input
+                  className="form-control mt-2"
+                  type="number"
+                  name="age"
+                  value={formData.age}
+                  onChange={changeHandler}
+                  placeholder="Age"
+                />
+                <input
+                  className="form-control mt-2"
+                  type="email"
+                  value={formData.email}
+                  onChange={changeHandler}
+                  name="email"
+                  placeholder="Email"
+                />
+                <div className="form-group">
                   <input
-                    type="text"
-                    className="form-control"
-                    id="teacherName"
-                    value={teacherName}
-                    onChange={(e) => setTeacherName(e.target.value)}
+                    className="form-control mt-2"
+                    type="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={changeHandler}
+                    placeholder="Password"
                   />
                 </div>
-                <div className="mb-3">
-                  <label htmlFor="subjectName" className="form-label">
-                    Subject Name
-                  </label>
+                <div className="form-group">
                   <input
-                    type="text"
-                    className="form-control"
-                    id="subjectName"
-                    value={subjectName}
-                    onChange={(e) => setSubjectName(e.target.value)}
+                    className="form-control mt-2"
+                    type="password"
+                    value={formData.passwordConfirm}
+                    onChange={changeHandler}
+                    name="passwordConfirm"
+                    placeholder="Confirm Password"
                   />
                 </div>
-                <div className="mb-3">
-                  <label htmlFor="department" className="form-label">
-                    Department
-                  </label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="department"
-                    value={department}
-                    onChange={(e) => setDepartment(e.target.value)}
-                  />
-                </div>
-              </form>
-            </div>
-            <div className="modal-footer">
+              </div>
+              <div className="modal-footer">
+                <input type="submit" value="Add Teacher" className="btn btn-primary" />
 
+                {/* <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={() => {
+                    if (teacherName && subjectName && department) {
+                      handleAddTeacher();
+                      Alert('Teacher Added', 'success');
+                    } else {
+                      // Display an alert or handle empty fields case
+                      Alert('Please fill in all fields', 'error');
+                    }
+                  }}
+                  data-bs-dismiss="modal"
+                  disabled={!teacherName || !subjectName || !department} // Disable the button if any field is empty
+                >
+                  Add
+                </button> */}
 
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={() => {
-                  if (teacherName && subjectName && department) {
-                    handleAddTeacher();
-                    Alert('Teacher Added', 'success');
-                  } else {
-                    // Display an alert or handle empty fields case
-                    Alert('Please fill in all fields', 'error');
-                  }
-                }}
-                data-bs-dismiss="modal"
-                disabled={!teacherName || !subjectName || !department} // Disable the button if any field is empty
-              >
-                Add
-              </button>
+              </div>
+            </form>
 
-            </div>
           </div>
         </div>
       </div >
