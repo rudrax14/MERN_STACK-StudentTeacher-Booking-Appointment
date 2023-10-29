@@ -5,7 +5,7 @@ const { verifyToken } = require('../controllers/authController');
 const router = express.Router()
 
 
-router.route('/').get(verifyToken,allow('admin'),getAllTeachers).post(verifyToken,allow('admin'),setRole('teacher'),createTeacher);
+router.route('/').get(verifyToken,getAllTeachers).post(verifyToken,allow('admin'),setRole('teacher'),createTeacher);
 router.route('/:id').get(getTeacher).patch(updateTeacher).delete(deleteTeacher);
 router.route('/approvestudent/:id').patch(approveStudent);
 

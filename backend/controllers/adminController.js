@@ -44,7 +44,7 @@ exports.allow = (...roles) => {
 
 exports.createTeacher = catchAsync(async (req, res, next) => {
   
-  const password = oneTimePasswordCreator();
+  
   
   const user = {
     email: req.body.email,
@@ -53,8 +53,8 @@ exports.createTeacher = catchAsync(async (req, res, next) => {
     subject: req.body.subject,
     age: req.body.age,
     roles: req.body.roles,
-    password: password,
-    passwordConfirm: password,
+    password: req.body.password,
+    passwordConfirm: req.body.passwordConfirm
   };
 
   const newUser = await User.create(user);
