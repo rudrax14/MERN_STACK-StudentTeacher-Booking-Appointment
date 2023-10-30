@@ -37,7 +37,7 @@ function admin() {
       }
       const { token } = response.data;
       localStorage.setItem('jwtToken', token);
-      console.log(token);
+      // console.log(token);
       navigate("/admin/dashboard");
       Alert('Logged in', 'success');
 
@@ -46,13 +46,13 @@ function admin() {
       // Check if a JWT token is present in localStorage
       const jwtToken = token
 
-      if (jwtToken) {
-        console.log("JWT token:", jwtToken);
-        // You can use the token for authentication
-      } else {
-        console.log("No JWT token found.");
-        // Handle this case, such as redirecting to a login page or displaying an error message.
-      }
+      // if (jwtToken) {
+      //   // console.log("JWT token:", jwtToken);
+      //   // You can use the token for authentication
+      // } else {
+      //   console.log("No JWT token found.");
+      //   // Handle this case, such as redirecting to a login page or displaying an error message.
+      // }
     } catch (error) {
       if (error.response) {
         const errorMessage = error.response.data.message; // Assuming your error response has a 'message' field

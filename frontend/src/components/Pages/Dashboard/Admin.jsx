@@ -55,7 +55,7 @@ function Admin() {
         }); // Replace with the correct endpoint
         // Update the state with the fetched data
         setStudents(response.data.students); // Assuming the response contains an array of students
-        console.log(response.data.students);
+        // console.log(response.data.students);
       } catch (error) {
         console.error('Error fetching students data:', error);
       }
@@ -160,7 +160,7 @@ function Admin() {
       Alert('Teacher Added', 'success');
     } catch (error) {
       if (error.response) {
-        console.log(error.response)
+        // console.log(error.response)
         const errorMessage = error.response.data.message;
         Alert(errorMessage, 'error');
       } else {
@@ -189,7 +189,7 @@ function Admin() {
           Authorization: `Bearer ${jwtToken}`,
         },
       });
-      console.log(response.data); // Log the response from the backend
+      // console.log(response.data); // Log the response from the backend
     } catch (error) {
       console.error('Error approving student:', error);
       Alert('Error approving student', 'error');
@@ -205,7 +205,7 @@ function Admin() {
           Authorization: `Bearer ${jwtToken}`,
         },
       });
-      console.log(response.data); // Log the response from the backend
+      // console.log(response.data); // Log the response from the backend
     } catch (error) {
       console.error('Error rejecting student:', error);
       Alert('Error rejecting student', 'error');
@@ -422,7 +422,7 @@ function Admin() {
                       <button
                         className='bg-success text-white rounded p-2 border-0'
                         onClick={() => {
-                          console.log(student._id) // Approve the student
+                          // console.log(student._id) // Approve the student
                           handleApproveReject(student._id);
                           Alert('Student Approved', 'success');
                           approveStudent(student._id);

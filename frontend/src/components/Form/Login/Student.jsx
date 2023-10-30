@@ -38,8 +38,12 @@ function Student() {
       // console.log(response);
       const { token } = response.data;
       localStorage.setItem('Student jwtToken', token);
-      console.log('Approve student id:', response.data.data.user._id);
-      navigate("/student/dashboard");
+      console.log('Approve student id:', response.data.data.user.admissionStatus);
+      if (response.data.data.user.admissionStatus == true) {
+        navigate("/student/dashboard");
+      } else {
+        navigate("/student/notapproved")
+      }
       Alert('Logged in', 'success');
     } catch (error) {
       if (error.response) {
@@ -50,12 +54,6 @@ function Student() {
       }
     }
   }
-
-
-
-
-
-
 
 
 
