@@ -122,3 +122,12 @@ exports.approveStudent = catchAsync(async (req, res, next) => {
     message: 'Student Approved',
   });
 });
+
+exports.deleteStudent = catchAsync(async (req, res, next) => {
+  await User.findByIdAndDelete(req.params.id);
+
+  res.status(200).json({
+    status: 'SUCCESS',
+    message: 'Student deleted',
+  });
+});
