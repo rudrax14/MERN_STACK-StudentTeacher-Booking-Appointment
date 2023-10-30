@@ -38,6 +38,7 @@ function Student() {
       // console.log(response);
       const { token } = response.data;
       localStorage.setItem('Student jwtToken', token);
+      console.log('Approve student id:', response.data.data.user._id);
       navigate("/student/dashboard");
       Alert('Logged in', 'success');
     } catch (error) {

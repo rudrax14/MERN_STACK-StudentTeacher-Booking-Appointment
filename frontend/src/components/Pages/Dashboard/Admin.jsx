@@ -30,7 +30,7 @@ function Admin() {
         });
         // Update the state with the fetched data
         setTeachers(response.data.data.users);
-        console.log(response.data.data.users);
+        // console.log(response.data.data.users);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -43,12 +43,16 @@ function Admin() {
   // const [students, setStudents] = useState(StudentData.studentApprovals)
   const [students, setStudents] = useState([]);
 
-  // Fetch students data
+  // Fetch All students data
   useEffect(() => {
     const fetchStudents = async () => {
       try {
         // Make an HTTP request to fetch data from the API using Axios
-        const response = await axios.get('http://localhost:5000/api/v1/teachers'); // Replace with the correct endpoint
+        const response = await axios.get('http://localhost:5000/api/v1/teachers', {
+          params: {
+            admissionStatus: false
+          },
+        }); // Replace with the correct endpoint
         // Update the state with the fetched data
         setStudents(response.data.students); // Assuming the response contains an array of students
         console.log(response.data.students);
@@ -74,12 +78,6 @@ function Admin() {
     setDepartment('');
   };
 
-
-
-  // const handleApproveReject = (id) => {
-  //   const updatedStudents = students.filter(student => student.id !== id);
-  //   setStudents(updatedStudents);
-  // };
 
   // const handleDeleteTeacher = (index) => {
   //   const updatedTeachers = teachers.filter((teacher, i) => i !== index);
@@ -136,16 +134,9 @@ function Admin() {
 
   async function submitHandler(event) {
     event.preventDefault();
-    console.log('Form Data');
-    console.log(formData);
+    // console.log('Form Data');
+    // console.log(formData);
 
-
-
-    // if (jwtToken) {
-    //   console.log('JWT token:', jwtToken);
-    // } else {
-    //   console.log('No JWT token found.');
-    // }
 
     const requestData = {
       email: formData.email,
@@ -158,7 +149,6 @@ function Admin() {
     };
 
     try {
-      // Make a POST request using Axios
       const jwtToken = localStorage.getItem('jwtToken');
       const response = await axios.post('http://localhost:5000/api/v1/admin', requestData, {
         headers: {
@@ -184,21 +174,41 @@ function Admin() {
   // admission
 
   // Function to update student's admission status
-  const updateStudentAdmissionStatus = async (studentId, admissionStatus) => {
+  const handleApproveReject = (_id) => {
+    // Filter out the student that was approved or rejected
+    const updatedStudents = students.filter(student => student._id !== _id);
+    setStudents(updatedStudents);
+  };
+
+  const approveStudent = async (_id) => {
     try {
+      // Make an HTTP request to approve the student using Axios
       const jwtToken = localStorage.getItem('jwtToken');
-      const response = await axios.put(`http://localhost:5000/api/v1/teacher/${studentId}`, {
-        admissionStatus,
-      }, {
+      const response = await axios.patch(`http://localhost:5000/api/v1/admin/approvestudent/${_id}`, null, {
         headers: {
-          'Content-Type': 'application/json',
           Authorization: `Bearer ${jwtToken}`,
         },
       });
       console.log(response.data); // Log the response from the backend
     } catch (error) {
-      console.error('Error updating student admission status:', error);
-      Alert('Error updating student admission status', 'error');
+      console.error('Error approving student:', error);
+      Alert('Error approving student', 'error');
+    }
+  };
+
+  const deleteStudent = async (_id) => {
+    try {
+      // Make an HTTP request to reject the student using Axios
+      const jwtToken = localStorage.getItem('jwtToken');
+      const response = await axios.delete(`http://localhost:5000/api/v1/admin/rejectStudent/${_id}`, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      });
+      console.log(response.data); // Log the response from the backend
+    } catch (error) {
+      console.error('Error rejecting student:', error);
+      Alert('Error rejecting student', 'error');
     }
   };
 
@@ -412,10 +422,10 @@ function Admin() {
                       <button
                         className='bg-success text-white rounded p-2 border-0'
                         onClick={() => {
-                          handleApproveReject(student.id);
+                          console.log(student._id) // Approve the student
+                          handleApproveReject(student._id);
                           Alert('Student Approved', 'success');
-                          // Update the student's admissionStatus to true
-                          updateStudentAdmissionStatus(student.id, true);
+                          approveStudent(student._id);
                         }}
                       >
                         Approve
@@ -423,10 +433,9 @@ function Admin() {
                       <button
                         className='bg-danger text-white rounded p-2 border-0'
                         onClick={() => {
-                          handleApproveReject(student.id);
+                          handleApproveReject(student._id);
                           Alert('Student Rejected', 'info');
-                          // Update the student's admissionStatus to false
-                          updateStudentAdmissionStatus(student.id, false);
+                          deleteStudent(student._id); // Delete the student
                         }}
                       >
                         Reject
