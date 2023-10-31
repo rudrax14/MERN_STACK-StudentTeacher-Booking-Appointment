@@ -1,10 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Navbar from '../../UI/Navbar';
+import { Link, useNavigate } from "react-router-dom";
 // import { BsChevronRight } from 'react-icons/bs';
 import { toast } from 'react-toastify';
 import teachersData from '../../../../data.json';
 import axios from 'axios';
 function Student() {
+  const navigate = useNavigate();
   const [selectedTeacher, setSelectedTeacher] = useState(null);
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
@@ -12,20 +14,23 @@ function Student() {
   // data coming
   // const [teachers, setTeachers] = useState(teachersData.teachers);
   const [teachers, setTeachers] = useState([]);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         const jwtToken = localStorage.getItem('Student jwtToken');
-        // Make an HTTP request to fetch data from the API using Axios
-        const response = await axios.get('http://localhost:5000/api/v1/admin', {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-          }
-        });
-        // Update the state with the fetched data
-        setTeachers(response.data.data.users);
-        // console.log(response.data.data.users);
+        if (jwtToken == null) {
+          navigate("/student/login");
+        } else {
+          // Make an HTTP request to fetch data from the API using Axios
+          const response = await axios.get('http://localhost:5000/api/v1/admin', {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            }
+          });
+          // Update the state with the fetched data
+          setTeachers(response.data.data.users);
+          // console.log(response.data.data.users);
+        }
       } catch (error) {
         console.error('Error fetching data:', error);
       }

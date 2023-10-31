@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../../UI/Navbar";
 import Alert from '../../Alert';
@@ -8,6 +8,9 @@ import axios from 'axios';
 
 function admin() {
   const navigate = useNavigate();
+
+
+
 
   const [formData, setFormData] = useState({
     email: "",
@@ -21,10 +24,9 @@ function admin() {
       [name]: value,
     }));
   }
-
+  
   async function submitHandler(event) {
     event.preventDefault();
-
 
     try {
       const response = await axios.post('http://localhost:5000/api/v1/student/login', {

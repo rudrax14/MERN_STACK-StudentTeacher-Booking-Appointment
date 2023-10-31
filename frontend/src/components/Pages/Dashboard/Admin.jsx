@@ -3,7 +3,7 @@ import Navbar from '../../UI/Navbar';
 import { Link, useNavigate } from "react-router-dom";
 import { BsChevronRight } from 'react-icons/bs';
 import Alert from '../../Alert';
-import StudentData from '../../../../data.json';
+// import StudentData from '../../../../data.json';
 import axios from 'axios';
 function Admin() {
 
@@ -22,15 +22,20 @@ function Admin() {
     const fetchData = async () => {
       try {
         const jwtToken = localStorage.getItem('jwtToken');
-        // Make an HTTP request to fetch data from the API using Axios
-        const response = await axios.get('http://localhost:5000/api/v1/admin', {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-          }
-        });
-        // Update the state with the fetched data
-        setTeachers(response.data.data.users);
-        // console.log(response.data.data.users);
+        if (jwtToken == null) {
+          navigate("/admin/login");
+        } else {
+
+          // Make an HTTP request to fetch data from the API using Axios
+          const response = await axios.get('http://localhost:5000/api/v1/admin', {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            }
+          });
+          // Update the state with the fetched data
+          setTeachers(response.data.data.users);
+          // console.log(response.data.data.users);
+        }
       } catch (error) {
         console.error('Error fetching data:', error);
       }

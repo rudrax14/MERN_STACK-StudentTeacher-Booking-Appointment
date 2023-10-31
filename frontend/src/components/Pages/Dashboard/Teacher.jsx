@@ -1,12 +1,63 @@
-import React, { useState } from 'react';
-import Navbar from '../../UI/Navbar';
+import React, { useState, useEffect } from 'react';
+// import Navbar from '../../UI/Navbar';
 import { BsChevronRight } from 'react-icons/bs';
+import { Link, useNavigate } from "react-router-dom";
 import Alert from '../../Alert';
-import StudentData from '../../../../data.json';
+import axios from 'axios';
+// import StudentData from '../../../../data.json';
 function Teacher() {
-  const [cards, setCards] = useState(StudentData.studentBookings)
-
+  const navigate = useNavigate();
+  // const [cards, setCards] = useState(StudentData.studentBookings)
+  const [cards, setCards] = useState([])
   const [appointments, setAppointments] = useState([]);
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState('');
+  const [highlightedTimeSlot, setHighlightedTimeSlot] = useState('');
+  // const handleReject = (cardId) => {
+  //   setCards(cards.filter(card => card.id !== cardId));
+  // };
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const jwtToken = localStorage.getItem('Teachers jwtToken');
+        if (jwtToken == null) {
+          navigate("/teacher/login");
+        }
+
+        else {
+
+          const response = await axios.get('http://localhost:5000/api/v1/teachers?admissionStatus=true', {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            }
+          });
+          // const appointment = response.data.students.appointments
+          // console.log(appointment)
+          // if (appointment.length > 0) {
+
+          // }
+          setCards(response.data.students);
+          // Update the 'cards' state with the fetched data
+          // console.log(response.data.students)
+        }
+
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+
+
+
+
+  const handleTimeSlotSelect = (timeSlot) => {
+    setSelectedTimeSlot(timeSlot);
+    setHighlightedTimeSlot(timeSlot); // Highlight the selected time slot
+  };
 
   const handleReject = (cardId) => {
     setCards(cards.filter(card => card.id !== cardId));
@@ -15,17 +66,11 @@ function Teacher() {
   const handleApprove = (card) => {
     const currentDate = new Date().toLocaleDateString();
     const currentTime = new Date().toLocaleTimeString();
+
     setAppointments(prevAppointments => [
       ...prevAppointments,
-      // {
-      //   id: card.id,
-      //   name: card.name,
-      //   subject: card.subject,
-      //   date: 'Date',
-      //   time: 'Time'
-      // }
       {
-        id: card.id,
+        _id: card._id,
         name: card.name,
         subject: card.subject,
         date: currentDate,
@@ -34,12 +79,28 @@ function Teacher() {
     ]);
 
     // Remove the approved card
-    setCards(cards.filter(c => c.id !== card.id));
+    setCards(cards.filter(c => c._id !== card._id));
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    console.log('Time Slot = ', selectedTimeSlot);
+    // try {
+    //   const response = await axios.post('http://localhost:5000/api/v1/teachers/scheduleappointment', {
+    //     teacherId: 'YOUR_TEACHER_ID',
+    //     timeSlot: selectedTimeSlot
+    //   });
+
+    //   // Handle the response from the server if needed
+    //   console.log('Appointment scheduled successfully:', response.data);
+    // } catch (error) {
+    //   // Handle any errors that occur during the request
+    //   console.error('Error scheduling appointment:', error);
+    // }
   };
 
   return (
     <>
-      {/* <Navbar /> */}
       {/* header */}
       <div className="header-container shadow p-3 mb-5 bg-success text-white ">
         <div className="container d-flex justify-content-center">
@@ -55,26 +116,22 @@ function Teacher() {
               <h1 className="modal-title fs-5" id="exampleModalLabel">Update Lectures</h1>
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div className="modal-body">
-              <form>
-                <div className="mb-3">
-                  <label htmlFor="subjectName" className="form-label">Subject Name</label>
-                  <input type="text" className="form-control" id="subjectName" />
-                </div>
+            <form onSubmit={handleSubmit}>
+              <div className="modal-body">
                 <div className="mb-3 row">
                   <label>Time Slot</label>
                   <div className='mt-1'>
-                    <button type="button" className="btn btn-outline-secondary ">2pm-4pm</button>
-                    <button type="button" className="btn btn-outline-secondary ms-2">5pm-6pm</button>
-                    <button type="button" className="btn btn-outline-secondary ms-2">7pm-8pm</button>
+                    <button type="button" className={`btn  ${highlightedTimeSlot === '2pm-4pm' ? 'btn-primary' : 'btn-outline-secondary'}`} onClick={() => handleTimeSlotSelect('2pm-4pm')}>2pm-4pm</button>
+                    <button type="button" className={`btn ms-2 ${highlightedTimeSlot === '5pm-6pm' ? 'btn-primary' : 'btn-outline-secondary'}`} onClick={() => handleTimeSlotSelect('5pm-6pm')}>5pm-6pm</button>
+                    <button type="button" className={`btn ms-2 ${highlightedTimeSlot === '7pm-8pm' ? 'btn-primary' : 'btn-outline-secondary'}`} onClick={() => handleTimeSlotSelect('7pm-8pm')}>7pm-8pm</button>
                   </div>
                 </div>
-              </form>
-            </div>
-            <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" className="btn btn-primary">Add</button>
-            </div>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <input type="submit" value="Add" className="btn btn-primary" data-bs-dismiss="modal" />
+              </div>
+            </form>
           </div>
         </div>
       </div>
@@ -200,7 +257,7 @@ function Teacher() {
           <hr className='mt-0 mb-4' />
           <div className="d-flex flex-wrap justify-content-center">
             {cards.map(card => (
-              <div className="card m-3" key={card.id} style={{ width: '18rem' }}>
+              <div className="card m-3" key={card._id} style={{ width: '18rem' }}>
                 <img src="https://static.vecteezy.com/system/resources/previews/001/942/923/large_2x/student-boy-with-school-suitcase-back-to-school-free-vector.jpg" className="card-img-top" alt="..." style={{ height: '256px' }} />
                 <div className="card-body">
                   <h5 className="card-title">{card.name}</h5>

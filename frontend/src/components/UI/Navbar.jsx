@@ -3,11 +3,16 @@ import { Link } from 'react-router-dom';
 import Alert from '../Alert';
 const Navbar = () => {
 
+    // Check if the current route is '/'
+    const isRootRoute = location.pathname === '/';
+
+    const shouldShowLink = !isRootRoute;
     const changeHandler = () => {
         Alert('Logout', 'success')
         localStorage.removeItem('Teachers jwtToken')
         localStorage.removeItem('Student jwtToken')
         localStorage.removeItem('jwtToken')
+        navigate("/");
     }
 
     return (
@@ -47,9 +52,11 @@ const Navbar = () => {
                         </div> */}
                         {/* logout */}
 
-                        <Link className='text-white me-2 fs-3' type="button" to="/" onClick={changeHandler}>
-                            <i className="fa-solid fa-right-from-bracket"></i>
-                        </Link>
+                        {shouldShowLink && (
+                            <Link className='text-white me-2 fs-3' type="button" to="/" onClick={changeHandler}>
+                                <i className="fa-solid fa-right-from-bracket"></i>
+                            </Link>
+                        )}
                     </div>
                 </div>
             </nav >
