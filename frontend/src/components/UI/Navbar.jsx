@@ -1,17 +1,19 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import Alert from '../Alert';
+import { Link, useNavigate } from "react-router-dom";
+// import Alert from '../Alert';
+import { toast } from 'react-toastify';
 const Navbar = () => {
-
+    const navigate = useNavigate();
     // Check if the current route is '/'
     const isRootRoute = location.pathname === '/';
 
     const shouldShowLink = !isRootRoute;
     const changeHandler = () => {
-        Alert('Logout', 'success')
+        toast.success('Logout Successfully')
         localStorage.removeItem('Teachers jwtToken')
         localStorage.removeItem('Student jwtToken')
         localStorage.removeItem('jwtToken')
+        localStorage.removeItem('email')
         navigate("/");
     }
 
@@ -53,9 +55,12 @@ const Navbar = () => {
                         {/* logout */}
 
                         {shouldShowLink && (
-                            <Link className='text-white me-2 fs-3' type="button" to="/" onClick={changeHandler}>
+                            // <Link className='text-white me-2 fs-3' type="button" to="/" onClick={changeHandler}>
+                            //     <i className="fa-solid fa-right-from-bracket"></i>
+                            // </Link>
+                            <a className='text-white me-2 fs-3' type="button" onClick={changeHandler}>
                                 <i className="fa-solid fa-right-from-bracket"></i>
-                            </Link>
+                            </a>
                         )}
                     </div>
                 </div>

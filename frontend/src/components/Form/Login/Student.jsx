@@ -38,9 +38,10 @@ function Student() {
       // console.log(response);
       const { token } = response.data;
       localStorage.setItem('Student jwtToken', token);
+      localStorage.setItem('email', formData.email);
       console.log('Approve student id:', response.data.data.user.admissionStatus);
       if (response.data.data.user.admissionStatus == true) {
-        navigate("/student/dashboard");
+        navigate(`/student/dashboard`);
       } else {
         navigate("/student/notapproved")
       }

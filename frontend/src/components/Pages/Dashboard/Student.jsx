@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Navbar from '../../UI/Navbar';
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 // import { BsChevronRight } from 'react-icons/bs';
 import { toast } from 'react-toastify';
-import teachersData from '../../../../data.json';
+// import teachersData from '../../../../data.json';
 import axios from 'axios';
 function Student() {
   const navigate = useNavigate();
@@ -11,10 +11,22 @@ function Student() {
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
   const [lectureDetails, setLectureDetails] = useState([]);
+  // const [searchParams, setSearchParams] = useSearchParams();
+  const [email, setEmail] = useState('');
+
   // data coming
   // const [teachers, setTeachers] = useState(teachersData.teachers);
   const [teachers, setTeachers] = useState([]);
   useEffect(() => {
+    const emailAdd = localStorage.getItem('email');
+    setEmail(emailAdd);
+    console.log(emailAdd);
+    // console.log(email)
+    // if (email == "") {
+    //   console.log(searchParams.get("q"))
+    //   setEmail(searchParams.get("q"))
+    // }
+    // setSearchParams("")
     const fetchData = async () => {
       try {
         const jwtToken = localStorage.getItem('Student jwtToken');
@@ -28,6 +40,7 @@ function Student() {
             }
           });
           // Update the state with the fetched data
+          // console.log(response.data.data.users);
           setTeachers(response.data.data.users);
           // console.log(response.data.data.users);
         }
@@ -38,6 +51,11 @@ function Student() {
 
     fetchData();
   }, []);
+
+  // useEffect(() => {
+
+  // })
+
 
 
 

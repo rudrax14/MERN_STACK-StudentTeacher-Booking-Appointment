@@ -5,7 +5,7 @@ exports.sendMessage = catchAsync(async (req, res, next) => {
   const messageObj = {
     to: req.body.to,
     from: req.user.email,
-    messageText: req.body.message,
+    messageText: req.body.messageText,
   };
 
   const { messageText } = await Message.create(messageObj);
