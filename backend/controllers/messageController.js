@@ -16,7 +16,7 @@ exports.sendMessage = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllMessages = catchAsync(async (req, res, next) => {
-  const { email } = req.body;
+  const { email } = req.query;
   const { user } = req;
 
   const messages = await Message.find({ from: email, to: user.email });

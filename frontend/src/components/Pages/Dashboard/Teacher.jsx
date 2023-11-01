@@ -12,6 +12,7 @@ function Teacher() {
   const [appointments, setAppointments] = useState([]);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState('');
   const [highlightedTimeSlot, setHighlightedTimeSlot] = useState('');
+  const [studentEmail, setStudentEmail] = useState('rudra@gmail.com')
   // const handleReject = (cardId) => {
   //   setCards(cards.filter(card => card.id !== cardId));
   // };
@@ -23,30 +24,36 @@ function Teacher() {
         const jwtToken = localStorage.getItem('Teachers jwtToken');
         if (jwtToken == null) {
           navigate("/teacher/login");
-        }
-
-        else {
-
+        } else {
           const response = await axios.get('http://localhost:5000/api/v1/teachers?admissionStatus=true', {
             headers: {
               Authorization: `Bearer ${jwtToken}`,
             }
           });
-          // const appointment = response.data.students.appointments
-          // console.log(appointment)
-          // if (appointment.length > 0) {
-
-          // }
           setCards(response.data.students);
-          // Update the 'cards' state with the fetched data
-          // console.log(response.data.students)
+          // Fetch message counts for all cards
+          const counts = {};
+          for (const card of response.data.students) {
+            const emailToFilter = card.email;
+            const response = await axios.get('http://localhost:5000/api/v1/messages', {
+              headers: {
+                Authorization: `Bearer ${jwtToken}`,
+              },
+              params: {
+                email: emailToFilter,
+              },
+            });
+            if (response.status === 200) {
+              const data = response.data;
+              counts[card.email] = data.messages.length;
+            }
+          }
+          setMessageCounts(counts);
         }
-
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
-
     fetchData();
   }, []);
 
@@ -99,6 +106,58 @@ function Teacher() {
     // }
   };
 
+
+  const [messages, setMessages] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [messageCounts, setMessageCounts] = useState({});
+
+
+  // useEffect(() => {
+  //   fetchMessages();
+  // }, []);
+
+  const fetchMessages = async (email) => {
+    try {
+      const jwtToken = localStorage.getItem('Teachers jwtToken');
+      const emailToFilter = email;
+
+      const response = await axios.get('http://localhost:5000/api/v1/messages', {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+        params: {
+          email: emailToFilter,
+        },
+      });
+
+      if (response.status === 200) {
+        const data = response.data;
+        setMessages(data.messages);
+        // Update the message count for the specific card
+        setMessageCounts((prevCounts) => ({
+          ...prevCounts,
+          [email]: data.messages.length,
+        }));
+      } else {
+        console.error('Failed to fetch messages');
+      }
+    } catch (error) {
+      console.error('An error occurred:', error);
+    }
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
   return (
     <>
       {/* header */}
@@ -140,11 +199,18 @@ function Teacher() {
         <div className="modal-dialog" role="document">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">Message Modal</h5>
+              <h5 className="modal-title">Student Message</h5>
 
             </div>
             <div className="modal-body">
-              <p>Modal body text goes here for Message.</p>
+              {/* Render the messages in the modal */}
+              {messages.map((message) => (
+                <div key={message._id}>
+
+                  <p className="border border-light-subtle">{message.messageText}</p>
+
+                </div>
+              ))}
             </div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
@@ -262,6 +328,7 @@ function Teacher() {
                 <div className="card-body">
                   <h5 className="card-title">{card.name}</h5>
                   <p className="card-text">{card.subject}</p>
+                  <p className="card-text">{card.email}</p>
                   <p className="card-text">Time Slot - {card.time}</p>
                   <div className='d-flex justify-content-around'>
                     <button
@@ -274,11 +341,20 @@ function Teacher() {
                       Approve
                     </button>
                     <button className='bg-danger text-white rounded p-2 border-0' onClick={() => { handleReject(card.id); Alert('Removed', 'warning'); }}>Reject</button>
-                    <button type="button" className="btn btn-primary position-relative" data-bs-toggle="modal"
-                      data-bs-target="#messageModal">
+                    <button
+                      type="button"
+                      className="btn btn-primary position-relative"
+                      data-bs-toggle="modal"
+                      data-bs-target="#messageModal"
+                      onClick={() => {
+                        setStudentEmail(card.email);
+                        setMessages([]); // Clear existing messages
+                        fetchMessages(card.email);
+                      }}
+                    >
                       Inbox
                       <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        99+
+                        {messageCounts[card.email] || 0} {/* Display the message count for this card */}
                         <span className="visually-hidden">unread messages</span>
                       </span>
                     </button>

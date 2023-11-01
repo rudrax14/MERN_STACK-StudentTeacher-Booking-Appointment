@@ -9,10 +9,11 @@ function Student() {
   const navigate = useNavigate();
   const [selectedTeacher, setSelectedTeacher] = useState(null);
   const [selectedSubject, setSelectedSubject] = useState(null);
-  const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
+  // const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
   const [lectureDetails, setLectureDetails] = useState([]);
   // const [searchParams, setSearchParams] = useSearchParams();
   const [email, setEmail] = useState('');
+  const [teacherEmail, setTeacherEmail] = useState('')
 
   // data coming
   // const [teachers, setTeachers] = useState(teachersData.teachers);
@@ -42,7 +43,7 @@ function Student() {
           // Update the state with the fetched data
           // console.log(response.data.data.users);
           setTeachers(response.data.data.users);
-          // console.log(response.data.data.users);
+          console.log(response.data.data.users);
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -73,13 +74,13 @@ function Student() {
   const handleTeacherClick = (teacherName, subject) => {
     setSelectedTeacher(teacherName);
     setSelectedSubject(subject);
-    setIsModalOpen(true);
+    // setIsModalOpen(true);
   };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleBooked = () => {
-    if (selectedTeacher && selectedSubject && selectedTimeSlot) {
+    if (selectedTeacher && selectedSubject) {
       const currentDate = new Date().toLocaleDateString();
       const currentTime = new Date().toLocaleTimeString();
 
@@ -90,7 +91,7 @@ function Student() {
           subject: selectedSubject,
           date: currentDate,
           time: currentTime,
-          timeSlot: selectedTimeSlot,
+          // timeSlot: selectedTimeSlot,
         },
       ]);
 
@@ -111,11 +112,80 @@ function Student() {
     }
   };
 
+
+  const [formData, setFormData] = useState({
+    message: '',
+  });
+
+  function changeHandler(event) {
+    const { name, value } = event.target;
+    setFormData((prevFormData) => {
+      // console.log(prevFormData);
+      return {
+        ...prevFormData,
+        [name]: value,
+      };
+    });
+  }
+  // async function submitHandler(event) {
+  //   event.preventDefault();
+  //   console.log('Message Data');
+  //   console.log(formData);
+  //   setFormData({ message: '' });
+  //   console.log(teacherEmail);
+
+  // }
+
+  async function submitHandler(event) {
+    event.preventDefault();
+    console.log('Message Data');
+    console.log(formData);
+
+    // Create the message object
+    const messageObject = {
+      to: teacherEmail, // Assuming teacherEmail contains the recipient email address
+      messageText: formData.message, // Assuming formData.message contains the message text
+    };
+
+    // Log the message object
+    console.log(messageObject);
+
+    try {
+      // Send a POST request to the specified URL
+      const jwtToken = localStorage.getItem('Student jwtToken');
+      const response = await fetch('http://localhost:5000/api/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${jwtToken}`,
+        },
+        body: JSON.stringify(messageObject), // Convert the message object to a JSON string
+      });
+
+      if (response.ok) {
+        // Handle a successful response, if needed
+        // console.log('Message sent successfully.');
+        toast.success('Message sent successfully')
+      } else {
+        // Handle an error response, if needed
+        // console.error('Failed to send the message.');
+        toast.error('Failed to send the message')
+      }
+    } catch (error) {
+      // Handle any network or fetch-related errors
+      console.error('An error occurred:', error);
+    }
+
+    // Reset the form data
+    setFormData({ message: '' });
+
+    console.log(teacherEmail);
+  }
   return (
     <>
       {/* <Navbar /> */}
       {/* time slot modal */}
-      <div
+      {/* <div
         className={`modal fade ${isModalOpen ? 'show' : ''}`}
         id="exampleModal"
         tabIndex="-1"
@@ -201,7 +271,7 @@ function Student() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* message modal */}
       <div className="modal fade" id="messageModal" tabIndex="-1" role="dialog">
@@ -211,17 +281,27 @@ function Student() {
               <h5 className="modal-title">Message Modal</h5>
 
             </div>
-            <div className="modal-body">
-              <p>Modal body text goes here for Message.</p>
-            </div>
-            <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
-                Close
-              </button>
-              <button type="button" className="btn btn-primary" data-bs-dismiss="modal">
-                Send Message
-              </button>
-            </div>
+            <form action="" onSubmit={submitHandler}>
+              <div className="modal-body">
+                <input
+                  className="form-control"
+                  type="text"
+                  name="message"
+                  value={formData.message}
+                  onChange={changeHandler}
+                  placeholder="Your Message Goes Here"
+                />
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                  Close
+                </button>
+                {/* <button type="button" className="btn btn-primary" data-bs-dismiss="modal">
+                  Send Message
+                </button> */}
+                <input type="submit" value="Send Message" className="btn btn-primary" data-bs-dismiss="modal" />
+              </div>
+            </form>
           </div>
         </div>
       </div>
@@ -283,19 +363,24 @@ function Student() {
                 />
                 <div className="card-body">
                   <h5
-                    className="card-title"
-                    onClick={() =>
-                      handleTeacherClick(teacher.name, teacher.subject)
-                    }
+                    className="card-title mb-3"
+                  // onClick={() =>
+                  //   handleTeacherClick(teacher.name, teacher.subject)
+                  // }
                   >
-                    {teacher.name}
+                    Name = {teacher.name}
                   </h5>
-                  <p className="card-text">{teacher.subject}</p>
+                  <p className="card-text">Subject = {teacher.subject}</p>
+                  <p className="card-text">Appointment Time = {teacher.appointments}</p>
+                  <p className="card-text">Email = {teacher.email}</p>
                   <div className="d-flex justify-content-around">
                     <button
                       className="bg-primary text-white rounded p-2 border-0"
-                      data-bs-toggle="modal"
-                      data-bs-target="#exampleModal"
+                      // data-bs-toggle="modal"
+                      // data-bs-target="#exampleModal"
+                      // onClick={() =>
+                      //   handleTeacherClick(teacher.name, teacher.subject)
+                      // }
                       onClick={() =>
                         handleTeacherClick(teacher.name, teacher.subject)
                       }
@@ -307,6 +392,8 @@ function Student() {
                       type="button"
                       data-bs-toggle="modal"
                       data-bs-target="#messageModal"
+                      onClick={() => (setTeacherEmail(teacher.email))
+                      }
                     >
                       Message
                     </button>
