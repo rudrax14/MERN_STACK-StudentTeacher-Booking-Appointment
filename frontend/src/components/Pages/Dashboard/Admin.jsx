@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '../../UI/Navbar';
 import { Link, useNavigate } from "react-router-dom";
 import { BsChevronRight } from 'react-icons/bs';
-import Alert from '../../Alert';
+// import Alert from '../../Alert';
+import { toast } from 'react-toastify';
 // import StudentData from '../../../../data.json';
 import axios from 'axios';
 function Admin() {
@@ -106,10 +107,10 @@ function Admin() {
       const updatedTeachers = [...teachers];
       updatedTeachers.splice(index, 1); // Remove the teacher at the specified index
       setTeachers(updatedTeachers);
-      Alert('Teacher deleted successfully', 'success');
+      toast.sucess('Teacher deleted successfully');
     } catch (error) {
       console.error('Error deleting teacher:', error);
-      Alert('Error deleting teacher', 'error');
+      toast.error('Error deleting teacher');
     }
   };
 
@@ -162,14 +163,14 @@ function Admin() {
         },
       });
       navigate("/admin/dashboard");
-      Alert('Teacher Added', 'success');
+      toast.success('Teacher Added')
     } catch (error) {
       if (error.response) {
         // console.log(error.response)
         const errorMessage = error.response.data.message;
-        Alert(errorMessage, 'error');
+        toast.error(errorMessage)
       } else {
-        Alert('Something Gone Wrong', 'error');
+        toast.error('Something Gone Wrong')
       }
     }
   }
@@ -197,7 +198,7 @@ function Admin() {
       // console.log(response.data); // Log the response from the backend
     } catch (error) {
       console.error('Error approving student:', error);
-      Alert('Error approving student', 'error');
+      toast.error('Error approving student')
     }
   };
 
@@ -213,7 +214,7 @@ function Admin() {
       // console.log(response.data); // Log the response from the backend
     } catch (error) {
       console.error('Error rejecting student:', error);
-      Alert('Error rejecting student', 'error');
+      toast.error('Error rejecting student')
     }
   };
 
@@ -429,8 +430,8 @@ function Admin() {
                         onClick={() => {
                           // console.log(student._id) // Approve the student
                           handleApproveReject(student._id);
-                          Alert('Student Approved', 'success');
                           approveStudent(student._id);
+                          toast.success('Student Approved')
                         }}
                       >
                         Approve
@@ -439,8 +440,8 @@ function Admin() {
                         className='bg-danger text-white rounded p-2 border-0'
                         onClick={() => {
                           handleApproveReject(student._id);
-                          Alert('Student Rejected', 'info');
                           deleteStudent(student._id); // Delete the student
+                          toast.info('Student Rejected')
                         }}
                       >
                         Reject
