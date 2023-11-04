@@ -1,50 +1,47 @@
-import React, { useState, useEffect } from 'react';
-import Navbar from '../../UI/Navbar';
+import React, { useState, useEffect } from "react";
+import Navbar from "../../UI/Navbar";
 import { Link, useNavigate } from "react-router-dom";
-import { BsChevronRight } from 'react-icons/bs';
+import { BsChevronRight } from "react-icons/bs";
 // import Alert from '../../Alert';
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 // import StudentData from '../../../../data.json';
-import axios from 'axios';
+import axios from "axios";
 function Admin() {
-
   const navigate = useNavigate();
 
-
-  const [teacherName, setTeacherName] = useState('');
-  const [subjectName, setSubjectName] = useState('');
-  const [department, setDepartment] = useState('');
+  const [teacherName, setTeacherName] = useState("");
+  const [subjectName, setSubjectName] = useState("");
+  const [department, setDepartment] = useState("");
   const [teachers, setTeachers] = useState([]);
-
-
 
   // teachers get
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const jwtToken = localStorage.getItem('jwtToken');
+        const jwtToken = localStorage.getItem("jwtToken");
         if (jwtToken == null) {
           navigate("/admin/login");
         } else {
-
           // Make an HTTP request to fetch data from the API using Axios
-          const response = await axios.get('http://localhost:5000/api/v1/admin', {
-            headers: {
-              Authorization: `Bearer ${jwtToken}`,
+          const response = await axios.get(
+            "http://localhost:5000/api/v1/admin",
+            {
+              headers: {
+                Authorization: `Bearer ${jwtToken}`,
+              },
             }
-          });
+          );
           // Update the state with the fetched data
           setTeachers(response.data.data.users);
           // console.log(response.data.data.users);
         }
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
 
     fetchData();
   }, []);
-
 
   // const [students, setStudents] = useState(StudentData.studentApprovals)
   const [students, setStudents] = useState([]);
@@ -54,49 +51,48 @@ function Admin() {
     const fetchStudents = async () => {
       try {
         // Make an HTTP request to fetch data from the API using Axios
-        const response = await axios.get('http://localhost:5000/api/v1/teachers', {
-          params: {
-            admissionStatus: false
-          },
-        }); // Replace with the correct endpoint
+        const response = await axios.get(
+          "http://localhost:5000/api/v1/teachers",
+          {
+            params: {
+              admissionStatus: false,
+            },
+          }
+        ); // Replace with the correct endpoint
         // Update the state with the fetched data
         setStudents(response.data.students); // Assuming the response contains an array of students
         // console.log(response.data.students);
       } catch (error) {
-        console.error('Error fetching students data:', error);
+        console.error("Error fetching students data:", error);
       }
     };
 
     fetchStudents();
   }, []);
 
+  // const handleAddTeacher = () => {
+  //   const newTeacher = {
+  //     teacherName,
+  //     subjectName,
+  //     department,
+  //   };
 
-  const handleAddTeacher = () => {
-    const newTeacher = {
-      teacherName,
-      subjectName,
-      department,
-    };
-
-    setTeachers([...teachers, newTeacher]);
-    setTeacherName('');
-    setSubjectName('');
-    setDepartment('');
-  };
-
+  //   setTeachers([...teachers, newTeacher]);
+  //   setTeacherName("");
+  //   setSubjectName("");
+  //   setDepartment("");
+  // };
 
   // const handleDeleteTeacher = (index) => {
   //   const updatedTeachers = teachers.filter((teacher, i) => i !== index);
   //   setTeachers(updatedTeachers);
   // };
 
-
-
   // detete teachers
   const handleDeleteTeacher = async (_id, index) => {
     try {
       // Make an HTTP request to delete the teacher using Axios
-      const jwtToken = localStorage.getItem('jwtToken');
+      const jwtToken = localStorage.getItem("jwtToken");
       await axios.delete(`http://localhost:5000/api/v1/admin/${_id}`, {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
@@ -107,22 +103,21 @@ function Admin() {
       const updatedTeachers = [...teachers];
       updatedTeachers.splice(index, 1); // Remove the teacher at the specified index
       setTeachers(updatedTeachers);
-      toast.sucess('Teacher deleted successfully');
+      toast.success("Teacher deleted successfully");
     } catch (error) {
-      console.error('Error deleting teacher:', error);
-      toast.error('Error deleting teacher');
+      console.error("Error deleting teacher:", error);
+      toast.error("Error deleting teacher");
     }
   };
-
 
   ///////////////////////////
 
   const [formData, setFormData] = useState({
-    name: '',
+    name: "",
     email: "",
-    age: '',
-    subject: '',
-    department: '',
+    age: "",
+    subject: "",
+    department: "",
     password: "",
     passwordConfirm: "",
   });
@@ -143,7 +138,6 @@ function Admin() {
     // console.log('Form Data');
     // console.log(formData);
 
-
     const requestData = {
       email: formData.email,
       name: formData.name,
@@ -155,72 +149,77 @@ function Admin() {
     };
 
     try {
-      const jwtToken = localStorage.getItem('jwtToken');
-      const response = await axios.post('http://localhost:5000/api/v1/admin', requestData, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${jwtToken}`,
-        },
-      });
+      const jwtToken = localStorage.getItem("jwtToken");
+      const response = await axios.post(
+        "http://localhost:5000/api/v1/admin",
+        requestData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        }
+      );
       navigate("/admin/dashboard");
-      toast.success('Teacher Added')
+      toast.success("Teacher Added");
     } catch (error) {
       if (error.response) {
         // console.log(error.response)
         const errorMessage = error.response.data.message;
-        toast.error(errorMessage)
+        toast.error(errorMessage);
       } else {
-        toast.error('Something Gone Wrong')
+        toast.error("Something Gone Wrong");
       }
     }
   }
-
-
 
   // admission
 
   // Function to update student's admission status
   const handleApproveReject = (_id) => {
     // Filter out the student that was approved or rejected
-    const updatedStudents = students.filter(student => student._id !== _id);
+    const updatedStudents = students.filter((student) => student._id !== _id);
     setStudents(updatedStudents);
   };
 
   const approveStudent = async (_id) => {
     try {
       // Make an HTTP request to approve the student using Axios
-      const jwtToken = localStorage.getItem('jwtToken');
-      const response = await axios.patch(`http://localhost:5000/api/v1/admin/approvestudent/${_id}`, null, {
-        headers: {
-          Authorization: `Bearer ${jwtToken}`,
-        },
-      });
+      const jwtToken = localStorage.getItem("jwtToken");
+      const response = await axios.patch(
+        `http://localhost:5000/api/v1/admin/approvestudent/${_id}`,
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        }
+      );
       // console.log(response.data); // Log the response from the backend
     } catch (error) {
-      console.error('Error approving student:', error);
-      toast.error('Error approving student')
+      console.error("Error approving student:", error);
+      toast.error("Error approving student");
     }
   };
 
   const deleteStudent = async (_id) => {
     try {
       // Make an HTTP request to reject the student using Axios
-      const jwtToken = localStorage.getItem('jwtToken');
-      const response = await axios.delete(`http://localhost:5000/api/v1/admin/rejectStudent/${_id}`, {
-        headers: {
-          Authorization: `Bearer ${jwtToken}`,
-        },
-      });
+      const jwtToken = localStorage.getItem("jwtToken");
+      const response = await axios.delete(
+        `http://localhost:5000/api/v1/admin/rejectStudent/${_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        }
+      );
       // console.log(response.data); // Log the response from the backend
     } catch (error) {
-      console.error('Error rejecting student:', error);
-      toast.error('Error rejecting student')
+      console.error("Error rejecting student:", error);
+      toast.error("Error rejecting student");
     }
   };
-
-
-
-
 
   return (
     <>
@@ -230,6 +229,7 @@ function Admin() {
           <p className="fs-1">Admin Dashboard</p>
         </div>
       </div>
+      {/* ----------------------------------------------------------------------------------------------------- */}
       {/* modal */}
       <div
         className="modal fade"
@@ -254,7 +254,6 @@ function Admin() {
             {/* form start */}
             <form onSubmit={submitHandler}>
               <div className="modal-body">
-
                 <input
                   className="form-control"
                   type="text"
@@ -317,7 +316,11 @@ function Admin() {
                 </div>
               </div>
               <div className="modal-footer">
-                <input type="submit" value="Add Teacher" className="btn btn-primary" />
+                <input
+                  type="submit"
+                  value="Add Teacher"
+                  className="btn btn-primary"
+                />
 
                 {/* <button
                   type="button"
@@ -336,27 +339,33 @@ function Admin() {
                 >
                   Add
                 </button> */}
-
               </div>
             </form>
-
           </div>
         </div>
-      </div >
-
+      </div>
+      {/* ----------------------------------------------------------------------------------------------------- */}
       <div className="container py-4">
         <div className="pagecontent">
           <h2>Status</h2>
-          <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit</p>
+          {/* <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit</p> */}
           <hr className="mt-0 mb-4" />
           <div className="row justify-content-around row-cols-4 text-center gy-5">
-            {/* Add Teacher Card */}
-            <div className="card bg-primary text-white h-100" style={{ width: '18rem' }}>
+            {/*Top Add Teacher Card */}
+            <div
+              className="card bg-primary text-white h-100"
+              style={{ width: "18rem" }}
+            >
               <div className="card-body">
                 <p className="fw-semibold fs-5">Add Teacher</p>
                 <p className="fw-normal fs-6">{teachers.length}</p>
               </div>
-              <div className="card-footer d-flex" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+              <div
+                className="card-footer d-flex"
+                type="button"
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModal"
+              >
                 Add
                 <span className="ms-auto">
                   <BsChevronRight />
@@ -366,10 +375,10 @@ function Admin() {
           </div>
         </div>
       </div>
-
+      {/* ----------------------------------------------------------------------------------------------------- */}
       <div className="container py-4">
         <h2>All Teachers</h2>
-        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit</p>
+        {/* <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit</p> */}
         <hr className="mt-0 mb-4" />
         <table className="table table-hover me-5">
           <thead>
@@ -386,12 +395,12 @@ function Admin() {
               <tr key={index}>
                 <th scope="row">{index + 1}</th>
                 <td>{teacher.name}</td>
-                <td>{teacher.subject.join(', ')}</td>
+                <td>{teacher.subject.join(", ")}</td>
                 <td>{teacher.department}</td>
                 <td>
                   {/* <button
                     className="bg-success text-white rounded p-2 border-0 me-2"
-                    onClick={() => handleEditTeacher(index)}
+                    onClick={() => handleEditTeacher(teacher._id, index)}
                   >
                     <i className="fa-solid fa-pen-to-square"></i>
                   </button> */}
@@ -405,43 +414,47 @@ function Admin() {
               </tr>
             ))}
           </tbody>
-
         </table>
       </div>
-
+      {/* ----------------------------------------------------------------------------------------------------- */}
       <div className="container py-4">
         <div className="teacher">
           <h2>Students</h2>
           <p>List of students</p>
-          <hr className='mt-0 mb-4' />
+          <hr className="mt-0 mb-4" />
           <div className="row justify-content-center">
             {students.map((student, index) => (
               <div className="col-3 mb-4" key={student._id}>
                 {/* Render student information */}
-                <div className="card" style={{ width: '18rem' }}>
+                <div className="card" style={{ width: "18rem" }}>
                   <div className="card-body">
-                    <img src="https://static.vecteezy.com/system/resources/previews/001/942/923/large_2x/student-boy-with-school-suitcase-back-to-school-free-vector.jpg" className="card-img-top" alt="..." style={{ height: '256px' }} />
+                    <img
+                      src="https://static.vecteezy.com/system/resources/previews/001/942/923/large_2x/student-boy-with-school-suitcase-back-to-school-free-vector.jpg"
+                      className="card-img-top"
+                      alt="..."
+                      style={{ height: "256px" }}
+                    />
                     <h5 className="card-title">Name={student.name}</h5>
                     <p className="card-text">Department={student.department}</p>
                     <p className="card-text">Email={student.email}</p>
-                    <div className='d-flex justify-content-around'>
+                    <div className="d-flex justify-content-around">
                       <button
-                        className='bg-success text-white rounded p-2 border-0'
+                        className="bg-success text-white rounded p-2 border-0"
                         onClick={() => {
                           // console.log(student._id) // Approve the student
                           handleApproveReject(student._id);
                           approveStudent(student._id);
-                          toast.success('Student Approved')
+                          toast.success("Student Approved");
                         }}
                       >
                         Approve
                       </button>
                       <button
-                        className='bg-danger text-white rounded p-2 border-0'
+                        className="bg-danger text-white rounded p-2 border-0"
                         onClick={() => {
                           handleApproveReject(student._id);
                           deleteStudent(student._id); // Delete the student
-                          toast.info('Student Rejected')
+                          toast.info("Student Rejected");
                         }}
                       >
                         Reject
@@ -453,7 +466,7 @@ function Admin() {
             ))}
           </div>
         </div>
-      </div >
+      </div>
     </>
   );
 }
