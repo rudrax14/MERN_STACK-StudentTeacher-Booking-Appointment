@@ -7,22 +7,26 @@ const appointmentSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    sendTo:{
-        type:String,
-        required:true,
-    },
-    reason:{
-        type:String,
-        required:true
-    },
+    
+    
     scheduleAt:{
         type:Date,
         required:true,
     },
-    status:{
-        type:Boolean,
-        default:false
-    }
+    students:[
+        {
+            studentId:{
+                type:mongoose.Schema.ObjectId,
+                unique:true,
+                ref:"User"
+                
+            },
+            approved:{
+                type:Boolean,
+                default:false
+            }
+        }
+    ]
 
     
     
@@ -30,7 +34,7 @@ const appointmentSchema = new mongoose.Schema({
 
 })
 
-appointmentSchema.index({sendBy:1,sendTo:1,scheduleAt:1},{unique:true});
+appointmentSchema.index({sendBy:1,scheduleAt:1},{unique:true});
 
 
    

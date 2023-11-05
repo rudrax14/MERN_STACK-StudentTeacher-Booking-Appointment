@@ -8,14 +8,14 @@ const sendEmail = require('../utils/sendEmail');
 // Helper function to check if two appointment times clash
 const checkTimeClash = (time1, time2) => {
     const timeDiff = Math.abs(new Date(time1) - new Date(time2));
-    return timeDiff <= 1800000; // 30 minutes in milliseconds
+    return timeDiff <= 7200000; // 120 minutes in milliseconds
 };
 
 // Helper function to retrieve appointments for a user within a specific date range
 const getUserAppointments = async (email, startDate, endDate) => {
     return await Appointment.find({
-        $or: [{ sendBy: email }, { sendTo: email }],
-        status: true,
+        sendBy: email ,
+        
         scheduleAt: { $gte: startDate, $lt: endDate }
     });
 };
@@ -25,7 +25,7 @@ exports.getAllAppointments = catchAsync(async (req, res) => {
     res.status(200).json({ appointments });
 });
 
-exports.createAppointment = catchAsync(async (req, res, next) => {
+/* exports.createAppointment = catchAsync(async (req, res, next) => {
     const { sendBy, sendTo, reason } = req.body;
     const scheduleAt = new Date(2022, 10, 10, 2, 45, 20).toString(); // Replace with your desired date/time
 
@@ -54,17 +54,50 @@ exports.createAppointment = catchAsync(async (req, res, next) => {
         status: 'SUCCESS',
         data: { appointment: newAppointment }
     });
+}); */
+
+exports.createAppointment = catchAsync(async (req, res, next) => {
+    console.log("Hi")
+    const sendBy = req.user.email;
+    console.log(sendBy)
+    const scheduleAt = new Date(2022, 10, 10, 2, 0, 0).toString(); // Replace with your desired date/time
+
+    const teacherAppointments = await getUserAppointments(sendBy, new Date(2022, 10, 10), new Date(2022, 10, 11));
+    if (teacherAppointments.length >= 3) {
+        return next(new AppError("Your schedule is packed"));
+    }
+
+    const newAppointment = await Appointment.create({sendBy,scheduleAt})
+    await User.findOneAndUpdate({_id:req.user.id},{$push:{appointments:newAppointment._id}})
+    res.status(200).json({
+        newAppointment
+    })
+
 });
 
 exports.approveAppointment = catchAsync(async (req, res) => {
-    await Appointment.findByIdAndUpdate(req.params.id, { status: true });
+   const student =  await Appointment.findOneAndUpdate({_id:req.params.id,"students.studentId":req.params.studentId},{
+    $set: {
+      'students.$.approved': true // Set the 'approved' field to true for the matched student
+    }});
+   
     res.status(200).json({ message: "Approved" });
 });
 
+exports.dissapproveAppointment = catchAsync(async (req,res)=>{
+    const student =  await Appointment.findOneAndUpdate({_id:req.params.id},{
+        $pull: {
+          'students':{'studentId': req.params.studentId }
+        }});
+       
+        res.status(200).json({ message: "Student rejected" });
+});
+
 exports.deleteAppointment = catchAsync(async (req, res) => {
-    const appointment = await Appointment.findByIdAndDelete(req.params.id);
+    await Appointment.findByIdAndDelete(req.params.id);
+    await User.findByIdAndUpdate(req.user.id,{$pull:{'appointments':req.params.id}})
     const message = `Appointment has been cancelled`;
-    await sendEmail(appointment.sendBy, req.body.mail, "Appointment Booking", message);
+    //await sendEmail(appointment.sendBy, req.body.mail, "Appointment Booking", message);
     res.status(200).json({ status: "SUCCESS", message: "Appointment deleted" });
 });
 
