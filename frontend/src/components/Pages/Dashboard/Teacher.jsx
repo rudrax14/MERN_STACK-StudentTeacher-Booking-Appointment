@@ -284,7 +284,7 @@ function Teacher() {
       <div className="container py-4">
         <div className="pagecontent">
           <h2>Status</h2>
-          <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit</p>
+          {/* <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit</p> */}
           <hr className="mt-0 mb-4" />
           <div className="row justify-content-around row-cols-4 text-center gy-5">
             <div
@@ -359,7 +359,7 @@ function Teacher() {
 
       <div className="container py-4">
         <h2>Your All Upcoming Appointment Details</h2>
-        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit</p>
+        {/* <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit</p> */}
         <hr className="mt-0 mb-4" />
         <table className="table table-hover me-5">
           <thead>

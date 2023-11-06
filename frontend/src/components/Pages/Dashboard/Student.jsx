@@ -182,7 +182,7 @@ function Student() {
       const jwtToken = localStorage.getItem("Student jwtToken");
       console.log(jwtToken);
       const response = await axios.patch(
-        `http://localhost:5000/api/v1/student/appointment/${appointmentId}`,
+        `http://localhost:5000/api/v1/student/appointment/${appointmentId}`,{},
         {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
