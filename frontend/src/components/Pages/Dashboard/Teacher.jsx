@@ -133,18 +133,29 @@ function Teacher() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     console.log("Time Slot = ", selectedTimeSlot);
-    // try {
-    //   const response = await axios.post('http://localhost:5000/api/v1/teachers/scheduleappointment', {
-    //     teacherId: 'YOUR_TEACHER_ID',
-    //     timeSlot: selectedTimeSlot
-    //   });
 
-    //   // Handle the response from the server if needed
-    //   console.log('Appointment scheduled successfully:', response.data);
-    // } catch (error) {
-    //   // Handle any errors that occur during the request
-    //   console.error('Error scheduling appointment:', error);
-    // }
+    // Get the JWT token from local storage
+    try {
+      const jwtToken = localStorage.getItem("Teachers jwtToken");
+      const response = await axios.post(
+        "http://localhost:5000/api/v1/teachers/schedule",
+        {
+          // teacherId: "YOUR_TEACHER_ID",
+          timeSlot: selectedTimeSlot,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        }
+      );
+
+      // Handle the response from the server if needed
+      toast.success("Appointment scheduled successfully:");
+    } catch (error) {
+      // Handle any errors that occur during the request
+      console.error("Error scheduling appointment:", error);
+    }
   };
 
   return (
@@ -184,30 +195,33 @@ function Teacher() {
                   <div className="mt-1">
                     <button
                       type="button"
-                      className={`btn  ${highlightedTimeSlot === "2pm-4pm"
-                        ? "btn-primary"
-                        : "btn-outline-secondary"
-                        }`}
+                      className={`btn  ${
+                        highlightedTimeSlot === "2pm-4pm"
+                          ? "btn-primary"
+                          : "btn-outline-secondary"
+                      }`}
                       onClick={() => handleTimeSlotSelect("2pm-4pm")}
                     >
                       2pm-4pm
                     </button>
                     <button
                       type="button"
-                      className={`btn ms-2 ${highlightedTimeSlot === "5pm-6pm"
-                        ? "btn-primary"
-                        : "btn-outline-secondary"
-                        }`}
+                      className={`btn ms-2 ${
+                        highlightedTimeSlot === "5pm-6pm"
+                          ? "btn-primary"
+                          : "btn-outline-secondary"
+                      }`}
                       onClick={() => handleTimeSlotSelect("5pm-6pm")}
                     >
                       5pm-6pm
                     </button>
                     <button
                       type="button"
-                      className={`btn ms-2 ${highlightedTimeSlot === "7pm-8pm"
-                        ? "btn-primary"
-                        : "btn-outline-secondary"
-                        }`}
+                      className={`btn ms-2 ${
+                        highlightedTimeSlot === "7pm-8pm"
+                          ? "btn-primary"
+                          : "btn-outline-secondary"
+                      }`}
                       onClick={() => handleTimeSlotSelect("7pm-8pm")}
                     >
                       7pm-8pm
@@ -413,7 +427,7 @@ function Teacher() {
                       className="bg-danger text-white rounded p-2 border-0"
                       onClick={() => {
                         handleReject(card._id);
-                        toast.info("Removed")
+                        toast.info("Removed");
                       }}
                     >
                       Reject

@@ -1,10 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
-import Navbar from '../../UI/Navbar';
+import React, { useState, useRef, useEffect } from "react";
+import Navbar from "../../UI/Navbar";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 // import { BsChevronRight } from 'react-icons/bs';
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 // import teachersData from '../../../../data.json';
-import axios from 'axios';
+import axios from "axios";
 function Student() {
   const navigate = useNavigate();
   const [selectedTeacher, setSelectedTeacher] = useState(null);
@@ -12,14 +12,14 @@ function Student() {
   // const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
   const [lectureDetails, setLectureDetails] = useState([]);
   // const [searchParams, setSearchParams] = useSearchParams();
-  const [email, setEmail] = useState('');
-  const [teacherEmail, setTeacherEmail] = useState('')
+  const [email, setEmail] = useState("");
+  const [teacherEmail, setTeacherEmail] = useState("");
 
   // data coming
   // const [teachers, setTeachers] = useState(teachersData.teachers);
   const [teachers, setTeachers] = useState([]);
   useEffect(() => {
-    const emailAdd = localStorage.getItem('email');
+    const emailAdd = localStorage.getItem("email");
     setEmail(emailAdd);
     console.log(emailAdd);
     // console.log(email)
@@ -30,23 +30,26 @@ function Student() {
     // setSearchParams("")
     const fetchData = async () => {
       try {
-        const jwtToken = localStorage.getItem('Student jwtToken');
+        const jwtToken = localStorage.getItem("Student jwtToken");
         if (jwtToken == null) {
           navigate("/student/login");
         } else {
           // Make an HTTP request to fetch data from the API using Axios
-          const response = await axios.get('http://localhost:5000/api/v1/admin', {
-            headers: {
-              Authorization: `Bearer ${jwtToken}`,
+          const response = await axios.get(
+            "http://localhost:5000/api/v1/admin",
+            {
+              headers: {
+                Authorization: `Bearer ${jwtToken}`,
+              },
             }
-          });
+          );
           // Update the state with the fetched data
           // console.log(response.data.data.users);
           setTeachers(response.data.data.users);
           console.log(response.data.data.users);
         }
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
 
@@ -56,18 +59,6 @@ function Student() {
   // useEffect(() => {
 
   // })
-
-
-
-
-
-
-
-
-
-
-
-
 
   const modalRef = useRef();
 
@@ -99,7 +90,7 @@ function Student() {
         prevTeachers.filter((teacher) => teacher.name !== selectedTeacher)
       );
 
-      toast.success('Lecture booked successfully');
+      toast.success("Lecture booked successfully");
 
       // Reset selections
       setSelectedTeacher(null);
@@ -108,13 +99,12 @@ function Student() {
 
       setIsModalOpen(false); // Close the modal
     } else {
-      toast.success('Please select a time slot.');
+      toast.success("Please select a time slot.");
     }
   };
 
-
   const [formData, setFormData] = useState({
-    message: '',
+    message: "",
   });
 
   function changeHandler(event) {
@@ -136,9 +126,10 @@ function Student() {
 
   // }
 
+
   async function submitHandler(event) {
     event.preventDefault();
-    console.log('Message Data');
+    console.log("Message Data");
     console.log(formData);
 
     // Create the message object
@@ -152,35 +143,60 @@ function Student() {
 
     try {
       // Send a POST request to the specified URL
-      const jwtToken = localStorage.getItem('Student jwtToken');
-      const response = await fetch('http://localhost:5000/api/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${jwtToken}`,
-        },
-        body: JSON.stringify(messageObject), // Convert the message object to a JSON string
-      });
+      const jwtToken = localStorage.getItem("Student jwtToken");
+      const response = await axios.post(
+        "http://localhost:5000/api/v1/messages",
+        messageObject,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        }
+      );
 
-      if (response.ok) {
+      if (response.status === 200) {
         // Handle a successful response, if needed
         // console.log('Message sent successfully.');
-        toast.success('Message sent successfully')
+        toast.success("Message sent successfully");
       } else {
         // Handle an error response, if needed
         // console.error('Failed to send the message.');
-        toast.error('Failed to send the message')
+        toast.error("Failed to send the message");
       }
     } catch (error) {
       // Handle any network or fetch-related errors
-      console.error('An error occurred:', error);
+      console.error("An error occurred:", error);
     }
 
     // Reset the form data
-    setFormData({ message: '' });
+    setFormData({ message: "" });
 
     console.log(teacherEmail);
   }
+
+  // book appoinments
+  const handleBookAppointment = async (appointmentId) => {
+    console.log(appointmentId);
+    try {
+      const jwtToken = localStorage.getItem("Student jwtToken");
+      console.log(jwtToken);
+      const response = await axios.patch(
+        `http://localhost:5000/api/v1/student/appointment/${appointmentId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        }
+      );
+
+      console.log("Appointment booked successfully:", response.data);
+      // Handle any further actions if needed
+    } catch (error) {
+      console.error("Error booking appointment:", error);
+    }
+  };
+
   return (
     <>
       {/* <Navbar /> */}
@@ -279,7 +295,6 @@ function Student() {
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title">Message Modal</h5>
-
             </div>
             <form action="" onSubmit={submitHandler}>
               <div className="modal-body">
@@ -293,13 +308,22 @@ function Student() {
                 />
               </div>
               <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
                   Close
                 </button>
                 {/* <button type="button" className="btn btn-primary" data-bs-dismiss="modal">
                   Send Message
                 </button> */}
-                <input type="submit" value="Send Message" className="btn btn-primary" data-bs-dismiss="modal" />
+                <input
+                  type="submit"
+                  value="Send Message"
+                  className="btn btn-primary"
+                  data-bs-dismiss="modal"
+                />
               </div>
             </form>
           </div>
@@ -308,14 +332,14 @@ function Student() {
       {/* header */}
       <div className="header-container shadow p-3 mb-5 bg-primary text-white">
         <div className="container d-flex justify-content-center">
-          <p className='fs-1'>Student Dashboard</p>
+          <p className="fs-1">Student Dashboard</p>
         </div>
       </div>
 
       {/* info table */}
       <div className="container py-4">
         <h2>Your Upcoming Lectures Details</h2>
-        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit</p>
+        {/* <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit</p> */}
         <hr className="mt-0 mb-4" />
         <table className="table table-hover">
           <thead>
@@ -347,67 +371,64 @@ function Student() {
       <div className="container py-4">
         <div className="pagecontent">
           <h2>All teachers</h2>
-          <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit</p>
+          {/* <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit</p> */}
           <hr className="mt-0 mb-4" />
           <div
             className="d-flex flex-wrap justify-content-center"
-            style={{ gap: '1rem' }}
+            style={{ gap: "1rem" }}
           >
             {teachers.map((teacher, index) => (
-              <div className="card" style={{ width: '18rem' }} key={index}>
+              <div className="card" style={{ width: "18rem" }} key={index}>
                 <img
                   src="https://static.vecteezy.com/system/resources/previews/002/406/452/non_2x/female-teacher-teaching-a-lesson-at-the-school-free-vector.jpg"
                   className="card-img-top"
                   alt="..."
-                  style={{ height: '256px' }}
+                  style={{ height: "256px" }}
                 />
                 <div className="card-body">
-                  <h5
-                    className="card-title mb-3"
-                  // onClick={() =>
-                  //   handleTeacherClick(teacher.name, teacher.subject)
-                  // }
-                  >
-                    Name = {teacher.name}
-                  </h5>
-                  <p className="card-text">Subject = {teacher.subject}</p>
-                  <p className="card-text">Appointment Time = {teacher.appointments}</p>
-                  <p className="card-text">Email = {teacher.email}</p>
-                  <div className="d-flex justify-content-around">
-                    <button
-                      className="bg-primary text-white rounded p-2 border-0"
-                      // data-bs-toggle="modal"
-                      // data-bs-target="#exampleModal"
-                      // onClick={() =>
-                      //   handleTeacherClick(teacher.name, teacher.subject)
-                      // }
-                      onClick={() =>
-                        handleTeacherClick(teacher.name, teacher.subject)
-                      }
-                    >
-                      Book Lectures
-                    </button>
-                    <button
-                      className="bg-primary text-white rounded p-2 border-0"
-                      type="button"
-                      data-bs-toggle="modal"
-                      data-bs-target="#messageModal"
-                      onClick={() => (setTeacherEmail(teacher.email))
-                      }
-                    >
-                      Message
-                    </button>
-                  </div>
+                  <h5 className="card-title mb-3">Name: {teacher.name}</h5>
+                  <p className="card-text">Subject: {teacher.subject}</p>
+                  <p className="card-text">Email: {teacher.email}</p>
+                  {/* Display scheduleAt for each appointment */}
+                  {teacher.appointments.map((appointment, appointmentIndex) => (
+                    <div key={appointmentIndex}>
+                      <p>
+                        Timing:{" "}
+                        {new Date(appointment.scheduleAt).toLocaleTimeString(
+                          [],
+                          {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          }
+                        )}
+                      </p>
+                      <div className="d-flex justify-content-around">
+                        <button
+                          className="bg-primary text-white rounded p-2 border-0"
+                          onClick={() => handleBookAppointment(appointment._id)}
+                        >
+                          Book Appointment
+                        </button>
+                        <button
+                          className="bg-primary text-white rounded p-2 border-0"
+                          type="button"
+                          data-bs-toggle="modal"
+                          data-bs-target="#messageModal"
+                          onClick={() => setTeacherEmail(teacher.email)}
+                        >
+                          Message
+                        </button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             ))}
           </div>
         </div>
       </div>
-
     </>
   );
 }
 
 export default Student;
-
