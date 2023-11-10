@@ -5,6 +5,13 @@ const catchAsync = require('../utils/catchAsync');
 const sendEmail = require('../utils/sendEmail');
 const { signToken } = require('./authController');
 
+
+const getTeacherWithAppointments = async (id) => {
+    return await Appointment.find({
+       "students.studentId":{'$not':{'$eq':[id]}}    
+    });
+};
+
 exports.register = catchAsync(
     async (req, res, next) => {
         const user = {
@@ -55,5 +62,14 @@ exports.bookAppointment = catchAsync(async (req, res, next) => {
         data: {
             newAppointment
         }
+    })
+})
+
+
+exports.getTeacherWithAppointments = catchAsync(async (req,res,next)=>{
+    const appointments = await getTeacherWithAppointments(req.user.id);
+    res.status(200).json({
+        status:'Success',
+        appointments
     })
 })

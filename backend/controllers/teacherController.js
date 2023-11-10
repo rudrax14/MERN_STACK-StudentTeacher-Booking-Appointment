@@ -20,52 +20,29 @@ const getUserAppointments = async (email, startDate, endDate) => {
     });
 };
 
+exports.getAllPendingStudents = catchAsync(async (req,res,next)=>{
+    const students =  await Appointment.find({sendBy:req.user.email,"students.approved":false}).populate({path:"students.studentId",select:"_id name department"}).select("-_id  -students.approved -students._id -sendBy");
+   
+    res.status(200).json({
+        status:"Success",
+        students
+    })
+})
+
 exports.getAllAppointments = catchAsync(async (req, res) => {
     const appointments = await getUserAppointments(req.user.email, new Date(), new Date(9999, 11, 31));
     res.status(200).json({ appointments });
 });
 
-/* exports.createAppointment = catchAsync(async (req, res, next) => {
-    const { sendBy, sendTo, reason } = req.body;
-    const scheduleAt = new Date(2022, 10, 10, 2, 45, 20).toString(); // Replace with your desired date/time
 
-    const teacherAppointments = await getUserAppointments(req.user.email, new Date(2022, 10, 10), new Date(2022, 10, 11));
-    const studentAppointments = await getUserAppointments(req.body.sendTo, new Date(2022, 10, 10), new Date(2022, 10, 11));
-
-    if (teacherAppointments.length >= 3) {
-        return next(new AppError("Your schedule is packed"));
-    }
-    if (studentAppointments.length > 0) {
-        return next(new AppError("Student's schedule is packed"));
-    }
-
-    const newAppointment = await Appointment.create({
-        sendBy,
-        sendTo,
-        reason,
-        scheduleAt,
-        status: true
-    });
-
-    const message = `Appointment has been scheduled at ${newAppointment.scheduleAt}. Reason: ${newAppointment.reason}`;
-
-    await sendEmail(sendBy, sendTo, "Appointment Booking", message);
-    res.status(200).json({
-        status: 'SUCCESS',
-        data: { appointment: newAppointment }
-    });
-}); */
 
 exports.createAppointment = catchAsync(async (req, res, next) => {
-    console.log("Hi")
+   
     const sendBy = req.user.email;
     console.log(sendBy)
-    const scheduleAt = new Date(2022, 10, 10, 14, 0, 0).toString(); // Replace with your desired date/time
-
-    const teacherAppointments = await getUserAppointments(sendBy, new Date(2022, 10, 10), new Date(2022, 10, 11));
-    if (teacherAppointments.length >= 3) {
-        return next(new AppError("Your schedule is packed"));
-    }
+    //const scheduleAt = new Date(2022, 10, 10, 14, 0, 0).toString(); // Replace with your desired date/time
+    const scheduleAt = req.body.scheduleAt;
+    
 
     const newAppointment = await Appointment.create({ sendBy, scheduleAt })
     await User.findOneAndUpdate({ _id: req.user.id }, { $push: { appointments: newAppointment._id } })

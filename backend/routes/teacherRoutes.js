@@ -1,7 +1,7 @@
 const { setRole, allow } = require("../controllers/adminController")
 const { login, updatePassword, verifyToken } = require("../controllers/authController")
 const express = require('express')
-const { createAppointment, deleteAppointment, getAllAppointments, getAllStudents, approveAppointment, dissapproveAppointment } = require("../controllers/teacherController")
+const { createAppointment, deleteAppointment, getAllAppointments, getAllStudents, approveAppointment, dissapproveAppointment, getAllPendingStudents } = require("../controllers/teacherController")
 const router = express.Router()
 
 router.route('/').get(getAllStudents);
@@ -14,4 +14,5 @@ router.route('/reschedule/:id').delete(verifyToken,allow('teacher'),deleteAppoin
 
 router.route('/changeApprovalStatus/:id/:studentId').delete(verifyToken, allow('admin', 'teacher'), dissapproveAppointment).patch(verifyToken,allow('admin','teacher'),approveAppointment)
 
+router.route('/getAllPendingStudents').get(verifyToken,allow('teacher'),getAllPendingStudents);
 module.exports = router

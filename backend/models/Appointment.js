@@ -17,8 +17,7 @@ const appointmentSchema = new mongoose.Schema({
         {
             studentId: {
                 type: mongoose.Schema.ObjectId,
-                // // unique: false,
-                // required: false,
+                
                 ref: "User"
 
             },
