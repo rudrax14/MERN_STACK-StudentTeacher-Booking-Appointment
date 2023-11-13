@@ -46,7 +46,7 @@ exports.bookAppointment = catchAsync(async (req, res, next) => {
     const appointment = {
         _id: req.params.id,
 
-        scheduleAt: req.body.scheduleAt,
+       
 
     }
     const existingStudent = await Appointment.findOne({"students.studentId":req.user.id})
@@ -55,7 +55,7 @@ exports.bookAppointment = catchAsync(async (req, res, next) => {
     }
     const newAppointment = await Appointment.findOneAndUpdate(appointment, { $push: { students: { studentId: req.user.id, approved: false } } })
 
-    const message = `I like to book an appointment on ${newAppointment.scheduleAt}. Reason:${newAppointment.reason}`
+    //const message = `I like to book an appointment on ${newAppointment.scheduleAt}. Reason:$//{newAppointment.reason}`
     //await sendEmail(req.body.sendBy,req.body.sendTo,"Appointment Booking",message) 
     res.status(200).json({
         status: 'SUCCESS',

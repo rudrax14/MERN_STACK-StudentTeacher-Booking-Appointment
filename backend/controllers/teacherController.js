@@ -5,6 +5,7 @@ const AppError = require("../utils/AppError");
 const catchAsync = require("../utils/catchAsync");
 const sendEmail = require('../utils/sendEmail');
 
+
 // Helper function to check if two appointment times clash
 const checkTimeClash = (time1, time2) => {
     const timeDiff = Math.abs(new Date(time1) - new Date(time2));
@@ -41,6 +42,7 @@ exports.createAppointment = catchAsync(async (req, res, next) => {
     const sendBy = req.user.email;
     console.log(sendBy)
     //const scheduleAt = new Date(2022, 10, 10, 14, 0, 0).toString(); // Replace with your desired date/time
+    
     const scheduleAt = req.body.scheduleAt;
     
 
