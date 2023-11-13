@@ -46,7 +46,7 @@ exports.bookAppointment = catchAsync(async (req, res, next) => {
     const appointment = {
         _id: req.params.id,
 
-        scheduleAt: new Date(2022, 10, 10, 2, 0, 0).toString(),
+        scheduleAt: req.body.scheduleAt,
 
     }
     const existingStudent = await Appointment.findOne({"students.studentId":req.user.id})
