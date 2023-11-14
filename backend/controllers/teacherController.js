@@ -22,7 +22,7 @@ const getUserAppointments = async (email, startDate, endDate) => {
 };
 
 exports.getAllPendingStudents = catchAsync(async (req,res,next)=>{
-    const students =  await Appointment.find({sendBy:req.user.email,"students.approved":false}).populate({path:"students.studentId",select:"_id name department"}).select("-_id  -students.approved -students._id -sendBy");
+    const students =  await Appointment.find({sendBy:req.user.email,"students.approved":false}).populate({path:"students.studentId",select:"_id name department email"}).select("-students.approved -students._id -sendBy");
    
     res.status(200).json({
         status:"Success",
@@ -40,13 +40,13 @@ exports.getAllAppointments = catchAsync(async (req, res) => {
 exports.createAppointment = catchAsync(async (req, res, next) => {
    
     const sendBy = req.user.email;
-    console.log(sendBy)
+    const name = req.user.name;
     //const scheduleAt = new Date(2022, 10, 10, 14, 0, 0).toString(); // Replace with your desired date/time
     
     const scheduleAt = req.body.scheduleAt;
     
 
-    const newAppointment = await Appointment.create({ sendBy, scheduleAt })
+    const newAppointment = await Appointment.create({ sendBy, name ,scheduleAt })
     await User.findOneAndUpdate({ _id: req.user.id }, { $push: { appointments: newAppointment._id } })
     res.status(200).json({
         newAppointment

@@ -24,7 +24,7 @@ exports.register = catchAsync(
         }
         const newUser = await User.create(user);
         newUser.password = undefined
-        const token = await signToken(newUser._id, newUser.roles)
+        const token = await signToken(user._id, user.roles, user.name ,user.email,user.admissionStatus);
         res.status(200).json({
             status: 'SUCCESS',
             message: "Student created",

@@ -10,8 +10,8 @@ const verifyPassword = async (candidatePassword, userPassword) => {
   return await bcrypt.compare(candidatePassword, userPassword);
 };
 
-const signToken = async (id, role, email,admissionStatus) => {
-  return await jwt.sign({ id, role, email,admissionStatus }, process.env.JWT_KEY, {
+const signToken = async (id, role, name ,email,admissionStatus) => {
+  return await jwt.sign({ id, role, name,email,admissionStatus }, process.env.JWT_KEY, {
     expiresIn: '90d'
   });
 };
@@ -37,7 +37,7 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError('Enter the correct password'));
   }
 
-  const token = await signToken(user._id, user.roles, user.email,user.admissionStatus);
+  const token = await signToken(user._id, user.roles, user.name ,user.email,user.admissionStatus);
   
   res.status(201).json({
     status: 'SUCCESS',
