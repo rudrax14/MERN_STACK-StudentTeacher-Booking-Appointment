@@ -13,6 +13,13 @@ function Teacher() {
   const [appointments, setAppointments] = useState([]);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState("");
   const [highlightedTimeSlot, setHighlightedTimeSlot] = useState("");
+  const getCurrentDate = () => {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+    const day = String(currentDate.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
   const [studentEmail, setStudentEmail] = useState("");
   // const handleReject = (cardId) => {
   //   setCards(cards.filter(card => card.id !== cardId));
@@ -26,45 +33,59 @@ function Teacher() {
     const fetchData = async () => {
       try {
         const jwtToken = localStorage.getItem("Teachers jwtToken");
-        //secure route
+        // secure route
         if (jwtToken == null) {
           navigate("/teacher/login");
         } else {
           const response = await axios.get(
-            "http://localhost:5000/api/v1/teachers?admissionStatus=true",
+            "http://localhost:5000/api/v1/teachers/getAllPendingStudents",
             {
               headers: {
                 Authorization: `Bearer ${jwtToken}`,
               },
             }
           );
+          // console.log(response.data.students);
           setCards(response.data.students);
+
           // Fetch message counts for all cards
           const counts = {};
           for (const card of response.data.students) {
-            const emailToFilter = card.email;
-            const response = await axios.get(
-              "http://localhost:5000/api/v1/messages",
-              {
-                headers: {
-                  Authorization: `Bearer ${jwtToken}`,
-                },
-                params: {
-                  email: emailToFilter,
-                },
+            for (const studentInfo of card.students) {
+              const emailToFilter =
+                studentInfo.studentId && studentInfo.studentId.email
+                  ? studentInfo.studentId.email
+                  : null;
+
+              if (emailToFilter) {
+                const messageResponse = await axios.get(
+                  "http://localhost:5000/api/v1/messages",
+                  {
+                    headers: {
+                      Authorization: `Bearer ${jwtToken}`,
+                    },
+                    params: {
+                      email: emailToFilter,
+                    },
+                  }
+                );
+
+                if (messageResponse.status === 200) {
+                  const data = messageResponse.data;
+                  counts[emailToFilter] = data.messages.length;
+                }
               }
-            );
-            if (response.status === 200) {
-              const data = response.data;
-              counts[card.email] = data.messages.length;
             }
           }
+
+          // console.log(counts);
           setMessageCounts(counts);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
+
     fetchData();
   }, []);
 
@@ -84,7 +105,7 @@ function Teacher() {
           },
         }
       );
-
+      console.log(response.data);
       if (response.status === 200) {
         const data = response.data;
         setMessages(data.messages);
@@ -101,9 +122,66 @@ function Teacher() {
     }
   };
 
-  const handleReject = (cardId) => {
-    setCards(cards.filter((card) => card._id !== cardId));
+  const handleStudentApprove = async (studentId, teacherAppointmentId) => {
+    try {
+      const jwtToken = localStorage.getItem("Teachers jwtToken");
+
+      const url = `http://localhost:5000/api/v1/teachers/changeApprovalStatus/${teacherAppointmentId}/${studentId}`;
+
+      const headers = {
+        Authorization: `Bearer ${jwtToken}`,
+      };
+
+      const response = await axios.patch(url, null, { headers });
+
+      console.log("Approval status changed successfully:", response.data);
+
+      setCards((prevCards) => {
+        const updatedCards = prevCards.map((schedule) => {
+          return {
+            ...schedule,
+            students: schedule.students.filter(
+              (student) => student.studentId._id !== studentId
+            ),
+          };
+        });
+
+        return updatedCards;
+      });
+    } catch (error) {
+      console.error("Error changing approval status:", error.message);
+    }
   };
+  const handleStudentReject = async (studentId, teacherAppointmentId) => {
+    try {
+      const jwtToken = localStorage.getItem("Teachers jwtToken");
+      const url = `http://localhost:5000/api/v1/teachers/changeApprovalStatus/${teacherAppointmentId}/${studentId}`;
+      const headers = {
+        Authorization: `Bearer ${jwtToken}`,
+      };
+
+      const response = await axios.delete(url, { headers });
+
+      console.log("Student rejected:", response.data);
+      setCards((prevCards) => {
+        const updatedCards = prevCards.map((schedule) => {
+          return {
+            ...schedule,
+            students: schedule.students.filter(
+              (student) => student.studentId._id !== studentId
+            ),
+          };
+        });
+        return updatedCards;
+      });
+    } catch (error) {
+      console.error("Error changing approval status:", error.message);
+    }
+  };
+
+  // const handleReject = (cardId) => {
+  //   setCards(cards.filter((card) => card._id !== cardId));
+  // };
 
   const handleApprove = (card) => {
     const currentDate = new Date().toLocaleDateString();
@@ -134,14 +212,12 @@ function Teacher() {
     event.preventDefault();
     console.log("Time Slot = ", selectedTimeSlot);
 
-    // Get the JWT token from local storage
     try {
       const jwtToken = localStorage.getItem("Teachers jwtToken");
       const response = await axios.post(
         "http://localhost:5000/api/v1/teachers/schedule",
         {
-          // teacherId: "YOUR_TEACHER_ID",
-          timeSlot: selectedTimeSlot,
+          scheduleAt: selectedTimeSlot,
         },
         {
           headers: {
@@ -150,11 +226,10 @@ function Teacher() {
         }
       );
 
-      // Handle the response from the server if needed
       toast.success("Appointment scheduled successfully:");
     } catch (error) {
-      // Handle any errors that occur during the request
       console.error("Error scheduling appointment:", error);
+      toast.error("Already Booked");
     }
   };
 
@@ -196,33 +271,39 @@ function Teacher() {
                     <button
                       type="button"
                       className={`btn  ${
-                        highlightedTimeSlot === "2pm-4pm"
+                        highlightedTimeSlot === `${getCurrentDate()}T22:30:00`
                           ? "btn-primary"
                           : "btn-outline-secondary"
                       }`}
-                      onClick={() => handleTimeSlotSelect("2pm-4pm")}
+                      onClick={() =>
+                        handleTimeSlotSelect(`${getCurrentDate()}T22:30:00`)
+                      }
                     >
                       2pm-4pm
                     </button>
                     <button
                       type="button"
-                      className={`btn ms-2 ${
-                        highlightedTimeSlot === "5pm-6pm"
+                      className={`btn  ${
+                        highlightedTimeSlot === `${getCurrentDate()}T20:30:00`
                           ? "btn-primary"
                           : "btn-outline-secondary"
                       }`}
-                      onClick={() => handleTimeSlotSelect("5pm-6pm")}
+                      onClick={() =>
+                        handleTimeSlotSelect(`${getCurrentDate()}T20:30:00`)
+                      }
                     >
                       5pm-6pm
                     </button>
                     <button
                       type="button"
-                      className={`btn ms-2 ${
-                        highlightedTimeSlot === "7pm-8pm"
+                      className={`btn  ${
+                        highlightedTimeSlot === `${getCurrentDate()}T12:30:00`
                           ? "btn-primary"
                           : "btn-outline-secondary"
                       }`}
-                      onClick={() => handleTimeSlotSelect("7pm-8pm")}
+                      onClick={() =>
+                        handleTimeSlotSelect(`${getCurrentDate()}T12:30:00`)
+                      }
                     >
                       7pm-8pm
                     </button>
@@ -393,65 +474,103 @@ function Teacher() {
       <div className="container py-4">
         <div className="pagecontent">
           <h2>Approve/cancel Appointment</h2>
-          <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit</p>
+          {/* <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit</p> */}
           <hr className="mt-0 mb-4" />
-          <div className="d-flex flex-wrap justify-content-center">
-            {cards.map((card) => (
+          <div
+            className="d-flex flex-wrap justify-content-center"
+            style={{ gap: "1rem" }}
+          >
+            {cards.map((schedule) => (
               <div
-                className="card m-3"
-                key={card._id}
-                style={{ width: "18rem" }}
+                key={schedule.scheduleAt}
+                className="schedule-container d-flex flex-wrap justify-content-center"
               >
-                <img
-                  src="https://static.vecteezy.com/system/resources/previews/001/942/923/large_2x/student-boy-with-school-suitcase-back-to-school-free-vector.jpg"
-                  className="card-img-top"
-                  alt="..."
-                  style={{ height: "256px" }}
-                />
-                <div className="card-body">
-                  <h5 className="card-title">{card.name}</h5>
-                  <p className="card-text">{card.subject}</p>
-                  <p className="card-text">{card.email}</p>
-                  <p className="card-text">Time Slot - {card.time}</p>
-                  <div className="d-flex justify-content-around">
-                    <button
-                      className="bg-success text-white rounded p-2 border-0"
-                      onClick={() => {
-                        handleApprove(card);
-                        toast.success("Added");
-                      }}
+                {schedule.students.map((studentInfo) => {
+                  const {
+                    _id: teacherAppointmentId,
+                    name: teacherName,
+                    scheduleAt,
+                  } = schedule;
+                  const {
+                    _id: studentId,
+                    name,
+                    department,
+                    email,
+                  } = studentInfo.studentId;
+
+                  return (
+                    <div
+                      key={studentId}
+                      className="card m-3"
+                      style={{ width: "18rem" }}
                     >
-                      Approve
-                    </button>
-                    <button
-                      className="bg-danger text-white rounded p-2 border-0"
-                      onClick={() => {
-                        handleReject(card._id);
-                        toast.info("Removed");
-                      }}
-                    >
-                      Reject
-                    </button>
-                    <button
-                      type="button"
-                      className="btn btn-primary position-relative"
-                      data-bs-toggle="modal"
-                      data-bs-target="#messageModal"
-                      onClick={() => {
-                        setStudentEmail(card.email);
-                        setMessages([]); // Clear existing messages
-                        fetchMessages(card.email);
-                      }}
-                    >
-                      Inbox
-                      <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        {messageCounts[card.email] || 0}{" "}
-                        {/* Display the message count for this card */}
-                        <span className="visually-hidden">unread messages</span>
-                      </span>
-                    </button>
-                  </div>
-                </div>
+                      <img
+                        src="https://static.vecteezy.com/system/resources/previews/001/942/923/large_2x/student-boy-with-school-suitcase-back-to-school-free-vector.jpg"
+                        className="card-img-top"
+                        alt="..."
+                        style={{ height: "256px" }}
+                      />
+                      <div className="card-body">
+                        <h5 className="card-title">{name}</h5>
+                        <p className="card-text">Department: {department}</p>
+                        <p>
+                          Timing:{" "}
+                          {new Date(scheduleAt).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </p>
+                        {/* <p className="card-text">ID: {studentId}</p> */}
+                        {/* <p className="card-title">{teacherAppointmentId}</p> */}
+                        <div className="d-flex justify-content-around">
+                          <button
+                            className="bg-success text-white rounded p-2 border-0"
+                            onClick={() => {
+                              handleStudentApprove(
+                                studentId,
+                                teacherAppointmentId
+                              );
+                              toast.success("Added");
+                            }}
+                          >
+                            Approve
+                          </button>
+                          <button
+                            className="bg-danger text-white rounded p-2 border-0"
+                            onClick={() => {
+                              handleStudentReject(
+                                studentId,
+                                teacherAppointmentId
+                              );
+                              // toast.info("Rejected");
+                            }}
+                          >
+                            Reject
+                          </button>
+                          <button
+                            type="button"
+                            className="btn btn-primary position-relative"
+                            data-bs-toggle="modal"
+                            data-bs-target="#messageModal"
+                            onClick={() => {
+                              setStudentEmail(email);
+                              setMessages([]); // Clear existing messages
+                              fetchMessages(email); // Assuming studentId is the student email
+                            }}
+                          >
+                            Inbox
+                            <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                              {messageCounts[email] || 0}
+                              <span className="visually-hidden">
+                                unread messages
+                              </span>
+                            </span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             ))}
           </div>

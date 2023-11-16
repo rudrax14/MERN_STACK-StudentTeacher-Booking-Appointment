@@ -45,8 +45,8 @@ function Student() {
           );
           // Update the state with the fetched data
           // console.log(response.data.data.users);
-          setTeachers(response.data.data.users);
           console.log(response.data.data.users);
+          setTeachers(response.data.data.users);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -126,7 +126,6 @@ function Student() {
 
   // }
 
-
   async function submitHandler(event) {
     event.preventDefault();
     console.log("Message Data");
@@ -182,18 +181,20 @@ function Student() {
       const jwtToken = localStorage.getItem("Student jwtToken");
       console.log(jwtToken);
       const response = await axios.patch(
-        `http://localhost:5000/api/v1/student/appointment/${appointmentId}`,{},
+        `http://localhost:5000/api/v1/student/appointment/${appointmentId}`,
+        {},
         {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
           },
         }
       );
-
+      toast.success("Appointment booked successfully");
       console.log("Appointment booked successfully:", response.data);
       // Handle any further actions if needed
     } catch (error) {
       console.error("Error booking appointment:", error);
+      toast.error("Already booked appointment");
     }
   };
 
@@ -402,26 +403,26 @@ function Student() {
                           }
                         )}
                       </p>
-                      <div className="d-flex justify-content-around">
+                      <div className="">
                         <button
                           className="bg-primary text-white rounded p-2 border-0"
                           onClick={() => handleBookAppointment(appointment._id)}
                         >
                           Book Appointment
                         </button>
-                        <button
-                          className="bg-primary text-white rounded p-2 border-0"
-                          type="button"
-                          data-bs-toggle="modal"
-                          data-bs-target="#messageModal"
-                          onClick={() => setTeacherEmail(teacher.email)}
-                        >
-                          Message
-                        </button>
                       </div>
                     </div>
                   ))}
                 </div>
+                <button
+                  className="bg-primary text-white rounded p-2 border-0"
+                  type="button"
+                  data-bs-toggle="modal"
+                  data-bs-target="#messageModal"
+                  onClick={() => setTeacherEmail(teacher.email)}
+                >
+                  Message
+                </button>
               </div>
             ))}
           </div>
