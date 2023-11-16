@@ -31,9 +31,10 @@ exports.getAllPendingStudents = catchAsync(async (req,res,next)=>{
 })
 
 exports.getAllAppointments = catchAsync(async (req, res) => {
-    const appointments = await getUserAppointments(req.user.email, new Date(), new Date(9999, 11, 31));
+    const appointments = await Appointment.find({sendBy:req.user.email});
     res.status(200).json({ appointments });
 });
+
 
 
 
