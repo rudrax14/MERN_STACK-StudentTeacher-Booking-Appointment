@@ -320,6 +320,8 @@ function Admin() {
                   type="submit"
                   value="Add Teacher"
                   className="btn btn-primary"
+                  data-bs-dismiss="modal"
+                  // onClick={()=> window.location.reload()}
                 />
 
                 {/* <button

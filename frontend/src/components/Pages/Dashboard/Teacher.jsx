@@ -10,7 +10,6 @@ function Teacher() {
   const navigate = useNavigate();
   // const [cards, setCards] = useState(StudentData.studentBookings)
   const [cards, setCards] = useState([]);
-  const [appointments, setAppointments] = useState([]);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState("");
   const [highlightedTimeSlot, setHighlightedTimeSlot] = useState("");
   const getCurrentDate = () => {
@@ -28,6 +27,7 @@ function Teacher() {
   const [messages, setMessages] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [messageCounts, setMessageCounts] = useState({});
+  const [tableAppointments, setTableAppointments] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -85,9 +85,52 @@ function Teacher() {
         console.error("Error fetching data:", error);
       }
     };
+    const fetchTeacherData = async () => {
+      try {
+        const jwtToken = localStorage.getItem("Teachers jwtToken");
 
+        const response = await axios.get(
+          "http://localhost:5000/api/v1/teachers/schedule",
+          {
+            headers: {
+              Authorization: `Bearer ${jwtToken}`,
+            },
+          }
+        );
+        console.log(response.data.appointments);
+        setTableAppointments(response.data.appointments);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
     fetchData();
+    fetchTeacherData();
   }, []);
+
+  const handleDeleteAppointment = async (appointmentId) => {
+    try {
+      const jwtToken = localStorage.getItem("Teachers jwtToken");
+
+      const response = await axios.delete(
+        `http://localhost:5000/api/v1/teachers/reschedule/${appointmentId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        }
+      );
+      toast.success("Appoinment Deleted Successfully");
+      if (response.status === 200) {
+        setTableAppointments((prevAppointments) =>
+          prevAppointments.filter(
+            (appointment) => appointment._id !== appointmentId
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Error deleting appointment:", error);
+    }
+  };
 
   const fetchMessages = async (email) => {
     try {
@@ -183,24 +226,24 @@ function Teacher() {
   //   setCards(cards.filter((card) => card._id !== cardId));
   // };
 
-  const handleApprove = (card) => {
-    const currentDate = new Date().toLocaleDateString();
-    const currentTime = new Date().toLocaleTimeString();
+  // const handleApprove = (card) => {
+  //   const currentDate = new Date().toLocaleDateString();
+  //   const currentTime = new Date().toLocaleTimeString();
 
-    setAppointments((prevAppointments) => [
-      ...prevAppointments,
-      {
-        _id: card._id,
-        name: card.name,
-        subject: card.subject,
-        date: currentDate,
-        time: currentTime,
-      },
-    ]);
+  //   // setAppointments((prevAppointments) => [
+  //   //   ...prevAppointments,
+  //   //   {
+  //   //     _id: card._id,
+  //   //     name: card.name,
+  //   //     subject: card.subject,
+  //   //     date: currentDate,
+  //   //     time: currentTime,
+  //   //   },
+  //   // ]);
 
-    // Remove the approved card
-    setCards(cards.filter((c) => c._id !== card._id));
-  };
+  //   // Remove the approved card
+  //   setCards(cards.filter((c) => c._id !== card._id));
+  // };
 
   const handleTimeSlotSelect = (timeSlot) => {
     setSelectedTimeSlot(timeSlot);
@@ -271,12 +314,12 @@ function Teacher() {
                     <button
                       type="button"
                       className={`btn  ${
-                        highlightedTimeSlot === `${getCurrentDate()}T22:30:00`
+                        highlightedTimeSlot === `${getCurrentDate()}T14:00:00`
                           ? "btn-primary"
                           : "btn-outline-secondary"
                       }`}
                       onClick={() =>
-                        handleTimeSlotSelect(`${getCurrentDate()}T22:30:00`)
+                        handleTimeSlotSelect(`${getCurrentDate()}T14:00:00`)
                       }
                     >
                       2pm-4pm
@@ -284,12 +327,12 @@ function Teacher() {
                     <button
                       type="button"
                       className={`btn  ${
-                        highlightedTimeSlot === `${getCurrentDate()}T20:30:00`
+                        highlightedTimeSlot === `${getCurrentDate()}T17:00:00`
                           ? "btn-primary"
                           : "btn-outline-secondary"
                       }`}
                       onClick={() =>
-                        handleTimeSlotSelect(`${getCurrentDate()}T20:30:00`)
+                        handleTimeSlotSelect(`${getCurrentDate()}T17:00:00`)
                       }
                     >
                       5pm-6pm
@@ -297,12 +340,12 @@ function Teacher() {
                     <button
                       type="button"
                       className={`btn  ${
-                        highlightedTimeSlot === `${getCurrentDate()}T12:30:00`
+                        highlightedTimeSlot === `${getCurrentDate()}T19:00:00`
                           ? "btn-primary"
                           : "btn-outline-secondary"
                       }`}
                       onClick={() =>
-                        handleTimeSlotSelect(`${getCurrentDate()}T12:30:00`)
+                        handleTimeSlotSelect(`${getCurrentDate()}T19:00:00`)
                       }
                     >
                       7pm-8pm
@@ -374,7 +417,7 @@ function Teacher() {
             >
               <div className="card-body ">
                 <p className="fw-semibold fs-5">Schedule Appointment</p>
-                <p className="fw-normal fs-6">3</p>
+                <p className="fw-normal fs-6">{tableAppointments.length}</p>
               </div>
               <div
                 className="card-footer d-flex"
@@ -388,7 +431,7 @@ function Teacher() {
                 </span>
               </div>
             </div>
-            <div
+            {/* <div
               className="card bg-warning text-black h-100"
               style={{ width: "18rem" }}
             >
@@ -402,8 +445,8 @@ function Teacher() {
                   <BsChevronRight />
                 </span>
               </div>
-            </div>
-            <div
+            </div> */}
+            {/* <div
               className="card bg-success text-white h-100"
               style={{ width: "18rem" }}
             >
@@ -432,7 +475,7 @@ function Teacher() {
                   <BsChevronRight />
                 </span>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -447,26 +490,36 @@ function Teacher() {
             <tr>
               <th scope="col">Sr.No</th>
               <th scope="col">Name</th>
-              <th scope="col">Subject</th>
+              <th scope="col">Email</th>
               <th scope="col">Date</th>
-              <th scope="col">Join Time</th>
-              {/* <th scope="col">Details</th> */}
+              <th scope="col">Shedule Time</th>
+              <th scope="col">Delete</th>
             </tr>
           </thead>
           <tbody>
-            {appointments.map((appointment, index) => (
-              <tr key={index}>
-                <td>{index + 1}</td>
-                <td>{appointment.name}</td>
-                <td>{appointment.subject}</td>
-                <td>{appointment.date}</td>
-                <td>{appointment.time}</td>
-                {/* <td>
-                  <button className='bg-success text-white rounded p-2 border-0 me-2'><i className="fa-solid fa-pen-to-square"></i></button>
-                  <button className='bg-danger text-white rounded p-2 border-0'><i className="fa-solid fa-trash"></i></button>
-                </td> */}
-              </tr>
-            ))}
+            {tableAppointments.map((appointment, index) => {
+              const scheduleDate = new Date(appointment.scheduleAt);
+              const formattedDate = scheduleDate.toLocaleDateString();
+              const formattedTime = scheduleDate.toLocaleTimeString();
+
+              return (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>{appointment.name}</td>
+                  <td>{appointment.sendBy}</td>
+                  <td>{formattedDate}</td>
+                  <td>{formattedTime}</td>
+                  <td>
+                    <button
+                      className="bg-danger text-white rounded p-2 border-0"
+                      onClick={() => handleDeleteAppointment(appointment._id)}
+                    >
+                      <i className="fa-solid fa-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
