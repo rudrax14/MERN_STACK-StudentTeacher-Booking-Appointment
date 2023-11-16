@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from "react";
-// import Navbar from '../../UI/Navbar';
 import { BsChevronRight } from "react-icons/bs";
-import { Link, useNavigate } from "react-router-dom";
-// import Alert from "../../Alert";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
-// import StudentData from '../../../../data.json';
 function Teacher() {
   const navigate = useNavigate();
-  // const [cards, setCards] = useState(StudentData.studentBookings)
   const [cards, setCards] = useState([]);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState("");
   const [highlightedTimeSlot, setHighlightedTimeSlot] = useState("");
+  const [studentEmail, setStudentEmail] = useState("");
+
+
   const getCurrentDate = () => {
     const currentDate = new Date();
     const year = currentDate.getFullYear();
@@ -19,10 +18,6 @@ function Teacher() {
     const day = String(currentDate.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
-  const [studentEmail, setStudentEmail] = useState("");
-  // const handleReject = (cardId) => {
-  //   setCards(cards.filter(card => card.id !== cardId));
-  // };
 
   const [messages, setMessages] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -222,32 +217,10 @@ function Teacher() {
     }
   };
 
-  // const handleReject = (cardId) => {
-  //   setCards(cards.filter((card) => card._id !== cardId));
-  // };
-
-  // const handleApprove = (card) => {
-  //   const currentDate = new Date().toLocaleDateString();
-  //   const currentTime = new Date().toLocaleTimeString();
-
-  //   // setAppointments((prevAppointments) => [
-  //   //   ...prevAppointments,
-  //   //   {
-  //   //     _id: card._id,
-  //   //     name: card.name,
-  //   //     subject: card.subject,
-  //   //     date: currentDate,
-  //   //     time: currentTime,
-  //   //   },
-  //   // ]);
-
-  //   // Remove the approved card
-  //   setCards(cards.filter((c) => c._id !== card._id));
-  // };
 
   const handleTimeSlotSelect = (timeSlot) => {
     setSelectedTimeSlot(timeSlot);
-    setHighlightedTimeSlot(timeSlot); // Highlight the selected time slot
+    setHighlightedTimeSlot(timeSlot); 
   };
 
   //appoinment assign
@@ -408,7 +381,7 @@ function Teacher() {
       <div className="container py-4">
         <div className="pagecontent">
           <h2>Status</h2>
-          {/* <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit</p> */}
+  
           <hr className="mt-0 mb-4" />
           <div className="row justify-content-around row-cols-4 text-center gy-5">
             <div
@@ -431,51 +404,7 @@ function Teacher() {
                 </span>
               </div>
             </div>
-            {/* <div
-              className="card bg-warning text-black h-100"
-              style={{ width: "18rem" }}
-            >
-              <div className="card-body ">
-                <p className="fw-semibold fs-5">Upcoming Lectures</p>
-                <p className="fw-normal fs-6">3</p>
-              </div>
-              <div className="card-footer d-flex">
-                View Details
-                <span className="ms-auto">
-                  <BsChevronRight />
-                </span>
-              </div>
-            </div> */}
-            {/* <div
-              className="card bg-success text-white h-100"
-              style={{ width: "18rem" }}
-            >
-              <div className="card-body ">
-                <p className="fw-semibold fs-5">All Messages</p>
-                <p className="fw-normal fs-6">3</p>
-              </div>
-              <div className="card-footer d-flex">
-                View Details
-                <span className="ms-auto">
-                  <BsChevronRight />
-                </span>
-              </div>
-            </div>
-            <div
-              className="card bg-danger text-white h-100"
-              style={{ width: "18rem" }}
-            >
-              <div className="card-body ">
-                <p className="fw-semibold fs-5">Lectures Missed</p>
-                <p className="fw-normal fs-6">3</p>
-              </div>
-              <div className="card-footer d-flex">
-                View Details
-                <span className="ms-auto">
-                  <BsChevronRight />
-                </span>
-              </div>
-            </div> */}
+            
           </div>
         </div>
       </div>
@@ -483,7 +412,7 @@ function Teacher() {
 
       <div className="container py-4">
         <h2>Your All Upcoming Appointment Details</h2>
-        {/* <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit</p> */}
+     
         <hr className="mt-0 mb-4" />
         <table className="table table-hover me-5">
           <thead>
