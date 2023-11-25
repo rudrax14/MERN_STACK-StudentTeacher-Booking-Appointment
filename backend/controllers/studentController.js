@@ -12,6 +12,13 @@ const getTeacherWithAppointments = async (id) => {
     });
 };
 
+const getRegisteredAppointments = async (id) => {
+    return await Appointment.find({
+       "students.studentId":{'$eq':[id]}    
+    });
+};
+
+
 exports.register = catchAsync(
     async (req, res, next) => {
         const user = {
@@ -70,6 +77,14 @@ exports.getTeacherWithAppointments = catchAsync(async (req,res,next)=>{
     const appointments = await getTeacherWithAppointments(req.user.id);
     res.status(200).json({
         status:'Success',
+        appointments
+    })
+})
+
+exports.registeredAppointments = catchAsync(async (req,res,next)=>{
+    const appointments = await getRegisteredAppointments(req.user.id);
+    res.status(200).json({
+        status:"Success",
         appointments
     })
 })
