@@ -2,6 +2,8 @@ const mongoose=require('mongoose')
 const bcrypt = require('bcrypt')
 const AppError = require('../utils/AppError')
 let crypto = require('crypto')
+const catchAsync = require('../utils/catchAsync')
+const sendEmail = require('../utils/sendEmail')
 const userSchema = new mongoose.Schema({
     email:{
         type:String,
@@ -83,6 +85,10 @@ userSchema.pre('save',async function(next){
 
 })
 
+/* userSchema.post('save',catchAsync(async function(doc){
+        const transporter = sendEmail.connect()
+        
+})) */
 userSchema.index(
     { department: 1,roles:1,admissionStatus:1 },
     { 

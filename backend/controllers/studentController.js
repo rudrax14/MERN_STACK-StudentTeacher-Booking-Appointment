@@ -2,9 +2,9 @@ const Appointment = require('../models/Appointment');
 const User = require('../models/User');
 const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
-const sendEmail = require('../utils/sendEmail');
+const {connect} = require('../utils/sendEmail');
 const { signToken } = require('./authController');
-
+const transporter = connect()
 
 const getTeacherWithAppointments = async (id) => {
     return await Appointment.find({
@@ -60,10 +60,11 @@ exports.bookAppointment = catchAsync(async (req, res, next) => {
     if(existingStudent){
         return next(new AppError("You have already booked the appointment",500));
     }
-    const newAppointment = await Appointment.findOneAndUpdate(appointment, { $push: { students: { studentId: req.user.id, approved: false } } })
+    const newAppointment = await Appointment.findOneAndUpdate(appointment, { $push: { students: { studentId: req.user.id, approved: false } } },{new:true})
 
-    //const message = `I like to book an appointment on ${newAppointment.scheduleAt}. Reason:$//{newAppointment.reason}`
+    const message = `I like to book an appointment on ${newAppointment.scheduleAt} from a student.`
     //await sendEmail(req.body.sendBy,req.body.sendTo,"Appointment Booking",message) 
+    let info = await transporter.sendMail({from:"abutalhasheikh33@gmail.com",to:newAppointment.sendBy,subject:"Book appointment",body:message})
     res.status(200).json({
         status: 'SUCCESS',
         data: {
