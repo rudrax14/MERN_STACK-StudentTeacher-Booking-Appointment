@@ -1,15 +1,19 @@
 import React from 'react';
-
+import student from '../../../assets/students.jpg'
+import teacher from '../../../assets/teachers.jpg'
+import admin from '../../../assets/admin.jpg'
 function Card() {
     return (
-        <div className="container">
-            <div className="row justify-content-center">
+        <div className="container"
+        style={{ marginTop: "17%" }}>
+            <div className="row">
                 <div className="col-sm-10 col-md-6 col-lg-4 my-3">
                     <div className="card">
                         <img
-                            src="https://static.vecteezy.com/system/resources/previews/001/925/922/non_2x/investment-in-education-concept-free-vector.jpg"
+                            src={student}
                             className="card-img-top"
                             alt="Student"
+                            // style={{ width: '406px', height: '271px' }}
                         />
                         <div className="card-body text-center">
                             <h5 className="card-title">Student</h5>
@@ -23,9 +27,10 @@ function Card() {
                 <div className="col-sm-10 col-md-6 col-lg-4 my-3">
                     <div className="card">
                         <img
-                            src="https://static.vecteezy.com/system/resources/previews/011/277/699/non_2x/female-young-school-teacher-teaching-lesson-in-classroom-smiling-woman-standing-beside-blackboard-explaining-material-school-banner-education-knowledge-study-concept-cartoon-illustration-free-vector.jpg"
+                            src={teacher}
                             className="card-img-top"
                             alt="Teacher"
+                            // style={{ width: '406px', height: '271px' }}
                         />
                         <div className="card-body text-center">
                             <h5 className="card-title">Teacher</h5>
@@ -39,9 +44,10 @@ function Card() {
                 <div className="col-sm-10 col-md-6 col-lg-4 my-3">
                     <div className="card">
                         <img
-                            src="https://static.vecteezy.com/system/resources/previews/020/391/409/non_2x/team-management-icon-vector.jpg"
+                            src={admin}
                             className="card-img-top mt-5"
                             alt="Admin"
+                            
                         />
                         <div className="card-body text-center">
                             <h5 className="card-title">Admin</h5>

@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../../UI/Navbar";
-import Alert from '../../Alert';
+import Alert from "../../Alert";
 import { useState } from "react";
-import axios from 'axios';
+import axios from "axios";
+import { useUser } from "../../../context/Provider";
 
 function Student() {
   const navigate = useNavigate();
@@ -25,38 +26,48 @@ function Student() {
     event.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:5000/api/v1/student/login', {
-        email: formData.email,
-        password: formData.password,
-      });
-      if (response.data.data.user.roles !== 'student') {
-        Alert('Access denied. Only students are allowed to log in.', 'error');
+      const response = await axios.post(
+        "http://localhost:5000/api/v1/student/login",
+        {
+          email: formData.email,
+          password: formData.password,
+        }
+      );
+      if (response.data.data.user.roles !== "student") {
+        Alert("Access denied. Only students are allowed to log in.", "error");
         return;
       }
 
       // console.log('Role:', response.data.data.user.roles);
-      // console.log(response);
+      // const { setUser } = useUser();
+      const name = response.data.data.user.name;
+      // setUser(name);
+      // console.log("Responce", name);
       const { token } = response.data;
-      localStorage.setItem('Student jwtToken', token);
-      localStorage.setItem('email', formData.email);
-      console.log('Approve student id:', response.data.data.user.admissionStatus);
+      localStorage.setItem("Student jwtToken", token);
+      localStorage.setItem("email", formData.email);
+      localStorage.setItem("Student Name", name);
+      console.log(
+        "Approve student id:",
+        response.data.data.user.admissionStatus
+      );
       if (response.data.data.user.admissionStatus == true) {
         navigate(`/student/dashboard`);
       } else {
-        navigate("/student/notapproved")
+        navigate("/student/notapproved");
       }
-      Alert('Logged in', 'success');
+      Alert("Logged in", "success");
     } catch (error) {
-      if (error.response) {
-        const errorMessage = error.response.data.message; // Assuming your error response has a 'message' field
-        Alert(errorMessage, 'error');
+      if (error) {
+        console.log(error);
+        const errorMessage = error.response;
+        // Assuming your error response has a 'message' field
+        Alert(errorMessage, "error");
       } else {
-        Alert('Login failed', 'error');
+        Alert("Login failed", "error");
       }
     }
   }
-
-
 
   return (
     <>
@@ -68,9 +79,14 @@ function Student() {
           <div className="row">
             <div className="col-md-6">
               <h2 className="font-bold text-2xl">Student Login</h2>
-              <p className="text-sm mt-4">If you are already a member, easy login</p>
+              <p className="text-sm mt-4">
+                If you are already a member, easy login
+              </p>
               {/* form start */}
-              <form className="d-flex flex-column gap-3" onSubmit={submitHandler}>
+              <form
+                className="d-flex flex-column gap-3"
+                onSubmit={submitHandler}
+              >
                 <input
                   className="form-control mt-3"
                   type="email"
@@ -90,8 +106,11 @@ function Student() {
                   />
                 </div>
                 <div className="d-flex mt-3 ">
-
-                  <input type="submit" value="Login" className="btn btn-primary" />
+                  <input
+                    type="submit"
+                    value="Login"
+                    className="btn btn-primary"
+                  />
                   <Link to="/student/dashboard" className="me-3">
                     {/* <button className="btn btn-primary" onClick={() => Alert('Logged in', 'success')} type="submit" value="Submit">Login</button> */}
                   </Link>

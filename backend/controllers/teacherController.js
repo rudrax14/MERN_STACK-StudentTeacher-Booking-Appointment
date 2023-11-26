@@ -21,17 +21,17 @@ const getUserAppointments = async (email, startDate, endDate) => {
     });
 };
 
-exports.getAllPendingStudents = catchAsync(async (req,res,next)=>{
-    const students =  await Appointment.find({sendBy:req.user.email,"students.approved":false}).populate({path:"students.studentId",select:"_id name department email"}).select("-students.approved -students._id -sendBy");
-   
+exports.getAllPendingStudents = catchAsync(async (req, res, next) => {
+    const students = await Appointment.find({ sendBy: req.user.email, "students.approved": false }).populate({ path: "students.studentId", select: "_id name department email" }).select("-students.approved -students._id -sendBy");
+
     res.status(200).json({
-        status:"Success",
+        status: "Success",
         students
     })
 })
 
 exports.getAllAppointments = catchAsync(async (req, res) => {
-    const appointments = await Appointment.find({sendBy:req.user.email});
+    const appointments = await Appointment.find({ sendBy: req.user.email });
     res.status(200).json({ appointments });
 });
 
@@ -39,15 +39,15 @@ exports.getAllAppointments = catchAsync(async (req, res) => {
 
 
 exports.createAppointment = catchAsync(async (req, res, next) => {
-   
+
     const sendBy = req.user.email;
     const name = req.user.name;
     //const scheduleAt = new Date(2022, 10, 10, 14, 0, 0).toString(); // Replace with your desired date/time
-    
-    const scheduleAt = req.body.scheduleAt;
-    
 
-    const newAppointment = await Appointment.create({ sendBy, name ,scheduleAt })
+    const scheduleAt = req.body.scheduleAt;
+
+
+    const newAppointment = await Appointment.create({ sendBy, name, scheduleAt })
     await User.findOneAndUpdate({ _id: req.user.id }, { $push: { appointments: newAppointment._id } })
     res.status(200).json({
         newAppointment
@@ -61,17 +61,19 @@ exports.approveAppointment = catchAsync(async (req, res) => {
             'students.$.approved': true // Set the 'approved' field to true for the matched student
         }
     });
-
+    console.log(student);
     res.status(200).json({ message: "Approved" });
 });
 
 exports.dissapproveAppointment = catchAsync(async (req, res) => {
+    const studentDetail = await Appointment.findOne({ _id: req.params.id });
+    console.log("SDetail", studentDetail)
     const student = await Appointment.findOneAndUpdate({ _id: req.params.id }, {
         $pull: {
             'students': { 'studentId': req.params.studentId }
         }
     });
-
+    console.log("student", student)
     res.status(200).json({ message: "Student rejected" });
 });
 

@@ -38,6 +38,8 @@ function admin() {
         return;
       }
       const { token } = response.data;
+      const name = response.data.data.user.name;
+      localStorage.setItem("Admin Name", name);
       localStorage.setItem('jwtToken', token);
       // console.log(token);
       navigate("/admin/dashboard");

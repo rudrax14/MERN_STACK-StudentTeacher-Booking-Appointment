@@ -33,10 +33,10 @@ function Teacher() {
         return;
       }
       const { token } = response.data;
-
+      const name = response.data.data.user.name;
       // Store the JWT token in local storage or state for authentication
       localStorage.setItem('Teachers jwtToken', token);
-
+      localStorage.setItem("Teacher Name", name);
       // Redirect to the teacher dashboard
       navigate("/teacher/dashboard");
       Alert('Logged in', 'success');
