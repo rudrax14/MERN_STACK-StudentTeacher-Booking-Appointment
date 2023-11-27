@@ -8,29 +8,25 @@ function Admin() {
   const navigate = useNavigate();
   const [teachers, setTeachers] = useState([]);
   // teachers get
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const jwtToken = localStorage.getItem("jwtToken");
-        if (jwtToken == null) {
-          navigate("/admin/login");
-        } else {
-          const response = await axios.get(
-            "http://localhost:5000/api/v1/admin",
-            {
-              headers: {
-                Authorization: `Bearer ${jwtToken}`,
-              },
-            }
-          );
+  const fetchData = async () => {
+    try {
+      const jwtToken = localStorage.getItem("jwtToken");
+      if (jwtToken == null) {
+        navigate("/admin/login");
+      } else {
+        const response = await axios.get("http://localhost:5000/api/v1/admin", {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        });
 
-          setTeachers(response.data.data.users);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
+        setTeachers(response.data.data.users);
       }
-    };
-
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -122,14 +118,25 @@ function Admin() {
           },
         }
       );
-      navigate("/admin/dashboard");
+      fetchData();
+      // Clear the form data
+      setFormData({
+        name: "",
+        email: "",
+        age: "",
+        subject: "",
+        department: "",
+        password: "",
+        passwordConfirm: "",
+      });
+      // navigate("/admin/dashboard");
       toast.success("Teacher Added");
     } catch (error) {
       if (error.response) {
         const errorMessage = error.response.data.message;
         toast.error(errorMessage);
       } else {
-        toast.error("Something Gone Wrong");
+        toast.error("Something Went Wrong");
       }
     }
   }

@@ -10,7 +10,6 @@ function Teacher() {
   const [highlightedTimeSlot, setHighlightedTimeSlot] = useState("");
   const [studentEmail, setStudentEmail] = useState("");
 
-
   const getCurrentDate = () => {
     const currentDate = new Date();
     const year = currentDate.getFullYear();
@@ -24,80 +23,80 @@ function Teacher() {
   const [messageCounts, setMessageCounts] = useState({});
   const [tableAppointments, setTableAppointments] = useState([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const jwtToken = localStorage.getItem("Teachers jwtToken");
-        // secure route
-        if (jwtToken == null) {
-          navigate("/teacher/login");
-        } else {
-          const response = await axios.get(
-            "http://localhost:5000/api/v1/teachers/getAllPendingStudents",
-            {
-              headers: {
-                Authorization: `Bearer ${jwtToken}`,
-              },
-            }
-          );
-          // console.log(response.data.students);
-          setCards(response.data.students);
-
-          // Fetch message counts for all cards
-          const counts = {};
-          for (const card of response.data.students) {
-            for (const studentInfo of card.students) {
-              const emailToFilter =
-                studentInfo.studentId && studentInfo.studentId.email
-                  ? studentInfo.studentId.email
-                  : null;
-
-              if (emailToFilter) {
-                const messageResponse = await axios.get(
-                  "http://localhost:5000/api/v1/messages",
-                  {
-                    headers: {
-                      Authorization: `Bearer ${jwtToken}`,
-                    },
-                    params: {
-                      email: emailToFilter,
-                    },
-                  }
-                );
-
-                if (messageResponse.status === 200) {
-                  const data = messageResponse.data;
-                  counts[emailToFilter] = data.messages.length;
-                }
-              }
-            }
-          }
-
-          // console.log(counts);
-          setMessageCounts(counts);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    const fetchTeacherData = async () => {
-      try {
-        const jwtToken = localStorage.getItem("Teachers jwtToken");
-
+  const fetchData = async () => {
+    try {
+      const jwtToken = localStorage.getItem("Teachers jwtToken");
+      // secure route
+      if (jwtToken == null) {
+        navigate("/teacher/login");
+      } else {
         const response = await axios.get(
-          "http://localhost:5000/api/v1/teachers/schedule",
+          "http://localhost:5000/api/v1/teachers/getAllPendingStudents",
           {
             headers: {
               Authorization: `Bearer ${jwtToken}`,
             },
           }
         );
-        console.log(response.data.appointments);
-        setTableAppointments(response.data.appointments);
-      } catch (error) {
-        console.error("Error fetching data:", error);
+        // console.log(response.data.students);
+        setCards(response.data.students);
+
+        // Fetch message counts for all cards
+        const counts = {};
+        for (const card of response.data.students) {
+          for (const studentInfo of card.students) {
+            const emailToFilter =
+              studentInfo.studentId && studentInfo.studentId.email
+                ? studentInfo.studentId.email
+                : null;
+
+            if (emailToFilter) {
+              const messageResponse = await axios.get(
+                "http://localhost:5000/api/v1/messages",
+                {
+                  headers: {
+                    Authorization: `Bearer ${jwtToken}`,
+                  },
+                  params: {
+                    email: emailToFilter,
+                  },
+                }
+              );
+
+              if (messageResponse.status === 200) {
+                const data = messageResponse.data;
+                counts[emailToFilter] = data.messages.length;
+              }
+            }
+          }
+        }
+
+        // console.log(counts);
+        setMessageCounts(counts);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  const fetchTeacherData = async () => {
+    try {
+      const jwtToken = localStorage.getItem("Teachers jwtToken");
+
+      const response = await axios.get(
+        "http://localhost:5000/api/v1/teachers/schedule",
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        }
+      );
+      console.log(response.data.appointments);
+      setTableAppointments(response.data.appointments);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  useEffect(() => {
     fetchData();
     fetchTeacherData();
   }, []);
@@ -217,10 +216,9 @@ function Teacher() {
     }
   };
 
-
   const handleTimeSlotSelect = (timeSlot) => {
     setSelectedTimeSlot(timeSlot);
-    setHighlightedTimeSlot(timeSlot); 
+    setHighlightedTimeSlot(timeSlot);
   };
 
   //appoinment assign
@@ -241,7 +239,7 @@ function Teacher() {
           },
         }
       );
-
+      fetchTeacherData();
       toast.success("Appointment scheduled successfully:");
     } catch (error) {
       console.error("Error scheduling appointment:", error);
@@ -381,7 +379,7 @@ function Teacher() {
       <div className="container py-4">
         <div className="pagecontent">
           <h2>Status</h2>
-  
+
           <hr className="mt-0 mb-4" />
           <div className="row justify-content-around row-cols-4 text-center gy-5">
             <div
@@ -404,7 +402,6 @@ function Teacher() {
                 </span>
               </div>
             </div>
-            
           </div>
         </div>
       </div>
@@ -412,7 +409,7 @@ function Teacher() {
 
       <div className="container py-4">
         <h2>Your All Upcoming Appointment Details</h2>
-     
+
         <hr className="mt-0 mb-4" />
         <table className="table table-hover me-5">
           <thead>

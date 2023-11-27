@@ -9,6 +9,26 @@ function Student() {
   const [teacherEmail, setTeacherEmail] = useState("");
   const [teachers, setTeachers] = useState([]);
 
+  const fetchTable = async () => {
+    try {
+      const jwtToken = localStorage.getItem("Student jwtToken");
+
+      const response = await axios.get(
+        "http://localhost:5000/api/v1/student/appointment/getRegisteredAppointments",
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        }
+      );
+      console.log(response.data.appointments);
+      setLectureDetails(response.data.appointments);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setError("Error fetching data. Please try again later.");
+    }
+  };
+
   useEffect(() => {
     ///////////////////////////////////////////////////////////////
     const emailAdd = localStorage.getItem("email");
@@ -35,8 +55,8 @@ function Student() {
         console.error("Error fetching data:", error);
       }
     };
-
     fetchData();
+    fetchTable();
   }, []);
 
   const [formData, setFormData] = useState({
@@ -107,11 +127,24 @@ function Student() {
         }
       );
       toast.success("Appointment booked successfully");
+      fetchTable();
       console.log("Appointment booked successfully:", response.data);
     } catch (error) {
       console.error("Error booking appointment:", error);
       toast.error("Already booked appointment");
     }
+  };
+
+  const formatDate = (dateString) => {
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
+  const formatTime = (timeString) => {
+    return new Date(timeString).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
   };
 
   return (
@@ -171,18 +204,18 @@ function Student() {
               <th scope="col">Subject</th>
               <th scope="col">Date</th>
               <th scope="col">Time Slot</th>
-              <th scope="col">Booking Time</th>
+              {/* <th scope="col">Booking Time</th> */}
             </tr>
           </thead>
           <tbody>
             {lectureDetails.map((detail, index) => (
               <tr key={index}>
                 <td>{index + 1}</td>
-                <td>{detail.teacher}</td>
+                <td>{detail.name}</td>
                 <td>{detail.subject}</td>
-                <td>{detail.date}</td>
-                <td>{detail.timeSlot}</td>
-                <td>{detail.time}</td>
+                <td>{formatDate(detail.scheduleAt)}</td>
+                <td>{formatTime(detail.scheduleAt)}</td>
+                {/* <td>{detail.time}</td> */}
               </tr>
             ))}
           </tbody>
