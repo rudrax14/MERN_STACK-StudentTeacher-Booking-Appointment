@@ -53,10 +53,9 @@ exports.bookAppointment = catchAsync(async (req, res, next) => {
     if (existingStudent) {
         return next(new AppError("You have already booked the appointment", 500));
     }
+    /// mail 
     const newAppointment = await Appointment.findOneAndUpdate(appointment, { $push: { students: { studentId: req.user.id, approved: false } } }, { new: true })
-    // console.log(students)
-    // const message = `You have received an appointment request from a student scheduled for ${newAppointment.scheduleAt}`
-    //await sendEmail(req.body.sendBy,req.body.sendTo,"Appointment Booking",message) 
+    // console.log(newAppointment)
     // const scheduledDate = new Date(newAppointment.scheduleAt);
     // const formattedDate = scheduledDate.toLocaleString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: '2-digit' });
     // const formattedTime = scheduledDate.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });

@@ -171,7 +171,7 @@ function Teacher() {
 
       const response = await axios.patch(url, null, { headers });
 
-      console.log("Approval status changed successfully:", response.data);
+      console.log("Approval status changed successfully", response.data);
 
       setCards((prevCards) => {
         const updatedCards = prevCards.map((schedule) => {
@@ -185,6 +185,7 @@ function Teacher() {
 
         return updatedCards;
       });
+      toast.success("Student Added");
     } catch (error) {
       console.error("Error changing approval status:", error.message);
     }
@@ -211,6 +212,7 @@ function Teacher() {
         });
         return updatedCards;
       });
+      toast.info("Student Rejected");
     } catch (error) {
       console.error("Error changing approval status:", error.message);
     }
@@ -284,11 +286,10 @@ function Teacher() {
                   <div className="mt-1">
                     <button
                       type="button"
-                      className={`btn  ${
-                        highlightedTimeSlot === `${getCurrentDate()}T14:00:00`
-                          ? "btn-primary"
-                          : "btn-outline-secondary"
-                      }`}
+                      className={`btn  ${highlightedTimeSlot === `${getCurrentDate()}T14:00:00`
+                        ? "btn-primary"
+                        : "btn-outline-secondary"
+                        }`}
                       onClick={() =>
                         handleTimeSlotSelect(`${getCurrentDate()}T14:00:00`)
                       }
@@ -297,11 +298,10 @@ function Teacher() {
                     </button>
                     <button
                       type="button"
-                      className={`btn  ${
-                        highlightedTimeSlot === `${getCurrentDate()}T17:00:00`
-                          ? "btn-primary"
-                          : "btn-outline-secondary"
-                      }`}
+                      className={`btn  ${highlightedTimeSlot === `${getCurrentDate()}T17:00:00`
+                        ? "btn-primary"
+                        : "btn-outline-secondary"
+                        }`}
                       onClick={() =>
                         handleTimeSlotSelect(`${getCurrentDate()}T17:00:00`)
                       }
@@ -310,11 +310,10 @@ function Teacher() {
                     </button>
                     <button
                       type="button"
-                      className={`btn  ${
-                        highlightedTimeSlot === `${getCurrentDate()}T19:00:00`
-                          ? "btn-primary"
-                          : "btn-outline-secondary"
-                      }`}
+                      className={`btn  ${highlightedTimeSlot === `${getCurrentDate()}T19:00:00`
+                        ? "btn-primary"
+                        : "btn-outline-secondary"
+                        }`}
                       onClick={() =>
                         handleTimeSlotSelect(`${getCurrentDate()}T19:00:00`)
                       }
@@ -509,7 +508,7 @@ function Teacher() {
                                 studentId,
                                 teacherAppointmentId
                               );
-                              toast.success("Added");
+
                             }}
                           >
                             Approve
@@ -521,7 +520,7 @@ function Teacher() {
                                 studentId,
                                 teacherAppointmentId
                               );
-                              // toast.info("Rejected");
+
                             }}
                           >
                             Reject
