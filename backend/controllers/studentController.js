@@ -49,6 +49,7 @@ exports.bookAppointment = catchAsync(async (req, res, next) => {
         _id: req.params.id,
     }
     const existingStudent = await Appointment.findOne({ "students.studentId": req.user.id })
+    console.log(existingStudent)
     if (existingStudent) {
         return next(new AppError("You have already booked the appointment", 500));
     }

@@ -3,8 +3,8 @@ const User = require("../models/User");
 const Appointment = require("../models/Appointment");
 const AppError = require("../utils/AppError");
 const catchAsync = require("../utils/catchAsync");
-const sendEmail = require('../utils/sendEmail');
-
+const {connect} = require('../utils/sendEmail');
+const transporter = connect()
 
 // Helper function to check if two appointment times clash
 const checkTimeClash = (time1, time2) => {
@@ -21,17 +21,17 @@ const getUserAppointments = async (email, startDate, endDate) => {
     });
 };
 
-exports.getAllPendingStudents = catchAsync(async (req, res, next) => {
-    const students = await Appointment.find({ sendBy: req.user.email, "students.approved": false }).populate({ path: "students.studentId", select: "_id name department email" }).select("-students.approved -students._id -sendBy");
-
+exports.getAllPendingStudents = catchAsync(async (req,res,next)=>{
+    const students =  await Appointment.find({sendBy:req.user.email,"students.approved":false}).populate({path:"students.studentId",select:"_id name department email"}).select("-students.approved -students._id -sendBy");
+   
     res.status(200).json({
-        status: "Success",
+        status:"Success",
         students
     })
 })
 
 exports.getAllAppointments = catchAsync(async (req, res) => {
-    const appointments = await Appointment.find({ sendBy: req.user.email });
+    const appointments = await Appointment.find({sendBy:req.user.email});
     res.status(200).json({ appointments });
 });
 
@@ -39,15 +39,15 @@ exports.getAllAppointments = catchAsync(async (req, res) => {
 
 
 exports.createAppointment = catchAsync(async (req, res, next) => {
-
+   
     const sendBy = req.user.email;
     const name = req.user.name;
     //const scheduleAt = new Date(2022, 10, 10, 14, 0, 0).toString(); // Replace with your desired date/time
-
+    
     const scheduleAt = req.body.scheduleAt;
+    
 
-
-    const newAppointment = await Appointment.create({ sendBy, name, scheduleAt })
+    const newAppointment = await Appointment.create({ sendBy, name ,scheduleAt })
     await User.findOneAndUpdate({ _id: req.user.id }, { $push: { appointments: newAppointment._id } })
     res.status(200).json({
         newAppointment
@@ -56,24 +56,32 @@ exports.createAppointment = catchAsync(async (req, res, next) => {
 });
 
 exports.approveAppointment = catchAsync(async (req, res) => {
-    const student = await Appointment.findOneAndUpdate({ _id: req.params.id, "students.studentId": req.params.studentId }, {
+    const appointment = await Appointment.findOneAndUpdate({ _id: req.params.id, "students.studentId": req.params.studentId }, {
         $set: {
             'students.$.approved': true // Set the 'approved' field to true for the matched student
         }
     });
-    console.log(student);
+    const studentEmail = await User.findById(req.params.studentId).select('email')
+    console.log(studentEmail)
+    const message = "your appointment is approved"
+    
+    let info = await transporter.sendMail({from:req.user.email,to:studentEmail.email,subject:"Book appointment",body:message})
     res.status(200).json({ message: "Approved" });
 });
 
 exports.dissapproveAppointment = catchAsync(async (req, res) => {
-    const studentDetail = await Appointment.findOne({ _id: req.params.id });
-    console.log("SDetail", studentDetail)
-    const student = await Appointment.findOneAndUpdate({ _id: req.params.id }, {
+    const appointment = await Appointment.findOneAndUpdate({ _id: req.params.id }, {
         $pull: {
             'students': { 'studentId': req.params.studentId }
         }
     });
-    console.log("student", student)
+    const studentEmail = await User.findById(req.params.studentId).select('email')
+    console.log(studentEmail)
+    const message = "Your appointment is not approved"
+    let info = await transporter.sendMail({from:req.user.email,to:studentEmail.email,subject:"Book appointment",body:message})
+    
+
+
     res.status(200).json({ message: "Student rejected" });
 });
 
