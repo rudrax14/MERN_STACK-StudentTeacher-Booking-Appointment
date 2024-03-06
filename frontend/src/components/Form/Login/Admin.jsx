@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react'
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../../UI/Navbar";
-import Alert from '../../Alert';
 import { useState } from "react";
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 
 function admin() {
@@ -24,7 +24,7 @@ function admin() {
       [name]: value,
     }));
   }
-  
+
   async function submitHandler(event) {
     event.preventDefault();
 
@@ -34,7 +34,7 @@ function admin() {
         password: formData.password,
       });
       if (response.data.data.user.roles !== 'admin') {
-        Alert('Access denied. Only Admin are allowed to log in.', 'error');
+        toast.error('Access denied. Only Admin are allowed to log in.');
         return;
       }
       const { token } = response.data;
@@ -43,7 +43,7 @@ function admin() {
       localStorage.setItem('jwtToken', token);
       // console.log(token);
       navigate("/admin/dashboard");
-      Alert('Logged in', 'success');
+      toast.success('Logged in');
 
 
 
@@ -60,9 +60,9 @@ function admin() {
     } catch (error) {
       if (error.response) {
         const errorMessage = error.response.data.message; // Assuming your error response has a 'message' field
-        Alert(errorMessage, 'error');
+        toast.error(errorMessage);
       } else {
-        Alert('Login failed', 'error');
+        toast.error('Login failed');
       }
     }
 
@@ -104,7 +104,6 @@ function admin() {
 
                   <input type="submit" value="Login" className="btn btn-primary" />
                   <Link to="/student/dashboard" className="me-3">
-                    {/* <button className="btn btn-primary" onClick={() => Alert('Logged in', 'success')} type="submit" value="Submit">Login</button> */}
                   </Link>
                   <Link to="/student/signup">
                     <button className="btn btn-primary">Register</button>

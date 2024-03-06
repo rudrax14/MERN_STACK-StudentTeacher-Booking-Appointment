@@ -1,8 +1,7 @@
 import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Navbar from "../../UI/Navbar";
-import Alert from "../../Alert";
 import { useState } from "react";
+import { toast } from "react-toastify";
 import axios from "axios";
 
 function Student() {
@@ -33,7 +32,7 @@ function Student() {
         }
       );
       if (response.data.data.user.roles !== "student") {
-        Alert("Access denied. Only students are allowed to log in.", "error");
+        toast.error("Access denied. Only students are allowed to log in.");
         return;
       }
 
@@ -55,15 +54,15 @@ function Student() {
       } else {
         navigate("/student/notapproved");
       }
-      Alert("Logged in", "success");
+      toast.success("Logged in");
     } catch (error) {
       if (error) {
         console.log(error);
         const errorMessage = error.response;
         // Assuming your error response has a 'message' field
-        Alert(errorMessage, "error");
+        toast.error(errorMessage);
       } else {
-        Alert("Login failed", "error");
+        toast.error("Login failed");
       }
     }
   }
@@ -111,7 +110,6 @@ function Student() {
                     className="btn btn-primary"
                   />
                   <Link to="/student/dashboard" className="me-3">
-                    {/* <button className="btn btn-primary" onClick={() => Alert('Logged in', 'success')} type="submit" value="Submit">Login</button> */}
                   </Link>
                   <Link to="/student/signup">
                     <button className="btn btn-primary">Register</button>

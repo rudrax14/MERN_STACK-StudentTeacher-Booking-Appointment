@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Navbar from "../../UI/Navbar";
-import Alert from '../../Alert';
+
 import axios from 'axios';
+import { toast } from "react-toastify";
 
 function Teacher() {
   const navigate = useNavigate();
@@ -29,7 +29,7 @@ function Teacher() {
         password: formData.password,
       });
       if (response.data.data.user.roles !== 'teacher') {
-        Alert('Access denied. Only teacher are allowed to log in.', 'error');
+        toast.error('Access denied. Only teacher are allowed to log in.');
         return;
       }
       const { token } = response.data;
@@ -39,13 +39,13 @@ function Teacher() {
       localStorage.setItem("Teacher Name", name);
       // Redirect to the teacher dashboard
       navigate("/teacher/dashboard");
-      Alert('Logged in', 'success');
+      toast.success('Logged in');
     } catch (error) {
       if (error.response) {
         const errorMessage = error.response.data.message; // Assuming your error response has a 'message' field
-        Alert(errorMessage, 'error');
+        toast.error(errorMessage);
       } else {
-        Alert('Login failed', 'error');
+        toast.error('Login failed');
       }
     }
   }

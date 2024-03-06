@@ -1,8 +1,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Navbar from "../../UI/Navbar";
-import Alert from '../../Alert';
 import { useState } from "react";
+import { toast } from "react-toastify";
 function Student() {
 
   const navigate = useNavigate();
@@ -28,15 +27,6 @@ function Student() {
       };
     });
   }
-
-
-  // function submitHandler(event) {
-  //   event.preventDefault();
-  //   console.log("Form Data")
-  //   console.log(formData);
-  //   navigate("/student/dashboard")
-  //   Alert('Signed Up', 'success')
-  // }
 
 
   function submitHandler(event) {
@@ -70,10 +60,10 @@ function Student() {
 
           // Navigate to the student dashboard
           navigate("/student/dashboard");
-          Alert('Logged in', 'success');
+          toast.success('Logged in');
         } else {
           // Handle registration errors or show appropriate error messages.
-          Alert('Failed to register', 'error');
+          toast.error('Failed to register');
         }
       })
       .catch((error) => {
