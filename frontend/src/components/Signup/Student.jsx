@@ -32,8 +32,8 @@ function Student() {
 
   async function submitHandler(event) {
     event.preventDefault();
-    console.log("Form Data");
-    console.log(formData);
+    // console.log("Form Data");
+    // console.log(formData);
 
     const requestData = {
       email: formData.email,
@@ -56,7 +56,7 @@ function Student() {
         if (data.token) {
           // Save the JWT token in localStorage
           localStorage.setItem("token", data.token);
-          console.log("token", data.token);
+          // console.log("token", data.token);
           setSpinner(false);
 
           navigate("/student/login");
