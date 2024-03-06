@@ -70,7 +70,7 @@ exports.approveAppointment = catchAsync(async (req, res) => {
     const studentEmail = await User.findById(req.params.studentId).select('email');
     console.log(studentEmail)
     let info = await transporter.sendMail({
-        from: "abutalhasheikh33@gmail.com",
+        from: '"tutor-time@brevo.com',
         to: studentEmail.email,
         subject: "Appointment Accepted",
         html: `

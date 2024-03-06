@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer')
 
 exports.connect = () => {
-    try{
+    try {
         //transporter 
         let transporter = nodemailer.createTransport({
             host: process.env.MAIL_HOST,
@@ -13,7 +13,7 @@ exports.connect = () => {
 
         return transporter;
     }
-    catch(error){
-        console.log(error);
+    catch (error) {
+        console.log("error for sending mail", error);
     }
 }

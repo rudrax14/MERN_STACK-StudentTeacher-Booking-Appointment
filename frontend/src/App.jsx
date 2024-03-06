@@ -1,4 +1,4 @@
-import "./App.css";
+
 // index.js or another appropriate file
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Routes, Route } from "react-router-dom";

@@ -56,24 +56,25 @@ exports.bookAppointment = catchAsync(async (req, res, next) => {
     /// mail 
     const newAppointment = await Appointment.findOneAndUpdate(appointment, { $push: { students: { studentId: req.user.id, approved: false } } }, { new: true })
     // console.log(newAppointment)
-    // const scheduledDate = new Date(newAppointment.scheduleAt);
-    // const formattedDate = scheduledDate.toLocaleString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: '2-digit' });
-    // const formattedTime = scheduledDate.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-    // let info = await transporter.sendMail({
-    //     from: "abutalhasheikh33@gmail.com",
-    //     to: newAppointment.sendBy,
-    //     subject: "Appointment Request",
-    //     html: `
-    //         <h2>Dear Teacher,</h2>
-    //         <p>We hope this message finds you well.</p>
-    //         <p>You have received an appointment request from a student scheduled for ${formattedDate}, and the timing is ${formattedTime}.</p>
-    //         <p>Please log in to our platform to review and respond to the request.</p>
-    //         <p>Thank you for your time and commitment to your students.</p>
-    //         <p>Best regards,</p>
-    //         <p>Tutor-Time</p>
-    //         <p><a href="Website URL">Visit our website</a></p>
-    //     `,
-    // });
+    const scheduledDate = new Date(newAppointment.scheduleAt);
+    const formattedDate = scheduledDate.toLocaleString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: '2-digit' });
+    const formattedTime = scheduledDate.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+
+    let info = await transporter.sendMail({
+        from: '"tutor-time@brevo.com',
+        to: newAppointment.sendBy,
+        subject: "Appointment Request",
+        html: `
+            <h2>Dear Teacher,</h2>
+            <p>We hope this message finds you well.</p>
+            <p>You have received an appointment request from a student scheduled for ${formattedDate}, and the timing is ${formattedTime}.</p>
+            <p>Please log in to our platform to review and respond to the request.</p>
+            <p>Thank you for your time and commitment to your students.</p>
+            <p>Best regards,</p>
+            <p>Tutor-Time</p>
+            <p><a href="Website URL">Visit our website</a></p>
+        `,
+    });
     res.status(200).json({
         status: 'SUCCESS',
         data: {

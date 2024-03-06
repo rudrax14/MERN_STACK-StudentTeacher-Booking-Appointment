@@ -3,13 +3,14 @@ const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
-const sendEmail = require('../utils/sendEmail');
+const { connect } = require('../utils/sendEmail');
+const transporter = connect()
 
 
 exports.setRole = function (role) {
-  
+
   return (req, res, next) => {
-    
+
     req.body.roles = role;
     next();
   };
@@ -33,7 +34,7 @@ const filterObj = (obj) => {
 
 exports.allow = (...roles) => {
   return (req, res, next) => {
-    
+
     if (roles.includes(req.user.role)) {
       next();
     } else {
@@ -43,9 +44,9 @@ exports.allow = (...roles) => {
 };
 
 exports.createTeacher = catchAsync(async (req, res, next) => {
-  
-  
-  
+
+
+
   const user = {
     email: req.body.email,
     name: req.body.name,
@@ -73,7 +74,7 @@ exports.createTeacher = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllTeachers = catchAsync(async (req, res, next) => {
-  const users = await User.find({roles:'teacher'}).populate('appointments');
+  const users = await User.find({ roles: 'teacher' }).populate('appointments');
 
   res.status(200).json({
     status: 'SUCCESS',
@@ -117,7 +118,20 @@ exports.deleteTeacher = catchAsync(async (req, res, next) => {
 
 exports.approveStudent = catchAsync(async (req, res, next) => {
   await User.findByIdAndUpdate(req.params.id, { admissionStatus: true }, { where: { roles: 'student' } });
-
+  const studentEmail = await User.findById(req.params.id).select('email');
+  // console.log("studentmail", studentEmail.email)
+  let info = await transporter.sendMail({
+    from: '"tutor-time@brevo.com',
+    to: studentEmail.email,
+    subject: "Appointment Accepted",
+    html: `
+    <h2>Congratulations!</h2>
+    <p>Your account has been approved on TUTOR-TIME.</p>
+    <p>You can now access all the features and resources available to students.</p>
+    <p>Best regards,</p>
+    <p>From TUTOR-TIME</p>
+    `,
+  });
   res.status(200).json({
     message: 'Student Approved',
   });

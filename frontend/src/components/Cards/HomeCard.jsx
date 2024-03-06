@@ -1,4 +1,5 @@
 import React from 'react'
+import capitalizeName from '../capitalizeName'
 
 
 function HomeCard({ img, name }) {
@@ -8,10 +9,10 @@ function HomeCard({ img, name }) {
                 <img
                     src={img}
                     className="card-img-top"
-                    alt={name}
+                    alt={capitalizeName(name)}
                 />
                 <div className="card-body text-center">
-                    <h5 className="card-title">{name}</h5>
+                    <h5 className="card-title">{capitalizeName(name)}</h5>
                     <a href={`/${name}/login`} className="btn btn-primary">
                         Let's Go
                     </a>

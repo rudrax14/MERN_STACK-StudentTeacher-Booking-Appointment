@@ -7,7 +7,7 @@ import HomeCard from "../components/Cards/HomeCard";
 function Home() {
   return (
     <>
-      <div className="container d-flex">
+      <div className="d-flex align-items-center justify-content-center container" style={{ height: '100vh' }}>
         <div className="row">
           <HomeCard img={student} name="student" />
           <HomeCard img={teacher} name="teacher" />

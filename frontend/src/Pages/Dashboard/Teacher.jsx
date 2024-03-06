@@ -4,12 +4,15 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 import Header from "../../components/Header";
+import Spinner from "../../components/UI/Spinner";
+
 function Teacher() {
   const navigate = useNavigate();
   const [cards, setCards] = useState([]);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState("");
   const [highlightedTimeSlot, setHighlightedTimeSlot] = useState("");
   const [studentEmail, setStudentEmail] = useState("");
+  const [spinner, setSpinner] = useState(false);
 
   const getCurrentDate = () => {
     const currentDate = new Date();
@@ -32,7 +35,7 @@ function Teacher() {
         navigate("/teacher/login");
       } else {
         const response = await axios.get(
-          "http://localhost:5000/api/v1/teachers/getAllPendingStudents",
+          "/api/v1/teachers/getAllPendingStudents",
           {
             headers: {
               Authorization: `Bearer ${jwtToken}`,
@@ -53,7 +56,7 @@ function Teacher() {
 
             if (emailToFilter) {
               const messageResponse = await axios.get(
-                "http://localhost:5000/api/v1/messages",
+                "/api/v1/messages",
                 {
                   headers: {
                     Authorization: `Bearer ${jwtToken}`,
@@ -84,7 +87,7 @@ function Teacher() {
       const jwtToken = localStorage.getItem("Teachers jwtToken");
 
       const response = await axios.get(
-        "http://localhost:5000/api/v1/teachers/schedule",
+        "/api/v1/teachers/schedule",
         {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
@@ -106,14 +109,16 @@ function Teacher() {
     try {
       const jwtToken = localStorage.getItem("Teachers jwtToken");
 
+
       const response = await axios.delete(
-        `http://localhost:5000/api/v1/teachers/reschedule/${appointmentId}`,
+        `/api/v1/teachers/reschedule/${appointmentId}`,
         {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
           },
         }
       );
+
       toast.success("Appoinment Deleted Successfully");
       if (response.status === 200) {
         setTableAppointments((prevAppointments) =>
@@ -123,6 +128,7 @@ function Teacher() {
         );
       }
     } catch (error) {
+
       console.error("Error deleting appointment:", error);
     }
   };
@@ -133,7 +139,7 @@ function Teacher() {
       const emailToFilter = email;
 
       const response = await axios.get(
-        "http://localhost:5000/api/v1/messages",
+        "/api/v1/messages",
         {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
@@ -162,16 +168,17 @@ function Teacher() {
 
   const handleStudentApprove = async (studentId, teacherAppointmentId) => {
     try {
+      setSpinner(true);
       const jwtToken = localStorage.getItem("Teachers jwtToken");
 
-      const url = `http://localhost:5000/api/v1/teachers/changeApprovalStatus/${teacherAppointmentId}/${studentId}`;
+      const url = `/api/v1/teachers/changeApprovalStatus/${teacherAppointmentId}/${studentId}`;
 
       const headers = {
         Authorization: `Bearer ${jwtToken}`,
       };
 
       const response = await axios.patch(url, null, { headers });
-
+      setSpinner(false);
       console.log("Approval status changed successfully", response.data);
 
       setCards((prevCards) => {
@@ -188,19 +195,21 @@ function Teacher() {
       });
       toast.success("Student Added");
     } catch (error) {
+      setSpinner(false);
       console.error("Error changing approval status:", error.message);
     }
   };
   const handleStudentReject = async (studentId, teacherAppointmentId) => {
     try {
+      setSpinner(true);
       const jwtToken = localStorage.getItem("Teachers jwtToken");
-      const url = `http://localhost:5000/api/v1/teachers/changeApprovalStatus/${teacherAppointmentId}/${studentId}`;
+      const url = `/api/v1/teachers/changeApprovalStatus/${teacherAppointmentId}/${studentId}`;
       const headers = {
         Authorization: `Bearer ${jwtToken}`,
       };
 
       const response = await axios.delete(url, { headers });
-
+      setSpinner(false);
       console.log("Student rejected:", response.data);
       setCards((prevCards) => {
         const updatedCards = prevCards.map((schedule) => {
@@ -215,6 +224,7 @@ function Teacher() {
       });
       toast.info("Student Rejected");
     } catch (error) {
+      setSpinner(false);
       console.error("Error changing approval status:", error.message);
     }
   };
@@ -232,7 +242,7 @@ function Teacher() {
     try {
       const jwtToken = localStorage.getItem("Teachers jwtToken");
       const response = await axios.post(
-        "http://localhost:5000/api/v1/teachers/schedule",
+        `/api/v1/teachers/schedule`,
         {
           scheduleAt: selectedTimeSlot,
         },
@@ -252,305 +262,312 @@ function Teacher() {
 
   return (
     <>
-      {/* header */}
-      <Header name='Teacher Dashboard' style='success' />
+      {spinner ? (
+        <Spinner />
+      ) : (
+        <>
 
-      {/* teacher slot modal */}
-      <div
-        className="modal fade"
-        id="exampleModal"
-        tabIndex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h1 className="modal-title fs-5" id="exampleModalLabel">
-                Update Lectures
-              </h1>
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
+          {/* header */}
+          < Header name='Teacher Dashboard' style='success' />
+
+          {/* teacher slot modal */}
+          <div
+            className="modal fade"
+            id="exampleModal"
+            tabIndex="-1"
+            aria-labelledby="exampleModalLabel"
+            aria-hidden="true"
+          >
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h1 className="modal-title fs-5" id="exampleModalLabel">
+                    Update Lectures
+                  </h1>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <form onSubmit={handleSubmit}>
+                  <div className="modal-body">
+                    <div className="mb-3 row">
+                      <label>Time Slot</label>
+                      <div className="mt-1">
+                        <button
+                          type="button"
+                          className={`btn  ${highlightedTimeSlot === `${getCurrentDate()}T14:00:00`
+                            ? "btn-primary"
+                            : "btn-outline-secondary"
+                            }`}
+                          onClick={() =>
+                            handleTimeSlotSelect(`${getCurrentDate()}T14:00:00`)
+                          }
+                        >
+                          2pm-4pm
+                        </button>
+                        <button
+                          type="button"
+                          className={`btn  ${highlightedTimeSlot === `${getCurrentDate()}T17:00:00`
+                            ? "btn-primary"
+                            : "btn-outline-secondary"
+                            }`}
+                          onClick={() =>
+                            handleTimeSlotSelect(`${getCurrentDate()}T17:00:00`)
+                          }
+                        >
+                          5pm-6pm
+                        </button>
+                        <button
+                          type="button"
+                          className={`btn  ${highlightedTimeSlot === `${getCurrentDate()}T19:00:00`
+                            ? "btn-primary"
+                            : "btn-outline-secondary"
+                            }`}
+                          onClick={() =>
+                            handleTimeSlotSelect(`${getCurrentDate()}T19:00:00`)
+                          }
+                        >
+                          7pm-8pm
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="modal-footer">
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      Close
+                    </button>
+                    <input
+                      type="submit"
+                      value="Add"
+                      className="btn btn-primary"
+                      data-bs-dismiss="modal"
+                    />
+                  </div>
+                </form>
+              </div>
             </div>
-            <form onSubmit={handleSubmit}>
-              <div className="modal-body">
-                <div className="mb-3 row">
-                  <label>Time Slot</label>
-                  <div className="mt-1">
-                    <button
-                      type="button"
-                      className={`btn  ${highlightedTimeSlot === `${getCurrentDate()}T14:00:00`
-                        ? "btn-primary"
-                        : "btn-outline-secondary"
-                        }`}
-                      onClick={() =>
-                        handleTimeSlotSelect(`${getCurrentDate()}T14:00:00`)
-                      }
-                    >
-                      2pm-4pm
-                    </button>
-                    <button
-                      type="button"
-                      className={`btn  ${highlightedTimeSlot === `${getCurrentDate()}T17:00:00`
-                        ? "btn-primary"
-                        : "btn-outline-secondary"
-                        }`}
-                      onClick={() =>
-                        handleTimeSlotSelect(`${getCurrentDate()}T17:00:00`)
-                      }
-                    >
-                      5pm-6pm
-                    </button>
-                    <button
-                      type="button"
-                      className={`btn  ${highlightedTimeSlot === `${getCurrentDate()}T19:00:00`
-                        ? "btn-primary"
-                        : "btn-outline-secondary"
-                        }`}
-                      onClick={() =>
-                        handleTimeSlotSelect(`${getCurrentDate()}T19:00:00`)
-                      }
-                    >
-                      7pm-8pm
-                    </button>
+          </div>
+          {/* student message modal */}
+          <div className="modal fade" id="messageModal" tabIndex="-1" role="dialog">
+            <div className="modal-dialog" role="document">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Student Message</h5>
+                </div>
+                <div className="modal-body">
+                  {/* Render the messages in the modal */}
+                  {messages.map((message) => (
+                    <div key={message._id}>
+                      <p className="border border-light-subtle">
+                        {message.messageText}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+                <div className="modal-footer">
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                  >
+                    Close
+                  </button>
+                  {/* <button type="button" className="btn btn-primary" data-bs-dismiss="modal">
+                Send Message
+              </button> */}
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* dashbord container */}
+          <div className="container py-4">
+            <div className="pagecontent">
+              <h2>Status</h2>
+
+              <hr className="mt-0 mb-4" />
+              <div className="row justify-content-around row-cols-4 text-center gy-5">
+                <div
+                  className="card bg-primary text-white h-100"
+                  style={{ width: "18rem" }}
+                >
+                  <div className="card-body ">
+                    <p className="fw-semibold fs-5">Schedule Appointment</p>
+                    <p className="fw-normal fs-6">{tableAppointments.length}</p>
+                  </div>
+                  <div
+                    className="card-footer d-flex"
+                    type="button"
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModal"
+                  >
+                    Add Appoinment
+                    <span className="ms-auto ">
+                      <BsChevronRight />
+                    </span>
                   </div>
                 </div>
               </div>
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  data-bs-dismiss="modal"
-                >
-                  Close
-                </button>
-                <input
-                  type="submit"
-                  value="Add"
-                  className="btn btn-primary"
-                  data-bs-dismiss="modal"
-                />
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-      {/* student message modal */}
-      <div className="modal fade" id="messageModal" tabIndex="-1" role="dialog">
-        <div className="modal-dialog" role="document">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title">Student Message</h5>
-            </div>
-            <div className="modal-body">
-              {/* Render the messages in the modal */}
-              {messages.map((message) => (
-                <div key={message._id}>
-                  <p className="border border-light-subtle">
-                    {message.messageText}
-                  </p>
-                </div>
-              ))}
-            </div>
-            <div className="modal-footer">
-              <button
-                type="button"
-                className="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Close
-              </button>
-              {/* <button type="button" className="btn btn-primary" data-bs-dismiss="modal">
-                Send Message
-              </button> */}
             </div>
           </div>
-        </div>
-      </div>
-      {/* dashbord container */}
-      <div className="container py-4">
-        <div className="pagecontent">
-          <h2>Status</h2>
+          {/* table info container */}
 
-          <hr className="mt-0 mb-4" />
-          <div className="row justify-content-around row-cols-4 text-center gy-5">
-            <div
-              className="card bg-primary text-white h-100"
-              style={{ width: "18rem" }}
-            >
-              <div className="card-body ">
-                <p className="fw-semibold fs-5">Schedule Appointment</p>
-                <p className="fw-normal fs-6">{tableAppointments.length}</p>
-              </div>
-              <div
-                className="card-footer d-flex"
-                type="button"
-                data-bs-toggle="modal"
-                data-bs-target="#exampleModal"
-              >
-                Add Appoinment
-                <span className="ms-auto ">
-                  <BsChevronRight />
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      {/* table info container */}
+          <div className="container py-4">
+            <h2>Your All Upcoming Appointment Details</h2>
 
-      <div className="container py-4">
-        <h2>Your All Upcoming Appointment Details</h2>
-
-        <hr className="mt-0 mb-4" />
-        <table className="table table-hover me-5">
-          <thead>
-            <tr>
-              <th scope="col">Sr.No</th>
-              <th scope="col">Name</th>
-              <th scope="col">Email</th>
-              <th scope="col">Date</th>
-              <th scope="col">Shedule Time</th>
-              <th scope="col">Delete</th>
-            </tr>
-          </thead>
-          <tbody>
-            {tableAppointments.map((appointment, index) => {
-              const scheduleDate = new Date(appointment.scheduleAt);
-              const formattedDate = scheduleDate.toLocaleDateString();
-              const formattedTime = scheduleDate.toLocaleTimeString();
-
-              return (
-                <tr key={index}>
-                  <td>{index + 1}</td>
-                  <td>{appointment.name}</td>
-                  <td>{appointment.sendBy}</td>
-                  <td>{formattedDate}</td>
-                  <td>{formattedTime}</td>
-                  <td>
-                    <button
-                      className="bg-danger text-white rounded p-2 border-0"
-                      onClick={() => handleDeleteAppointment(appointment._id)}
-                    >
-                      <i className="fa-solid fa-trash"></i>
-                    </button>
-                  </td>
+            <hr className="mt-0 mb-4" />
+            <table className="table table-hover me-5">
+              <thead>
+                <tr>
+                  <th scope="col">Sr.No</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Shedule Time</th>
+                  <th scope="col">Delete</th>
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-      {/* student card container */}
-      <div className="container py-4">
-        <div className="pagecontent">
-          <h2>Approve/cancel Appointment</h2>
-          {/* <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit</p> */}
-          <hr className="mt-0 mb-4" />
-          <div
-            className="d-flex flex-wrap justify-content-center"
-            style={{ gap: "1rem" }}
-          >
-            {cards.map((schedule) => (
-              <div
-                key={schedule.scheduleAt}
-                className="schedule-container d-flex flex-wrap justify-content-center"
-              >
-                {schedule.students.map((studentInfo) => {
-                  const {
-                    _id: teacherAppointmentId,
-                    name: teacherName,
-                    scheduleAt,
-                  } = schedule;
-                  const {
-                    _id: studentId,
-                    name,
-                    department,
-                    email,
-                  } = studentInfo.studentId;
+              </thead>
+              <tbody>
+                {tableAppointments.map((appointment, index) => {
+                  const scheduleDate = new Date(appointment.scheduleAt);
+                  const formattedDate = scheduleDate.toLocaleDateString();
+                  const formattedTime = scheduleDate.toLocaleTimeString();
 
                   return (
-                    <div
-                      key={studentId}
-                      className="card m-3"
-                      style={{ width: "18rem" }}
-                    >
-                      <img
-                        src="https://static.vecteezy.com/system/resources/previews/001/942/923/large_2x/student-boy-with-school-suitcase-back-to-school-free-vector.jpg"
-                        className="card-img-top"
-                        alt="..."
-                        style={{ height: "256px" }}
-                      />
-                      <div className="card-body">
-                        <h5 className="card-title">{name}</h5>
-                        <p className="card-text">Department: {department}</p>
-                        <p>
-                          Timing:{" "}
-                          {new Date(scheduleAt).toLocaleTimeString([], {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                        </p>
-                        {/* <p className="card-text">ID: {studentId}</p> */}
-                        {/* <p className="card-title">{teacherAppointmentId}</p> */}
-                        <div className="d-flex justify-content-around">
-                          <button
-                            className="bg-success text-white rounded p-2 border-0"
-                            onClick={() => {
-                              handleStudentApprove(
-                                studentId,
-                                teacherAppointmentId
-                              );
-
-                            }}
-                          >
-                            Approve
-                          </button>
-                          <button
-                            className="bg-danger text-white rounded p-2 border-0"
-                            onClick={() => {
-                              handleStudentReject(
-                                studentId,
-                                teacherAppointmentId
-                              );
-
-                            }}
-                          >
-                            Reject
-                          </button>
-                          <button
-                            type="button"
-                            className="btn btn-primary position-relative"
-                            data-bs-toggle="modal"
-                            data-bs-target="#messageModal"
-                            onClick={() => {
-                              setStudentEmail(email);
-                              setMessages([]); // Clear existing messages
-                              fetchMessages(email); // Assuming studentId is the student email
-                            }}
-                          >
-                            Inbox
-                            <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                              {messageCounts[email] || 0}
-                              <span className="visually-hidden">
-                                unread messages
-                              </span>
-                            </span>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
+                    <tr key={index}>
+                      <td>{index + 1}</td>
+                      <td>{appointment.name}</td>
+                      <td>{appointment.sendBy}</td>
+                      <td>{formattedDate}</td>
+                      <td>{formattedTime}</td>
+                      <td>
+                        <button
+                          className="bg-danger text-white rounded p-2 border-0"
+                          onClick={() => handleDeleteAppointment(appointment._id)}
+                        >
+                          <i className="fa-solid fa-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
                   );
                 })}
-              </div>
-            ))}
+              </tbody>
+            </table>
           </div>
-        </div>
-      </div>
+          {/* student card container */}
+          <div className="container py-4">
+            <div className="pagecontent">
+              <h2>Approve/cancel Appointment</h2>
+              {/* <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit</p> */}
+              <hr className="mt-0 mb-4" />
+              <div
+                className="d-flex flex-wrap justify-content-center"
+                style={{ gap: "1rem" }}
+              >
+                {cards.map((schedule) => (
+                  <div
+                    key={schedule.scheduleAt}
+                    className="schedule-container d-flex flex-wrap justify-content-center"
+                  >
+                    {schedule.students.map((studentInfo) => {
+                      const {
+                        _id: teacherAppointmentId,
+                        name: teacherName,
+                        scheduleAt,
+                      } = schedule;
+                      const {
+                        _id: studentId,
+                        name,
+                        department,
+                        email,
+                      } = studentInfo.studentId;
+
+                      return (
+                        <div
+                          key={studentId}
+                          className="card m-3"
+                          style={{ width: "18rem" }}
+                        >
+                          <img
+                            src="https://static.vecteezy.com/system/resources/previews/001/942/923/large_2x/student-boy-with-school-suitcase-back-to-school-free-vector.jpg"
+                            className="card-img-top"
+                            alt="..."
+                            style={{ height: "256px" }}
+                          />
+                          <div className="card-body">
+                            <h5 className="card-title">{name}</h5>
+                            <p className="card-text">Department: {department}</p>
+                            <p>
+                              Timing:{" "}
+                              {new Date(scheduleAt).toLocaleTimeString([], {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
+                            </p>
+                            {/* <p className="card-text">ID: {studentId}</p> */}
+                            {/* <p className="card-title">{teacherAppointmentId}</p> */}
+                            <div className="d-flex justify-content-around">
+                              <button
+                                className="bg-success text-white rounded p-2 border-0"
+                                onClick={() => {
+                                  handleStudentApprove(
+                                    studentId,
+                                    teacherAppointmentId
+                                  );
+
+                                }}
+                              >
+                                Approve
+                              </button>
+                              <button
+                                className="bg-danger text-white rounded p-2 border-0"
+                                onClick={() => {
+                                  handleStudentReject(
+                                    studentId,
+                                    teacherAppointmentId
+                                  );
+
+                                }}
+                              >
+                                Reject
+                              </button>
+                              <button
+                                type="button"
+                                className="btn btn-primary position-relative"
+                                data-bs-toggle="modal"
+                                data-bs-target="#messageModal"
+                                onClick={() => {
+                                  setStudentEmail(email);
+                                  setMessages([]); // Clear existing messages
+                                  fetchMessages(email); // Assuming studentId is the student email
+                                }}
+                              >
+                                Inbox
+                                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                  {messageCounts[email] || 0}
+                                  <span className="visually-hidden">
+                                    unread messages
+                                  </span>
+                                </span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </>
   );
 }
