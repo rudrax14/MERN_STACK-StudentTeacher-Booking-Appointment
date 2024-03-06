@@ -4,7 +4,6 @@ import Navbar from "../../UI/Navbar";
 import Alert from "../../Alert";
 import { useState } from "react";
 import axios from "axios";
-import { useUser } from "../../../context/Provider";
 
 function Student() {
   const navigate = useNavigate();
