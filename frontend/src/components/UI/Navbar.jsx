@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -8,7 +8,6 @@ const Navbar = () => {
   const shouldShowLink = !isRootRoute;
 
   const changeHandler = () => {
-    toast.success("Logout Successfully");
     localStorage.removeItem("Teachers jwtToken");
     localStorage.removeItem("Student jwtToken");
     localStorage.removeItem("Student Name");
@@ -16,8 +15,21 @@ const Navbar = () => {
     localStorage.removeItem("jwtToken");
     localStorage.removeItem("Teacher Name");
     localStorage.removeItem("Admin Name");
+    toast.success("Logout Successfully");
     navigate("/");
   };
+
+  // useEffect(() => {
+  //   if (location.pathname === "/") {
+  //     localStorage.removeItem("Teachers jwtToken");
+  //     localStorage.removeItem("Student jwtToken");
+  //     localStorage.removeItem("Student Name");
+  //     localStorage.removeItem("email");
+  //     localStorage.removeItem("jwtToken");
+  //     localStorage.removeItem("Teacher Name");
+  //     localStorage.removeItem("Admin Name");
+  //   }
+  // }, []);
 
   const userData =
     localStorage.getItem("Student Name") ||
@@ -28,7 +40,7 @@ const Navbar = () => {
     <>
       <nav className="navbar navbar-dark bg-dark sticky-top navbar-expand-sm">
         <div className="container-fluid">
-          <a className="navbar-brand" href="/">
+          <a className="navbar-brand" href="/" onClick={changeHandler}>
             Tutor-Time
           </a>
 

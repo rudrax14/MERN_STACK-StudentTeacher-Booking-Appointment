@@ -24,7 +24,7 @@ function Student() {
           },
         }
       );
-      console.log(response.data.appointments);
+      // console.log(response.data.appointments);
       setLectureDetails(response.data.appointments);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -36,7 +36,7 @@ function Student() {
     ///////////////////////////////////////////////////////////////
     const emailAdd = localStorage.getItem("email");
     setEmail(emailAdd);
-    console.log(emailAdd);
+    // console.log(emailAdd);
     const fetchData = async () => {
       try {
         const jwtToken = localStorage.getItem("Student jwtToken");
@@ -79,8 +79,8 @@ function Student() {
 
   async function submitHandler(event) {
     event.preventDefault();
-    console.log("Message Data");
-    console.log(formData);
+    // console.log("Message Data");
+    // console.log(formData);
 
     const messageObject = {
       to: teacherEmail,
@@ -120,7 +120,7 @@ function Student() {
     try {
       setSpinner(true);
       const jwtToken = localStorage.getItem("Student jwtToken");
-      console.log(jwtToken);
+      // console.log(jwtToken);
       const response = await axios.patch(
         `/api/v1/student/appointment/${appointmentId}`, {},
         {
@@ -132,7 +132,7 @@ function Student() {
       setSpinner(false);
       toast.success("Appointment booked successfully");
       fetchTable();
-      console.log("Appointment booked successfully:", response.data);
+      // console.log("Appointment booked successfully:", response.data);
     } catch (error) {
       setSpinner(false);
       console.error("Error booking appointment:", error);

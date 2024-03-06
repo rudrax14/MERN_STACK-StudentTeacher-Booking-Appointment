@@ -94,7 +94,7 @@ function Teacher() {
           },
         }
       );
-      console.log(response.data.appointments);
+      // console.log(response.data.appointments);
       setTableAppointments(response.data.appointments);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -149,7 +149,7 @@ function Teacher() {
           },
         }
       );
-      console.log(response.data);
+      // console.log(response.data);
       if (response.status === 200) {
         const data = response.data;
         setMessages(data.messages);
@@ -179,7 +179,7 @@ function Teacher() {
 
       const response = await axios.patch(url, null, { headers });
       setSpinner(false);
-      console.log("Approval status changed successfully", response.data);
+      // console.log("Approval status changed successfully", response.data);
 
       setCards((prevCards) => {
         const updatedCards = prevCards.map((schedule) => {
@@ -210,7 +210,7 @@ function Teacher() {
 
       const response = await axios.delete(url, { headers });
       setSpinner(false);
-      console.log("Student rejected:", response.data);
+      // console.log("Student rejected:", response.data);
       setCards((prevCards) => {
         const updatedCards = prevCards.map((schedule) => {
           return {
@@ -237,7 +237,7 @@ function Teacher() {
   //appoinment assign
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("Time Slot = ", selectedTimeSlot);
+    // console.log("Time Slot = ", selectedTimeSlot);
 
     try {
       const jwtToken = localStorage.getItem("Teachers jwtToken");

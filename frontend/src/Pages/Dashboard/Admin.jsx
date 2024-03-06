@@ -165,7 +165,7 @@ function Admin() {
           },
         }
       );
-      console.log(response.data);
+      // console.log(response.data);
       setSpinner(false);
       toast.success("Student approved successfully");
     } catch (error) {
