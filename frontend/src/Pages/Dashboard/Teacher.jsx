@@ -3,6 +3,7 @@ import { BsChevronRight } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
+import Header from "../../components/Header";
 function Teacher() {
   const navigate = useNavigate();
   const [cards, setCards] = useState([]);
@@ -252,11 +253,7 @@ function Teacher() {
   return (
     <>
       {/* header */}
-      <div className="header-container shadow p-3 mb-5 bg-success text-white ">
-        <div className="container d-flex justify-content-center">
-          <p className="fs-1">Teacher Dashboard</p>
-        </div>
-      </div>
+      <Header name='Teacher Dashboard' style='success' />
 
       {/* teacher slot modal */}
       <div

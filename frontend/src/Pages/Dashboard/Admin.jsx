@@ -4,6 +4,7 @@ import { BsChevronRight } from "react-icons/bs";
 import { toast } from "react-toastify";
 
 import axios from "axios";
+import Header from "../../components/Header";
 function Admin() {
   const navigate = useNavigate();
   const [teachers, setTeachers] = useState([]);
@@ -185,11 +186,7 @@ function Admin() {
 
   return (
     <>
-      <div className="header-container shadow p-3 mb-5 bg-danger text-white">
-        <div className="container d-flex justify-content-center">
-          <p className="fs-1">Admin Dashboard</p>
-        </div>
-      </div>
+      <Header name='Admin Dashboard' style='danger' />
       {/* ----------------------------------------------------------------------------------------------------- */}
       {/* modal */}
       <div
@@ -282,7 +279,7 @@ function Admin() {
                   value="Add Teacher"
                   className="btn btn-primary"
                   data-bs-dismiss="modal"
-                  // onClick={()=> window.location.reload()}
+                // onClick={()=> window.location.reload()}
                 />
               </div>
             </form>

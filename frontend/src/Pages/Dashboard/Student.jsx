@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
+import Header from "../../components/Header";
 function Student() {
   const navigate = useNavigate();
   const [lectureDetails, setLectureDetails] = useState([]);
@@ -187,11 +188,7 @@ function Student() {
         </div>
       </div>
       {/* header */}
-      <div className="header-container shadow p-3 mb-5 bg-primary text-white">
-        <div className="container d-flex justify-content-center">
-          <p className="fs-1">Student Dashboard</p>
-        </div>
-      </div>
+      <Header name='Student Dashboard' style='primary' />
       {/* info table */}
       <div className="container py-4">
         <h2>Your Upcoming Lectures Details</h2>
