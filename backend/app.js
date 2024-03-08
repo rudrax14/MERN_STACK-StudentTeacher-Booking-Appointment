@@ -7,7 +7,7 @@ const teacherRoutes = require('./routes/teacherRoutes')
 const studentRoutes = require('./routes/studentRoutes')
 const messageRoutes = require('./routes/messageRoutes')
 app.use(express.json())
-app.use(cors({ origin: 'http://localhost:3000' }));
+app.use(cors());
 
 
 

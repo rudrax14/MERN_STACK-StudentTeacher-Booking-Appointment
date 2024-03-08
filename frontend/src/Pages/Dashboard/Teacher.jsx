@@ -35,7 +35,7 @@ function Teacher() {
         navigate("/teacher/login");
       } else {
         const response = await axios.get(
-          "/api/v1/teachers/getAllPendingStudents",
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/teachers/getAllPendingStudents`,
           {
             headers: {
               Authorization: `Bearer ${jwtToken}`,
@@ -56,7 +56,7 @@ function Teacher() {
 
             if (emailToFilter) {
               const messageResponse = await axios.get(
-                "/api/v1/messages",
+                `${import.meta.env.VITE_BACKEND_URL}/api/v1/messages`,
                 {
                   headers: {
                     Authorization: `Bearer ${jwtToken}`,
@@ -87,7 +87,7 @@ function Teacher() {
       const jwtToken = localStorage.getItem("Teachers jwtToken");
 
       const response = await axios.get(
-        "/api/v1/teachers/schedule",
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/teachers/schedule`,
         {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
@@ -111,7 +111,7 @@ function Teacher() {
 
 
       const response = await axios.delete(
-        `/api/v1/teachers/reschedule/${appointmentId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/teachers/reschedule/${appointmentId}`,
         {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
@@ -139,7 +139,7 @@ function Teacher() {
       const emailToFilter = email;
 
       const response = await axios.get(
-        "/api/v1/messages",
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/messages`,
         {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
@@ -171,7 +171,7 @@ function Teacher() {
       setSpinner(true);
       const jwtToken = localStorage.getItem("Teachers jwtToken");
 
-      const url = `/api/v1/teachers/changeApprovalStatus/${teacherAppointmentId}/${studentId}`;
+      const url = `${import.meta.env.VITE_BACKEND_URL}/api/v1/teachers/changeApprovalStatus/${teacherAppointmentId}/${studentId}`;
 
       const headers = {
         Authorization: `Bearer ${jwtToken}`,
@@ -203,7 +203,7 @@ function Teacher() {
     try {
       setSpinner(true);
       const jwtToken = localStorage.getItem("Teachers jwtToken");
-      const url = `/api/v1/teachers/changeApprovalStatus/${teacherAppointmentId}/${studentId}`;
+      const url = `${import.meta.env.VITE_BACKEND_URL}/api/v1/teachers/changeApprovalStatus/${teacherAppointmentId}/${studentId}`;
       const headers = {
         Authorization: `Bearer ${jwtToken}`,
       };
@@ -242,7 +242,7 @@ function Teacher() {
     try {
       const jwtToken = localStorage.getItem("Teachers jwtToken");
       const response = await axios.post(
-        `/api/v1/teachers/schedule`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/teachers/schedule`,
         {
           scheduleAt: selectedTimeSlot,
         },

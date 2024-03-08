@@ -18,7 +18,7 @@ function Admin() {
       if (jwtToken == null) {
         navigate("/admin/login");
       } else {
-        const response = await axios.get(`/api/v1/admin`, {
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/admin`, {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
           },
@@ -40,7 +40,7 @@ function Admin() {
     const fetchStudents = async () => {
       try {
         const response = await axios.get(
-          `/api/v1/teachers`,
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/teachers`,
           {
             params: {
               admissionStatus: false,
@@ -60,7 +60,7 @@ function Admin() {
   const handleDeleteTeacher = async (_id, index) => {
     try {
       const jwtToken = localStorage.getItem("jwtToken");
-      await axios.delete(`/api/v1/admin/${_id}`, {
+      await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/v1/admin/${_id}`, {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
         },
@@ -113,7 +113,7 @@ function Admin() {
     try {
       const jwtToken = localStorage.getItem("jwtToken");
       const response = await axios.post(
-        `/api/v1/admin`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/admin`,
         requestData,
         {
           headers: {
@@ -157,7 +157,7 @@ function Admin() {
       setSpinner(true);
       const jwtToken = localStorage.getItem("jwtToken");
       const response = await axios.patch(
-        `/api/v1/admin/approvestudent/${_id}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/admin/approvestudent/${_id}`,
         null,
         {
           headers: {
@@ -180,7 +180,7 @@ function Admin() {
       setSpinner(true);
       const jwtToken = localStorage.getItem("jwtToken");
       const response = await axios.delete(
-        `/api/v1/admin/rejectStudent/${_id}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/admin/rejectStudent/${_id}`,
         {
           headers: {
             Authorization: `Bearer ${jwtToken}`,

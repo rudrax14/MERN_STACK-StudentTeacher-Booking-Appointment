@@ -44,7 +44,7 @@ function Student() {
       passwordConfirm: formData.passwordConfirm,
     };
     setSpinner(true);
-    fetch("/api/v1/student/register", {
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/student/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -17,7 +17,7 @@ function Student() {
       const jwtToken = localStorage.getItem("Student jwtToken");
 
       const response = await axios.get(
-        `/api/v1/student/appointment/getRegisteredAppointments`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/student/appointment/getRegisteredAppointments`,
         {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
@@ -44,7 +44,7 @@ function Student() {
           navigate("/student/login");
         } else {
           const response = await axios.get(
-            `/api/v1/admin`,
+            `${import.meta.env.VITE_BACKEND_URL}/api/v1/admin`,
             {
               headers: {
                 Authorization: `Bearer ${jwtToken}`,
@@ -92,7 +92,7 @@ function Student() {
     try {
       const jwtToken = localStorage.getItem("Student jwtToken");
       const response = await axios.post(
-        `/api/v1/messages`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/messages`,
         messageObject,
         {
           headers: {
@@ -122,7 +122,7 @@ function Student() {
       const jwtToken = localStorage.getItem("Student jwtToken");
       // console.log(jwtToken);
       const response = await axios.patch(
-        `/api/v1/student/appointment/${appointmentId}`, {},
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/student/appointment/${appointmentId}`, {},
         {
           headers: {
             Authorization: `Bearer ${jwtToken}`,

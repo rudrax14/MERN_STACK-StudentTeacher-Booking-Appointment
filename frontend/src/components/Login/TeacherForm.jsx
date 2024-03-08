@@ -27,7 +27,7 @@ function Teacher() {
     try {
       setSpinner(true);
       const response = await axios.post(
-        "/api/v1/teachers/login",
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/teachers/login`,
         {
           email: formData.email,
           password: formData.password,
