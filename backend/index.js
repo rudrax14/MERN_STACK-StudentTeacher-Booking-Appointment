@@ -7,7 +7,7 @@ const app = express();
 
 dotenv.config({ path: './.env' });
 
-app.use(cors({ origin: true, credentials: true }));
+app.use(cors({ origin: 'https://mern-stack-student-teacher-booking-appointment.vercel.apphttps://mern-stack-student-teacher-booking-frontend.vercel.app' }));
 
 mongoose.set('strictQuery', false);
 
