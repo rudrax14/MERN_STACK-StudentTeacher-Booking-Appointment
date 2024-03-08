@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': 'http://localhost:5000',
+      '/api': 'https://vercel.com/rudras-projects-27a9092e/mern-stack-student-teacher-booking-appointment',
     },
     host: true,
   }
