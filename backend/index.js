@@ -1,5 +1,5 @@
 const dotenv = require('dotenv');
-
+app.use(cors())
 dotenv.config({ path: './.env' });
 
 const app = require('./app')
