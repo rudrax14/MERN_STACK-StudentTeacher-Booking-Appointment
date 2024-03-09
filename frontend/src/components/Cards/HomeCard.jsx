@@ -13,7 +13,7 @@ function HomeCard({ img, name }) {
                 />
                 <div className="card-body text-center">
                     <h5 className="card-title">{capitalizeName(name)}</h5>
-                    <a href={`/api/v1/${name}/login`} className="btn btn-primary">
+                    <a href={`/${name}/login`} className="btn btn-primary">
                         Let's Go
                     </a>
                 </div>
