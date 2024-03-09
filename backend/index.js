@@ -1,31 +1,31 @@
 const express = require("express");
+const app = express();
+
+// cors
 const cors = require("cors");
 const dotenv = require("dotenv");
-const mongoose = require("mongoose");
+
 dotenv.config({ path: "./.env" });
 
-const app = express();
+
+// middleware
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
-mongoose.set("strictQuery", false);
+// Connect to MongoDB
+const connectToMongo = require("./db");
+connectToMongo();
 
-mongoose
-  .connect(process.env.DB_URL)
-  .then(() => {
-    console.log("DB Connected");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
 
-const port = process.env.PORT || 5000;
+
 
 app.get("/", (req, res) => {
   res.send("Welcome to the Tutor-Time API!");
 });
 
+
+// mouting routes
 const adminRoutes = require("./routes/adminRoutes");
 const teacherRoutes = require("./routes/teacherRoutes");
 const studentRoutes = require("./routes/studentRoutes");
@@ -36,13 +36,14 @@ app.use("/api/v1/teachers", teacherRoutes);
 app.use("/api/v1/student", studentRoutes);
 app.use("/api/v1/messages", messageRoutes);
 
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send("Something broke!");
-});
+// global catch
+// app.use((err, req, res, next) => {
+//   console.error(err.stack);
+//   res.status(500).send("Something broke!");
+// });
+
+const port = process.env.PORT || 5000;
 
 app.listen(port, () => {
   console.log("App listening on port " + port);
 });
-
-module.exports = app;

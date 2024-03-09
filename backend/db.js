@@ -4,7 +4,7 @@ const dbUrl = process.env.DB_URL || 'mongodb://127.0.0.1:27017/classroom';
 
 const connectToMongo = () => {
     mongoose.set("strictQuery", false);
-    mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true })
+    mongoose.connect(dbUrl)
         .then(() => {
             console.log("DATABASE CONNECTED")
         })
