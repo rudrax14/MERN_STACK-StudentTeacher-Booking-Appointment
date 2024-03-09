@@ -7,6 +7,9 @@ const router = express.Router();
 router.get('/get', (req, res) => {
     res.send("Welcome to the student Tutor-Time API!")
 })
+router.route('/post').post((req, res) => {
+    res.send("Welcome to the student Tutor-Time API!")
+})
 router.route('/register').post(register);
 router.route('/login').post(login)
 router.route('/appointment/:id').patch(verifyToken, allow('student'), bookAppointment)
