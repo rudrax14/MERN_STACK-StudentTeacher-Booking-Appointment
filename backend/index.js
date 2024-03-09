@@ -7,7 +7,8 @@ const app = express();
 
 dotenv.config({ path: './.env' });
 
-app.use(cors());
+
+
 
 mongoose.set('strictQuery', false);
 
@@ -27,6 +28,7 @@ app.get('/', (req, res) => {
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
 const adminRoutes = require('./routes/adminRoutes');
 const teacherRoutes = require('./routes/teacherRoutes');
