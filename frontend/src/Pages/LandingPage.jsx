@@ -1,7 +1,7 @@
 import React from "react";
-import student from "../assets/students.jpg";
-import teacher from "../assets/teachers.jpg";
-import admin from "../assets/admin.jpg";
+import student from "../../public/assets/students.jpg";
+import teacher from "../../public/assets/teachers.jpg";
+import admin from "../../public/assets/admin.jpg";
 import HomeCard from "../components/Cards/HomeCard";
 
 function Home() {
