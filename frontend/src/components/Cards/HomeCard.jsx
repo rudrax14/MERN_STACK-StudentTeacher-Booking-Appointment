@@ -1,5 +1,6 @@
 import React from 'react'
 import capitalizeName from '../capitalizeName'
+import { Link } from 'react-router-dom'
 
 
 function HomeCard({ img, name }) {
@@ -13,9 +14,9 @@ function HomeCard({ img, name }) {
                 />
                 <div className="card-body text-center">
                     <h5 className="card-title">{capitalizeName(name)}</h5>
-                    <a href={`/${name}/login`} className="btn btn-primary">
+                    <Link to={`/${name}/login`} className="btn btn-primary">
                         Let's Go
-                    </a>
+                    </Link>
                 </div>
             </div>
         </div>
