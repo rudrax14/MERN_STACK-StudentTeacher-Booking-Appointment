@@ -40,9 +40,9 @@ const Navbar = () => {
     <>
       <nav className="navbar navbar-dark bg-dark sticky-top navbar-expand-sm">
         <div className="container-fluid">
-          <a className="navbar-brand" href="/" onClick={changeHandler}>
+          <Link className="navbar-brand" to="/" onClick={changeHandler}>
             Tutor-Time
-          </a>
+          </Link>
 
           <button
             className="navbar-toggler"
