@@ -84,7 +84,7 @@ function Student() {
           {/* <Navbar /> */}
           <section className="mx-auto">
             {/* Register Container */}
-            <div className="container bg-white rounded-2 shadow-lg p-5 w-50 my-5">
+            <div className="container bg-white rounded-2 shadow-lg p-5 my-5">
               {/* Form */}
               <div className="row">
                 <div className="col-md-6">

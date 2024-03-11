@@ -68,7 +68,7 @@ function admin() {
           {/* <Navbar /> */}
           <section className="bg-light min-vh-100 d-flex align-items-center justify-content-center">
             {/* Register Container */}
-            <div className="container bg-white rounded-2 shadow-lg p-5 w-50">
+            <div className="container bg-white rounded-2 shadow-lg p-5">
               {/* Form */}
               <div className="row">
                 <div className="col-md-6">
