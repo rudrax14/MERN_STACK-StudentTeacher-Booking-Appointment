@@ -1,4 +1,4 @@
-import '../styles/LandingPage.css';
+import '../styles/landingPage.css';
 import React from "react";
 import student from "../../public/assets/students.jpg";
 import teacher from "../../public/assets/teachers.jpg";
