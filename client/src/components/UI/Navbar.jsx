@@ -2,6 +2,10 @@ import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { IoIosLogOut } from "react-icons/io";
+import { FaMoon, FaSun } from "react-icons/fa";
+import { ThemeContext } from "../../context/ThemeContext";
+import { useContext } from "react";
+
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -28,20 +32,23 @@ const Navbar = () => {
     localStorage.getItem("Student Name") ||
     localStorage.getItem("Teacher Name") ||
     localStorage.getItem("Admin Name");
-
+  const { theme, toggleTheme } = useContext(ThemeContext); // Use ThemeContext
   return (
     <>
-      <nav className="bg-gray-800 sticky top-0 z-50">
+      <nav className="bg-slate-950 sticky top-0 z-50">
         <div className="container mx-auto px-4 py-2 flex justify-between items-center">
           <Link
             className="text-white text-xl font-bold"
-            // to="/"
+            to={!localData ? "/" : undefined} 
             onClick={() => {
-              toast.success("Welcome to Tutor-Time");
+              if (localData) {
+                toast.success("Welcome to Tutor-Time");
+              }
             }}
           >
             Tutor-Time
           </Link>
+
 
           <div className="flex items-center w-auto">
             {userData && (
@@ -49,6 +56,12 @@ const Navbar = () => {
                 Welcome, {userData}!
               </span>
             )}
+            <button
+              onClick={toggleTheme}
+              className="flex items-center justify-center p-2 rounded-full bg-primary-200 text-white hover:bg-primary-300 focus:outline-none"
+            >
+              {theme === "light" ? <FaMoon /> : <FaSun />}
+            </button>
             {localData && (
               <button
                 className="text-white text-2xl"

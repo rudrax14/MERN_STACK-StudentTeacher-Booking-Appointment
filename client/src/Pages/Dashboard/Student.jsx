@@ -203,8 +203,8 @@ function Student() {
 
 
           {/* header */}
-          <Header name="Student Dashboard" style='bg-blue-500' />
-          <div className="px-4">
+          <Header name="Student Dashboard" style='bg-gradient-to-r from-cyan-500 to-blue-500' />
+          <div className="px-4 dark:bg-slate-900 dark:text-white">
             {/* info table */}
             <div className="container mx-auto py-4">
               <h2 className="text-2xl font-bold mb-2">
@@ -216,17 +216,17 @@ function Student() {
                   <tr>
                     <th className="px-4 py-2">Sr.No</th>
                     <th className="px-4 py-2">Teacher</th>
-                    <th className="px-4 py-2">Subject</th>
+                    {/* <th className="px-4 py-2">Subject</th> */}
                     <th className="px-4 py-2">Date</th>
                     <th className="px-4 py-2">Time Slot</th>
                   </tr>
                 </thead>
                 <tbody>
                   {lectureDetails.map((detail, index) => (
-                    <tr key={index} className="bg-gray-100 text-center">
+                    <tr key={index} className="bg-gray-100 dark:bg-slate-800 text-center hover:dark:bg-slate-950">
                       <td className="border px-4 py-2">{index + 1}</td>
                       <td className="border px-4 py-2">{detail.name}</td>
-                      <td className="border px-4 py-2">{}</td>
+                      {/* <td className="border px-4 py-2">{}</td> */}
                       <td className="border px-4 py-2">
                         {formatDate(detail.scheduleAt)}
                       </td>
@@ -247,7 +247,7 @@ function Student() {
                 <div className="flex flex-wrap justify-center gap-4">
                   {teachers.map((teacher, index) => (
                     <div
-                      className="rounded max-w-80 border shadow-lg p-4 flex flex-col gap-6 justify-between"
+                      className="rounded max-w-80 border shadow-lg p-4 flex flex-col gap-6 justify-between dark:text-white"
                       key={index}
                     >
                       <div>
@@ -257,14 +257,14 @@ function Student() {
                           className="w-full"
                           alt="..."
                         />
-                        <div className="px-6 py-4 flex flex-col gap-4">
+                        <div className="px-6 py-4 flex flex-col gap-4 ">
                           <h5 className="font-bold text-xl mb-2">
                             Name: {teacher.name}
                           </h5>
-                          <p className="text-gray-700 text-base">
+                          <p className="text-gray-700 text-base dark:text-gray-400">
                             Subject: {teacher.subject}
                           </p>
-                          <p className="text-gray-700 text-base">
+                          <p className="text-gray-700 text-base dark:text-gray-400">
                             Email: {teacher.email}
                           </p>
                           {/* Display scheduleAt for each appointment */}
@@ -272,7 +272,7 @@ function Student() {
                             teacher.appointments.map(
                               (appointment, appointmentIndex) => (
                                 <div key={appointmentIndex} className="flex flex-col gap-4">
-                                  <p className="text-gray-700 text-base">
+                                  <p className="text-gray-700 text-base dark:text-gray-400">
                                     Timing:{" "}
                                     {new Date(
                                       appointment.scheduleAt

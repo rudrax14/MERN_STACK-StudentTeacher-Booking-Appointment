@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 function HomeCard({ img, name }) {
   return (
     <div className="w-full sm:w-1/2 lg:w-2/3 my-3 px-2">
-      <div className="bg-white rounded-lg border shadow-md overflow-hidden">
+      <div className="bg-white dark:bg-slate-800 rounded-lg border shadow-md overflow-hidden">
         <img
           src={img}
           className="w-full h-48 object-cover"

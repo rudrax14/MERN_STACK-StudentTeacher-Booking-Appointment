@@ -203,9 +203,9 @@ function Admin() {
         <Spinner />
       ) : (
         <>
-          <Header name="Admin Dashboard" style="bg-red-500" />
-          <section className="container px-6">
-            <div className="py-4">
+          <Header name="Admin Dashboard" style="bg-gradient-to-r from-[#F64C18] to-[#EE9539]" />
+          <section className="dark:bg-slate-900 dark:text-white">
+            <div className="py-4 container px-6">
               <div className="pagecontent">
                 <h2 className="text-2xl font-semibold mb-4">Status</h2>
                 <hr className="mt-0 mb-4" />
@@ -227,14 +227,14 @@ function Admin() {
             </div>
             {/* modal */}
             {isModalOpen && (
-              <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
-                <div className="bg-white rounded-lg shadow-lg p-6 max-w-md mx-4 sm:mx-auto">
+              <div className="fixed inset-0 bg-gray-800 bg-opacity-90 flex justify-center items-center z-50">
+                <div className="bg-white dark:bg-slate-800 border rounded-lg shadow-lg p-6 max-w-md mx-4 sm:mx-auto">
                   <div className="flex justify-between items-center border-b pb-3">
                     <h1 className="text-lg font-semibold">Add Teacher</h1>
                   </div>
                   <form onSubmit={submitHandler} className="mt-4 space-y-4">
                     <input
-                      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300"
+                      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300 dark:bg-slate-700"
                       type="text"
                       name="name"
                       value={formData.name}
@@ -242,15 +242,15 @@ function Admin() {
                       placeholder="Name"
                     />
                     <input
-                      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300"
+                      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300 dark:bg-slate-700"
                       type="text"
                       name="department"
                       value={formData.department}
                       onChange={changeHandler}
-                      placeholder="Department"
+                      placeholder="Department dark:bg-slate-700"
                     />
                     <input
-                      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300"
+                      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300 dark:bg-slate-700"
                       type="text"
                       name="subject"
                       value={formData.subject}
@@ -258,7 +258,7 @@ function Admin() {
                       placeholder="Subject"
                     />
                     <input
-                      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300"
+                      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300 dark:bg-slate-700"
                       type="number"
                       name="age"
                       value={formData.age}
@@ -266,7 +266,7 @@ function Admin() {
                       placeholder="Age"
                     />
                     <input
-                      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300"
+                      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300 dark:bg-slate-700"
                       type="email"
                       value={formData.email}
                       onChange={changeHandler}
@@ -274,7 +274,7 @@ function Admin() {
                       placeholder="Email"
                     />
                     <input
-                      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300"
+                      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300 dark:bg-slate-700"
                       type="password"
                       name="password"
                       value={formData.password}
@@ -282,7 +282,7 @@ function Admin() {
                       placeholder="Password"
                     />
                     <input
-                      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300"
+                      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300 dark:bg-slate-700"
                       type="password"
                       value={formData.passwordConfirm}
                       onChange={changeHandler}
@@ -325,7 +325,7 @@ function Admin() {
                 </thead>
                 <tbody>
                   {teachers.map((teacher, index) => (
-                    <tr key={index} className="hover:bg-gray-100 text-center">
+                    <tr key={index} className="hover:bg-gray-100 hover:dark:bg-slate-950 text-center">
                       <td className="border px-4 py-2">{index + 1}</td>
                       <td className="border px-4 py-2">{teacher.name}</td>
                       <td className="border px-4 py-2">

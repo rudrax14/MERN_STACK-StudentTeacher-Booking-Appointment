@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+    @apply dark:bg-slate-900 dark:text-gray-200 bg-gray-100 text-gray-900 font-sans;
+    @apply min-h-screen
+}

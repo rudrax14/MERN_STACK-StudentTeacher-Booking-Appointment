@@ -3,8 +3,8 @@ import React from 'react';
 function NotFound() {
     document.body.style.overflow = 'hidden';
     return (
-        <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
-            <div className='fs-1'>404 Not Found</div>
+        <div className="flex min-h-screen justify-center items-center dark:bg-slate-900 ">
+            <div className='text-4xl font-medium'>404 Not Found</div>
         </div>
     );
 }

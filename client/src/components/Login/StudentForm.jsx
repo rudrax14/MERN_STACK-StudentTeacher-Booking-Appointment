@@ -65,22 +65,23 @@ function StudentLogin() {
       {spinner ? (
         <Spinner />
       ) : (
-        <section className="bg-gray-100 min-h-screen flex items-center justify-center p-8 w-full">
-          <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
-            <div className="flex flex-col items-center">
+        <section className="bg-gray-100 dark:bg-slate-900 min-h-screen flex items-center justify-center p-8 w-full">
+          <div className="bg-white rounded-lg dark:bg-slate-800 dark:text-white dark:border-gray-200 dark:border shadow-lg p-8 w-full max-w-md">
+            <div className="flex flex-col  items-center">
               <h2 className="font-bold text-2xl">Student Login</h2>
-              <p className="text-sm mt-4">If you are already a member, easy login</p>
-              <form className="flex flex-col gap-3 mt-4 w-full" onSubmit={submitHandler}>
+              <p className="text-sm mt-4 dark:text-gray-300">If you are already a member, easy login</p>
+              <form className="flex flex-col  gap-3 mt-4 w-full dark:bg-slate-800" onSubmit={submitHandler}>
                 <input
-                  className="mt-3 p-2 border rounded"
+                  className="mt-3 p-2 border rounded dark:bg-slate-700"
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={changeHandler}
                   placeholder="Email"
+
                 />
                 <input
-                  className="mt-3 p-2 border rounded"
+                  className="mt-3 p-2 border rounded dark:bg-slate-700"
                   type="password"
                   name="password"
                   value={formData.password}

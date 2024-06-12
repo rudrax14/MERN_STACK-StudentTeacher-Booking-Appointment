@@ -287,7 +287,7 @@ function Teacher() {
       ) : (
         <>
           {/* header */}
-          <Header name="Teacher Dashboard" style="bg-green-500" />
+          <Header name="Teacher Dashboard" style="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" />
 
           {/* teacher slot modal */}
           {seduleModal && (<div
@@ -414,200 +414,203 @@ function Teacher() {
 
 
           {/* dashbord container */}
-          <section className="container p-6">
-            <h2 className="text-2xl font-semibold mb-4">Status</h2>
-            <hr className="mt-0 mb-4" />
-            <div className="flex justify-center text-center">
-              <div className="bg-blue-500 min-w-80 text-white rounded-lg shadow-lg flex flex-col justify-between h-40"
-                onClick={() => setSeduleModal(true)}>
-                <div className="p-4 flex flex-col gap-4">
-                  <p className="text-2xl font-bold">Schedule Appointment</p>
-                  <p className="text-xl">{tableAppointments.length}</p>
-                </div>
-                <div className="flex justify-center border-t items-center py-2 cursor-pointer hover:bg-blue-600 rounded-b-lg">
-                  Add Schedule
-                </div>
-              </div>
-            </div>
+          <div className="dark:bg-slate-900 dark:text-white">
 
-
-            {/* table info container */}
-
-            <div className="py-4">
-              <h2 className="text-2xl font-semibold mb-4">Your All Upcoming Appointment Details</h2>
+            <section className="container p-6  " >
+              <h2 className="text-2xl font-semibold mb-4">Status</h2>
               <hr className="mt-0 mb-4" />
-              <div className="hidden md:block overflow-x-auto">
-                <table className="min-w-full text-center">
-                  <thead>
-                    <tr>
-                      <th className="px-4 py-2">Sr.No</th>
-                      <th className="px-4 py-2">Name</th>
-                      <th className="px-4 py-2">Email</th>
-                      <th className="px-4 py-2">Date</th>
-                      <th className="px-4 py-2">Schedule Time</th>
-                      <th className="px-4 py-2">Delete</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {tableAppointments.map((appointment, index) => {
-                      const scheduleDate = new Date(appointment.scheduleAt);
-                      const formattedDate = scheduleDate.toLocaleDateString();
-                      const formattedTime = scheduleDate.toLocaleTimeString();
-
-                      return (
-                        <tr key={index} className="hover:bg-gray-100">
-                          <td className="border px-4 py-2">{index + 1}</td>
-                          <td className="border px-4 py-2">{appointment.name}</td>
-                          <td className="border px-4 py-2">{appointment.sendBy}</td>
-                          <td className="border px-4 py-2">{formattedDate}</td>
-                          <td className="border px-4 py-2">{formattedTime}</td>
-                          <td className="border px-4 py-2">
-                            <button
-                              className="bg-red-500 text-white rounded px-4 py-2"
-                              onClick={() =>
-                                handleDeleteAppointment(appointment._id)
-                              }
-                            >
-                              <MdDelete />
-                            </button>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
+              <div className="flex justify-center text-center">
+                <div className="bg-blue-500 min-w-80 text-white rounded-lg shadow-lg flex flex-col justify-between h-40"
+                  onClick={() => setSeduleModal(true)}>
+                  <div className="p-4 flex flex-col gap-4">
+                    <p className="text-2xl font-bold">Schedule Appointment</p>
+                    <p className="text-xl">{tableAppointments.length}</p>
+                  </div>
+                  <div className="flex justify-center border-t items-center py-2 cursor-pointer hover:bg-blue-600 rounded-b-lg">
+                    Add Schedule
+                  </div>
+                </div>
               </div>
-              <div className="block md:hidden space-y-4">
-                {tableAppointments.map((appointment, index) => {
-                  const scheduleDate = new Date(appointment.scheduleAt);
-                  const formattedDate = scheduleDate.toLocaleDateString();
-                  const formattedTime = scheduleDate.toLocaleTimeString();
 
-                  return (
-                    <div key={index} className="border border-gray-200 rounded-lg p-4 shadow-md bg-white">
-                      <div className="flex justify-between items-center mb-2">
-                        <p className="font-semibold text-lg">Appointment {index + 1}</p>
-                        <button
-                          className="bg-red-500 text-white rounded-full p-2"
-                          onClick={() => handleDeleteAppointment(appointment._id)}
-                        >
-                          <MdDelete />
-                        </button>
+
+              {/* table info container */}
+
+              <div className="py-4 ">
+                <h2 className="text-2xl font-semibold mb-4">Your All Upcoming Appointment Details</h2>
+                <hr className="mt-0 mb-4" />
+                <div className="hidden md:block overflow-x-auto">
+                  <table className="min-w-full text-center ">
+                    <thead>
+                      <tr className=" ">
+                        <th className="px-4 py-2">Sr.No</th>
+                        <th className="px-4 py-2">Name</th>
+                        <th className="px-4 py-2">Email</th>
+                        <th className="px-4 py-2">Date</th>
+                        <th className="px-4 py-2">Schedule Time</th>
+                        <th className="px-4 py-2">Delete</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {tableAppointments.map((appointment, index) => {
+                        const scheduleDate = new Date(appointment.scheduleAt);
+                        const formattedDate = scheduleDate.toLocaleDateString();
+                        const formattedTime = scheduleDate.toLocaleTimeString();
+
+                        return (
+                          <tr key={index} className="hover:bg-gray-100 dark:hover:bg-slate-950">
+                            <td className="border px-4 py-2">{index + 1}</td>
+                            <td className="border px-4 py-2">{appointment.name}</td>
+                            <td className="border px-4 py-2">{appointment.sendBy}</td>
+                            <td className="border px-4 py-2">{formattedDate}</td>
+                            <td className="border px-4 py-2">{formattedTime}</td>
+                            <td className="border px-4 py-2">
+                              <button
+                                className="bg-red-500 text-white rounded px-4 py-2"
+                                onClick={() =>
+                                  handleDeleteAppointment(appointment._id)
+                                }
+                              >
+                                <MdDelete />
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+                <div className="block md:hidden space-y-4">
+                  {tableAppointments.map((appointment, index) => {
+                    const scheduleDate = new Date(appointment.scheduleAt);
+                    const formattedDate = scheduleDate.toLocaleDateString();
+                    const formattedTime = scheduleDate.toLocaleTimeString();
+
+                    return (
+                      <div key={index} className="border border-gray-200 rounded-lg p-4 shadow-md bg-white dark:bg-slate-800 hover:dark:bg-slate-950">
+                        <div className="flex justify-between items-center mb-2">
+                          <p className="font-semibold text-lg">Appointment {index + 1}</p>
+                          <button
+                            className="bg-red-500 text-white rounded-full p-2"
+                            onClick={() => handleDeleteAppointment(appointment._id)}
+                          >
+                            <MdDelete />
+                          </button>
+                        </div>
+                        <p className="mb-1"><span className="font-semibold">Name:</span> {appointment.name}</p>
+                        <p className="mb-1"><span className="font-semibold">Email:</span> {appointment.sendBy}</p>
+                        <p className="mb-1"><span className="font-semibold">Date:</span> {formattedDate}</p>
+                        <p><span className="font-semibold">Schedule Time:</span> {formattedTime}</p>
                       </div>
-                      <p className="mb-1"><span className="font-semibold">Name:</span> {appointment.name}</p>
-                      <p className="mb-1"><span className="font-semibold">Email:</span> {appointment.sendBy}</p>
-                      <p className="mb-1"><span className="font-semibold">Date:</span> {formattedDate}</p>
-                      <p><span className="font-semibold">Schedule Time:</span> {formattedTime}</p>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
-            </div>
 
 
 
-            {/* student card container */}
+              {/* student card container */}
 
-            <div className="py-4">
-              <h2 className="text-2xl font-semibold mb-4">
-                Approve/cancel Appointment
-              </h2>
-              <hr className="mt-0 mb-6 border-gray-300 rounded-lg" />
-              <div className="flex justify-center">
-                {cards.map((schedule) => (
-                  <div
-                    key={schedule.scheduleAt}
-                    className="grid xl:grid-cols-4 sm:grid-cols-2 items-center justify-center gap-4 mx-12"
-                  >
-                    {schedule.students.map((studentInfo) => {
-                      const {
-                        _id: teacherAppointmentId,
-                        name: teacherName,
-                        scheduleAt,
-                      } = schedule;
-                      const {
-                        _id: studentId,
-                        name,
-                        department,
-                        email,
-                      } = studentInfo.studentId;
+              <div className="py-4">
+                <h2 className="text-2xl font-semibold mb-4">
+                  Approve/cancel Appointment
+                </h2>
+                <hr className="mt-0 mb-6 border-gray-300 rounded-lg" />
+                <div className="flex justify-center ">
+                  {cards.map((schedule) => (
+                    <div
+                      key={schedule.scheduleAt}
+                      className="grid xl:grid-cols-4 sm:grid-cols-2 items-center justify-center gap-4 mx-12"
+                    >
+                      {schedule.students.map((studentInfo) => {
+                        const {
+                          _id: teacherAppointmentId,
+                          name: teacherName,
+                          scheduleAt,
+                        } = schedule;
+                        const {
+                          _id: studentId,
+                          name,
+                          department,
+                          email,
+                        } = studentInfo.studentId;
 
-                      return (
-                        <div
-                          key={studentId}
-                          className="card-body border shadow-lg rounded-lg p-4 w-72"
-                        >
-                          <img
-                            src="https://static.vecteezy.com/system/resources/previews/001/942/923/large_2x/student-boy-with-school-suitcase-back-to-school-free-vector.jpg"
-                            className="w-full h-64 object-cover rounded-t-lg"
-                            alt="Student"
-                          />
-                          <div className="p-4 bg-gray-50 rounded-b-lg">
-                            <h5 className="text-xl font-semibold mb-2">
-                              {name}
-                            </h5>
-                            <p className="text-gray-600 mb-2">
-                              Department: {department}
-                            </p>
-                            <p className="text-gray-600 mb-4">
-                              Timing:{" "}
-                              {new Date(scheduleAt).toLocaleTimeString([], {
-                                hour: "2-digit",
-                                minute: "2-digit",
-                              })}
-                            </p>
-                            <div className="flex justify-between">
-                              <button
-                                className="bg-green-500 text-white rounded p-2 hover:bg-green-600"
-                                onClick={() => {
-                                  handleStudentApprove(
-                                    studentId,
-                                    teacherAppointmentId
-                                  );
-                                }}
-                              >
-                                Approve
-                              </button>
-                              <button
-                                className="bg-red-500 text-white rounded p-2 hover:bg-red-600"
-                                onClick={() => {
-                                  handleStudentReject(
-                                    studentId,
-                                    teacherAppointmentId
-                                  );
-                                }}
-                              >
-                                Reject
-                              </button>
-                              <button
-                                type="button"
-                                className="relative bg-blue-500 text-white rounded p-2 hover:bg-blue-600"
-                                onClick={() => {
-                                  setStudentEmail(email);
-                                  setMessages([]); // Clear existing messages
-                                  fetchMessages(email); // Assuming studentId is the student email
-                                  setMessageModal(true);
-                                }}
-                              >
-                                Inbox
-                                <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm">
-                                  {messageCounts[email] || 0}
-                                  <span className="sr-only">
-                                    unread messages
+                        return (
+                          <div
+                            key={studentId}
+                            className="card-body border shadow-lg rounded-lg p-4 w-72"
+                          >
+                            <img
+                              src="https://static.vecteezy.com/system/resources/previews/001/942/923/large_2x/student-boy-with-school-suitcase-back-to-school-free-vector.jpg"
+                              className="w-full h-64 object-cover rounded-t-lg"
+                              alt="Student"
+                            />
+                            <div className="p-4 bg-gray-50 rounded-b-lg dark:bg-slate-800 border ">
+                              <h5 className="text-xl font-semibold mb-2">
+                                {name}
+                              </h5>
+                              <p className="text-gray-600 mb-2 dark:text-gray-300">
+                                Department: {department}
+                              </p>
+                              <p className="text-gray-600 mb-4 dark:text-gray-300">
+                                Timing:{" "}
+                                {new Date(scheduleAt).toLocaleTimeString([], {
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                })}
+                              </p>
+                              <div className="flex justify-between">
+                                <button
+                                  className="bg-green-500 text-white rounded p-2 hover:bg-green-600"
+                                  onClick={() => {
+                                    handleStudentApprove(
+                                      studentId,
+                                      teacherAppointmentId
+                                    );
+                                  }}
+                                >
+                                  Approve
+                                </button>
+                                <button
+                                  className="bg-red-500 text-white rounded p-2 hover:bg-red-600"
+                                  onClick={() => {
+                                    handleStudentReject(
+                                      studentId,
+                                      teacherAppointmentId
+                                    );
+                                  }}
+                                >
+                                  Reject
+                                </button>
+                                <button
+                                  type="button"
+                                  className="relative bg-blue-500 text-white rounded p-2 hover:bg-blue-600"
+                                  onClick={() => {
+                                    setStudentEmail(email);
+                                    setMessages([]); // Clear existing messages
+                                    fetchMessages(email); // Assuming studentId is the student email
+                                    setMessageModal(true);
+                                  }}
+                                >
+                                  Inbox
+                                  <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm">
+                                    {messageCounts[email] || 0}
+                                    <span className="sr-only">
+                                      unread messages
+                                    </span>
                                   </span>
-                                </span>
-                              </button>
+                                </button>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                ))}
+                        );
+                      })}
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
 
-          </section>
+            </section>
+          </div>
         </>
       )
       }

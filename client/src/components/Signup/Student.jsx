@@ -65,13 +65,13 @@ function StudentRegister() {
       {spinner ? (
         <Spinner />
       ) : (
-        <section className="bg-gray-100 min-h-screen flex items-center justify-center p-8 w-full">
-          <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
+        <section className="bg-gray-100 min-h-screen dark:bg-slate-900 flex items-center justify-center p-8 w-full">
+          <div className="bg-white rounded-lg dark:bg-slate-800 dark:text-white dark:border- dark:border shadow-lg p-8 w-full max-w-md">
             <div className="flex flex-col items-center">
               <h2 className="font-bold text-2xl">Student Register</h2>
               <form className="flex flex-col gap-3 mt-4 w-full" onSubmit={submitHandler}>
                 <input
-                  className="mt-3 p-2 border rounded"
+                  className="mt-3 p-2 border rounded dark:bg-slate-700"
                   type="text"
                   name="name"
                   value={formData.name}
@@ -79,7 +79,7 @@ function StudentRegister() {
                   placeholder="Name"
                 />
                 <input
-                  className="mt-2 p-2 border rounded"
+                  className="mt-2 p-2 border rounded dark:bg-slate-700"
                   type="text"
                   name="department"
                   value={formData.department}
@@ -87,7 +87,7 @@ function StudentRegister() {
                   placeholder="Department"
                 />
                 <input
-                  className="mt-2 p-2 border rounded"
+                  className="mt-2 p-2 border rounded dark:bg-slate-700"
                   type="number"
                   name="age"
                   value={formData.age}
@@ -95,7 +95,7 @@ function StudentRegister() {
                   placeholder="Age"
                 />
                 <input
-                  className="mt-2 p-2 border rounded"
+                  className="mt-2 p-2 border rounded dark:bg-slate-700"
                   type="email"
                   value={formData.email}
                   onChange={changeHandler}
@@ -103,7 +103,7 @@ function StudentRegister() {
                   placeholder="Email"
                 />
                 <input
-                  className="mt-2 p-2 border rounded"
+                  className="mt-2 p-2 border rounded dark:bg-slate-700"
                   type="password"
                   name="password"
                   value={formData.password}
@@ -111,7 +111,7 @@ function StudentRegister() {
                   placeholder="Password"
                 />
                 <input
-                  className="mt-2 p-2 border rounded"
+                  className="mt-2 p-2 border rounded dark:bg-slate-700"
                   type="password"
                   value={formData.passwordConfirm}
                   onChange={changeHandler}
