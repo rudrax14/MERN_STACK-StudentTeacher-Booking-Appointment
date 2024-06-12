@@ -11,7 +11,7 @@ function TodayDateComponent() {
 
   return (
     <div
-      className="fixed bottom-0 right-0 p-3 rounded-lg shadow-lg z-50 m-5 bg-white dark:bg-slate-950 dark:text-white dark:border"
+      className="fixed hidden sm:block bottom-0 right-0 p-3 rounded-lg shadow-lg z-50 m-5 bg-white dark:bg-slate-950 dark:text-white dark:border"
     >
       <div className="flex items-center">
         <div>

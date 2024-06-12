@@ -204,8 +204,8 @@ function Admin() {
       ) : (
         <>
           <Header name="Admin Dashboard" style="bg-gradient-to-r from-[#F64C18] to-[#EE9539]" />
-          <section className="dark:bg-slate-900 dark:text-white">
-            <div className="py-4 container px-6">
+          <section className="dark:bg-slate-900 dark:text-white px-6 py-4">
+            <div className=" container">
               <div className="pagecontent">
                 <h2 className="text-2xl font-semibold mb-4">Status</h2>
                 <hr className="mt-0 mb-4" />
@@ -310,43 +310,71 @@ function Admin() {
 
             )}
 
-            <div className="container mx-auto py-4">
+            <div className="py-4 container">
               <h2 className="text-2xl font-semibold mb-4">All Teachers</h2>
               <hr className="mt-0 mb-4" />
-              <table className="table-auto w-full text-center">
-                <thead>
-                  <tr>
-                    <th className="px-4 py-2">Sr.No</th>
-                    <th className="px-4 py-2">Name</th>
-                    <th className="px-4 py-2">Subject</th>
-                    <th className="px-4 py-2">Department</th>
-                    <th className="px-4 py-2">Delete</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {teachers.map((teacher, index) => (
-                    <tr key={index} className="hover:bg-gray-100 hover:dark:bg-slate-950 text-center">
-                      <td className="border px-4 py-2">{index + 1}</td>
-                      <td className="border px-4 py-2">{teacher.name}</td>
-                      <td className="border px-4 py-2">
-                        {teacher.subject.join(", ")}
-                      </td>
-                      <td className="border px-4 py-2">{teacher.department}</td>
-                      <td className="border px-4 py-2">
+              <div className="hidden md:block overflow-x-auto">
+                <table className="min-w-full text-center">
+                  <thead>
+                    <tr>
+                      <th className="px-4 py-2">Sr.No</th>
+                      <th className="px-4 py-2">Name</th>
+                      <th className="px-4 py-2">Subject</th>
+                      <th className="px-4 py-2">Department</th>
+                      <th className="px-4 py-2">Delete</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {teachers.map((teacher, index) => (
+                      <tr key={index} className="hover:bg-gray-100 hover:dark:bg-slate-950 text-center">
+                        <td className="border px-4 py-2">{index + 1}</td>
+                        <td className="border px-4 py-2">{teacher.name}</td>
+                        <td className="border px-4 py-2">{teacher.subject.join(", ")}</td>
+                        <td className="border px-4 py-2">{teacher.department}</td>
+                        <td className="border px-4 py-2">
+                          <button
+                            className="bg-red-500 text-white rounded px-4 py-2"
+                            onClick={() => handleDeleteTeacher(teacher._id, index)}
+                          >
+                            <MdDelete />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className="block md:hidden space-y-4 ">
+                {teachers.map((teacher, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className="border border-gray-200 rounded-lg p-4 shadow-md bg-white dark:bg-slate-800 hover:dark:bg-slate-950"
+                    >
+                      <div className="flex justify-between items-center mb-2">
+                        <p className="font-semibold text-lg">Teacher {index + 1}</p>
                         <button
-                          className="bg-red-500 text-white rounded px-4 py-2"
-                          onClick={() =>
-                            handleDeleteTeacher(teacher._id, index)
-                          }
+                          className="bg-red-500 text-white rounded-full p-2"
+                          onClick={() => handleDeleteTeacher(teacher._id)}
                         >
                           <MdDelete />
                         </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                      </div>
+                      <p className="mb-1">
+                        <span className="font-semibold">Name:</span> {teacher.name}
+                      </p>
+                      <p className="mb-1">
+                        <span className="font-semibold">Subject:</span> {teacher.subject.join(", ")}
+                      </p>
+                      <p className="mb-1">
+                        <span className="font-semibold">Department:</span> {teacher.department}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
+
 
             <div className="container mx-auto py-4">
               <div className="teacher">
