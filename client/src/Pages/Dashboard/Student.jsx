@@ -211,7 +211,7 @@ function Student() {
                 Your Upcoming Lectures Details
               </h2>
               <hr className="mt-0 mb-4" />
-              <table className="table-auto w-full">
+              {!lectureDetails.length == 0 ? (<table className="table-auto w-full">
                 <thead>
                   <tr>
                     <th className="px-4 py-2">Sr.No</th>
@@ -237,7 +237,7 @@ function Student() {
                   ))}
 
                 </tbody>
-              </table>
+              </table>) : (<h1 className="text-center text-xl">No Upcoming Lectures</h1>)}
             </div>
             {/* card container */}
             <div className="container mx-auto py-4">

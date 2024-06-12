@@ -16,22 +16,27 @@ const Navbar = () => {
     localStorage.getItem("Student jwtToken") ||
     localStorage.getItem("jwtToken");
 
-  const changeHandler = () => {
-    localStorage.clear();
-    toast.success("Logout Successfully");
-    navigate("/");
-  };
-
-  useEffect(() => {
-    if (isRootRoute) {
-      localStorage.clear();
-    }
-  }, [localData]);
-
   const userData =
     localStorage.getItem("Student Name") ||
     localStorage.getItem("Teacher Name") ||
     localStorage.getItem("Admin Name");
+  const changeHandler = () => {
+    localStorage.removeItem("Teacher jwtToken")
+    localStorage.removeItem("Student jwtToken") 
+    localStorage.removeItem("jwtToken");
+    localStorage.removeItem("Student Name") 
+    localStorage.removeItem("Teacher Name") 
+    localStorage.removeItem("Admin Name");
+    toast.success("Logout Successfully");
+    navigate("/");
+  };
+
+  // useEffect(() => {
+  //   // if (isRootRoute) {
+  //   //   localStorage.clear();
+  //   // }
+  // }, [localData]);
+
   const { theme, toggleTheme } = useContext(ThemeContext); // Use ThemeContext
   return (
     <>
@@ -39,7 +44,7 @@ const Navbar = () => {
         <div className="container mx-auto px-4 py-2 flex justify-between items-center">
           <Link
             className="text-white text-xl font-bold"
-            to={!localData ? "/" : undefined} 
+            to={!localData ? "/" : undefined}
             onClick={() => {
               if (localData) {
                 toast.success("Welcome to Tutor-Time");
