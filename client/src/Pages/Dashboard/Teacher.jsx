@@ -295,19 +295,19 @@ function Teacher() {
           >
             <div className="flex justify-center items-center min-h-screen text-center">
               <div
-                className="fixed inset-0 bg-gray-500 bg-opacity-85 transition-opacity"
+                className="fixed inset-0 bg-gray-500 bg-opacity-90 transition-opacity"
               ></div>
-              <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+              <div className="inline-block align-bottom bg-white  rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div className="bg-white dark:bg-slate-800  px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                   <h1
-                    className="text-lg font-medium text-gray-900"
+                    className="text-lg font-medium text-gray-900 dark:text-white"
                   >
                     Update Lectures
                   </h1>
                   <form onSubmit={handleSubmit}>
                     <div className="mt-3 text-center sm:mt-5">
                       <div className="mt-2">
-                        <label className="block text-sm font-medium text-gray-700 mb-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-4 dark:text-gray-400">
                           Time Slot
                         </label>
                         <div className="mt-1 flex gap-4 justify-center">
@@ -383,16 +383,16 @@ function Teacher() {
           </div>)}
           {/* student message modal */}
           {messageModal && (<div className="fixed inset-0 z-50 overflow-y-auto">
-            <div className="flex justify-center items-center min-h-screen text-center bg-gray-500 bg-opacity-85 transition-opacity">
-              <div className="bg-white rounded-lg shadow-xl w-full max-w-lg mx-4 sm:mx-auto">
+            <div className="flex justify-center items-center min-h-screen text-center bg-gray-500 bg-opacity-90 transition-opacity">
+              <div className="bg-white rounded-lg dark:bg-slate-800 shadow-xl w-full max-w-lg mx-4 sm:mx-auto">
                 <div className="border-b border-gray-200 p-4">
-                  <h5 className="text-lg font-medium text-gray-900">Student Message</h5>
+                  <h5 className="text-lg font-medium text-gray-900 dark:text-white">Student Message</h5>
                 </div>
                 <div className="p-4 space-y-4">
                   {/* Render the messages in the modal */}
                   {messages.map((message) => (
                     <div key={message._id} className="border border-gray-200 p-2 rounded">
-                      <p className="text-gray-700">{message.messageText}</p>
+                      <p className="text-gray-700 dark:text-white">{message.messageText}</p>
                     </div>
                   ))}
                 </div>

@@ -78,8 +78,8 @@ function StudentLogin() {
                   value={formData.email}
                   onChange={changeHandler}
                   placeholder="Email"
-
                 />
+                <label >Email: student@gmail.com</label>
                 <input
                   className="mt-3 p-2 border rounded dark:bg-slate-700"
                   type="password"
@@ -88,6 +88,7 @@ function StudentLogin() {
                   onChange={changeHandler}
                   placeholder="Password"
                 />
+                <label >Password: pass123</label>
                 <div className="flex mt-4 gap-3 w-full">
                   <input
                     type="submit"

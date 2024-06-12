@@ -247,7 +247,7 @@ function Admin() {
                       name="department"
                       value={formData.department}
                       onChange={changeHandler}
-                      placeholder="Department dark:bg-slate-700"
+                      placeholder="Department"
                     />
                     <input
                       className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300 dark:bg-slate-700"

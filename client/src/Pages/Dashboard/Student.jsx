@@ -164,15 +164,15 @@ function Student() {
         <>
           {/* message modal */}
           {showModal && (<div className="fixed inset-0 z-50 overflow-y-auto">
-            <div className="flex items-center justify-center min-h-screen bg-gray-500 bg-opacity-85 transition-opacity">
-              <div className="bg-white rounded-lg shadow-lg w-full max-w-md mx-4 sm:mx-auto">
+            <div className="flex items-center justify-center min-h-screen bg-gray-500 bg-opacity-90 transition-opacity">
+              <div className="bg-white dark:bg-slate-800 dark:text-white rounded-lg shadow-lg w-full max-w-md mx-4 sm:mx-auto">
                 <div className="border-b border-gray-200 p-4">
-                  <h5 className="text-lg font-medium text-gray-900">Message Modal</h5>
+                  <h5 className="text-lg font-medium text-gray-900 dark:text-white">Message Modal</h5>
                 </div>
                 <form onSubmit={submitHandler}>
                   <div className="p-4">
                     <input
-                      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300"
+                      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300 dark:bg-slate-700"
                       type="text"
                       name="message"
                       value={formData.message}
