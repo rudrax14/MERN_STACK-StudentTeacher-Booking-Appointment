@@ -88,7 +88,7 @@ function Student() {
       to: teacherEmail,
       messageText: formData.message,
     };
-
+    setShowModal(false)
     // console.log(messageObject);
 
     try {
@@ -163,45 +163,43 @@ function Student() {
       ) : (
         <>
           {/* message modal */}
-          {/* <div className="fixed z-10 inset-0 overflow-y-auto" id="messageModal">
-            <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-              <div className="fixed inset-0 transition-opacity" aria-hidden="true">
-                <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
-              </div>
-              <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                  <h5 className="text-lg leading-6 font-medium text-gray-900">Message Modal</h5>
-                  <form action="" onSubmit={submitHandler}>
-                    <div className="mt-2">
-                      <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        type="text"
-                        name="message"
-                        value={formData.message}
-                        onChange={changeHandler}
-                        placeholder="Your Message Goes Here"
-                      />
-                    </div>
-                    <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                      <button
-                        type="button"
-                        className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
-                        onClick={() => setShowModal(false)}
-                      >
-                        Close
-                      </button>
-                      <input
-                        type="submit"
-                        value="Send Message"
-                        className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                        data-bs-dismiss="modal"
-                      />
-                    </div>
-                  </form>
+          {showModal && (<div className="fixed inset-0 z-50 overflow-y-auto">
+            <div className="flex items-center justify-center min-h-screen bg-gray-500 bg-opacity-85 transition-opacity">
+              <div className="bg-white rounded-lg shadow-lg w-full max-w-md mx-4 sm:mx-auto">
+                <div className="border-b border-gray-200 p-4">
+                  <h5 className="text-lg font-medium text-gray-900">Message Modal</h5>
                 </div>
+                <form onSubmit={submitHandler}>
+                  <div className="p-4">
+                    <input
+                      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300"
+                      type="text"
+                      name="message"
+                      value={formData.message}
+                      onChange={changeHandler}
+                      placeholder="Your Message Goes Here"
+                    />
+                  </div>
+                  <div className="flex justify-end border-t border-gray-200 p-4">
+                    <button
+                      type="button"
+                      className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+                      onClick={() => setShowModal(false)}
+                    >
+                      Close
+                    </button>
+                    <input
+                      type="submit"
+                      value="Send Message"
+                      className="ml-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                    // onClick={() => setShowModal(false)}
+                    />
+                  </div>
+                </form>
               </div>
             </div>
-          </div> */}
+          </div>)}
+
 
 
           {/* header */}
@@ -228,7 +226,7 @@ function Student() {
                     <tr key={index} className="bg-gray-100 text-center">
                       <td className="border px-4 py-2">{index + 1}</td>
                       <td className="border px-4 py-2">{detail.name}</td>
-                      <td className="border px-4 py-2">{detail.subject}</td>
+                      <td className="border px-4 py-2">{}</td>
                       <td className="border px-4 py-2">
                         {formatDate(detail.scheduleAt)}
                       </td>
@@ -237,6 +235,7 @@ function Student() {
                       </td>
                     </tr>
                   ))}
+
                 </tbody>
               </table>
             </div>
@@ -308,7 +307,10 @@ function Student() {
                           type="button"
                           data-bs-toggle="modal"
                           data-bs-target="#messageModal"
-                          onClick={() => setTeacherEmail(teacher.email)}
+                          onClick={() => {
+                            setTeacherEmail(teacher.email)
+                            setShowModal(true)
+                          }}
                         >
                           Message
                         </button>

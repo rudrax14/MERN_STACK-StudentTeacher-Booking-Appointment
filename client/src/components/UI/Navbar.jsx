@@ -6,35 +6,23 @@ import { IoIosLogOut } from "react-icons/io";
 const Navbar = () => {
   const navigate = useNavigate();
   const isRootRoute = location.pathname === "/";
-  const shouldShowLink = !isRootRoute;
 
-
-  const localData = localStorage.getItem("Teacher jwtToken") || localStorage.getItem("Student jwtToken") || localStorage.getItem("jwtToken");
+  const localData =
+    localStorage.getItem("Teacher jwtToken") ||
+    localStorage.getItem("Student jwtToken") ||
+    localStorage.getItem("jwtToken");
 
   const changeHandler = () => {
-    localStorage.removeItem("Teacher jwtToken");
-    localStorage.removeItem("Student jwtToken");
-    localStorage.removeItem("Student Name");
-    localStorage.removeItem("email");
-    localStorage.removeItem("jwtToken");
-    localStorage.removeItem("Teacher Name");
-    localStorage.removeItem("Admin Name");
     localStorage.clear();
     toast.success("Logout Successfully");
     navigate("/");
   };
 
-  // useEffect(() => {
-  //   if (location.pathname === "/") {
-  //     localStorage.removeItem("Teacher jwtToken");
-  //     localStorage.removeItem("Student jwtToken");
-  //     localStorage.removeItem("Student Name");
-  //     localStorage.removeItem("email");
-  //     localStorage.removeItem("jwtToken");
-  //     localStorage.removeItem("Teacher Name");
-  //     localStorage.removeItem("Admin Name");
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (isRootRoute) {
+      localStorage.clear();
+    }
+  }, [localData]);
 
   const userData =
     localStorage.getItem("Student Name") ||
@@ -45,27 +33,21 @@ const Navbar = () => {
     <>
       <nav className="bg-gray-800 sticky top-0 z-50">
         <div className="container mx-auto px-4 py-2 flex justify-between items-center">
-          <Link className="text-white text-xl font-bold" to="/" onClick={changeHandler}>
+          <Link
+            className="text-white text-xl font-bold"
+            // to="/"
+            onClick={() => {
+              toast.success("Welcome to Tutor-Time");
+            }}
+          >
             Tutor-Time
           </Link>
 
-          <button
-            className="text-white sm:hidden"
-            type="button"
-            onClick={() => document.getElementById('navbarSupportedContent').classList.toggle('hidden')}
-          >
-            <span className="material-icons">menu</span>
-          </button>
-
-          <div className="hidden sm:flex sm:items-center sm:w-auto" id="navbarSupportedContent">
-            <ul className="flex space-x-4 items-center">
-              <li className="hidden sm:block">
-                <button className="btn btn-icon btn-transparent-dark dropdown-toggle"></button>
-              </li>
-            </ul>
-
+          <div className="flex items-center w-auto">
             {userData && (
-              <span className="text-white text-lg mr-4">Welcome, {userData}!</span>
+              <span className="text-white text-lg mr-4">
+                Welcome, {userData}!
+              </span>
             )}
             {localData && (
               <button

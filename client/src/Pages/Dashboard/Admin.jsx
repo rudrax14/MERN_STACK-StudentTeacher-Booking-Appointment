@@ -228,19 +228,13 @@ function Admin() {
             {/* modal */}
             {isModalOpen && (
               <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
-                <div className="bg-white rounded-lg shadow-lg p-6 max-w-md mx-auto">
+                <div className="bg-white rounded-lg shadow-lg p-6 max-w-md mx-4 sm:mx-auto">
                   <div className="flex justify-between items-center border-b pb-3">
                     <h1 className="text-lg font-semibold">Add Teacher</h1>
-                    <button
-                      onClick={() => setIsModalOpen(false)}
-                      className="text-gray-500 hover:text-gray-700"
-                    >
-                      &times;
-                    </button>
                   </div>
-                  <form onSubmit={submitHandler} className="mt-4">
+                  <form onSubmit={submitHandler} className="mt-4 space-y-4">
                     <input
-                      className="form-control mt-2"
+                      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300"
                       type="text"
                       name="name"
                       value={formData.name}
@@ -248,7 +242,7 @@ function Admin() {
                       placeholder="Name"
                     />
                     <input
-                      className="form-control mt-2"
+                      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300"
                       type="text"
                       name="department"
                       value={formData.department}
@@ -256,7 +250,7 @@ function Admin() {
                       placeholder="Department"
                     />
                     <input
-                      className="form-control mt-2"
+                      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300"
                       type="text"
                       name="subject"
                       value={formData.subject}
@@ -264,7 +258,7 @@ function Admin() {
                       placeholder="Subject"
                     />
                     <input
-                      className="form-control mt-2"
+                      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300"
                       type="number"
                       name="age"
                       value={formData.age}
@@ -272,7 +266,7 @@ function Admin() {
                       placeholder="Age"
                     />
                     <input
-                      className="form-control mt-2"
+                      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300"
                       type="email"
                       value={formData.email}
                       onChange={changeHandler}
@@ -280,7 +274,7 @@ function Admin() {
                       placeholder="Email"
                     />
                     <input
-                      className="form-control mt-2"
+                      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300"
                       type="password"
                       name="password"
                       value={formData.password}
@@ -288,24 +282,24 @@ function Admin() {
                       placeholder="Password"
                     />
                     <input
-                      className="form-control mt-2"
+                      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300"
                       type="password"
                       value={formData.passwordConfirm}
                       onChange={changeHandler}
                       name="passwordConfirm"
                       placeholder="Confirm Password"
                     />
-                    <div className="flex justify-end mt-4">
+                    <div className="flex justify-end space-x-2">
                       <button
                         type="button"
-                        className="bg-gray-500 text-white rounded px-4 py-2 mr-2"
+                        className="bg-gray-500 text-white rounded px-4 py-2 hover:bg-gray-600 focus:outline-none"
                         onClick={() => setIsModalOpen(false)}
                       >
                         Cancel
                       </button>
                       <button
                         type="submit"
-                        className="bg-blue-500 text-white rounded px-4 py-2"
+                        className="bg-blue-500 text-white rounded px-4 py-2 hover:bg-blue-600 focus:outline-none"
                       >
                         Add Teacher
                       </button>
@@ -313,6 +307,7 @@ function Admin() {
                   </form>
                 </div>
               </div>
+
             )}
 
             <div className="container mx-auto py-4">

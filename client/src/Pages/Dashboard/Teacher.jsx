@@ -35,7 +35,7 @@ function Teacher() {
       const jwtToken = localStorage.getItem("Teacher jwtToken");
       // secure route
       if (jwtToken == null) {
-        // navigate("/teacher/login");
+        navigate("/teacher/login");
       } else {
         const response = await axios.get(
           `${import.meta.env.VITE_BACKEND_URL
@@ -46,7 +46,7 @@ function Teacher() {
             },
           }
         );
-        console.log(response.data.students);
+        // console.log(response.data.students);
         setCards(response.data.students);
 
         // Fetch message counts for all cards
@@ -101,7 +101,7 @@ function Teacher() {
       // console.log(response);
       setTableAppointments(response.data.appointments);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       console.error("Error fetching data:", error);
     }
   };
@@ -361,7 +361,6 @@ function Teacher() {
                     </div>
                     <div className="mt-5 sm:mt-6 flex justify-center">
                       <button
-                        type="button"
                         className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-gray-500 hover:bg-gray-700 hover:cursor-pointer"
                         onClick={() => {
                           setSeduleModal(false)
@@ -383,77 +382,134 @@ function Teacher() {
             </div>
           </div>)}
           {/* student message modal */}
-
-          {/* dashbord container */}
-          <div className="container px-6">
-            <div className="py-4">
-              <h2 className="text-2xl font-semibold mb-4">Status</h2>
-              <hr className="mt-0 mb-4" />
-              <div className="flex justify-center text-center">
-                <div className="bg-blue-500 min-w-80 text-white rounded-lg shadow-lg flex flex-col justify-between h-40"
-                  onClick={() => setSeduleModal(true)}>
-                  <div className="p-4 flex flex-col gap-4">
-                    <p className="text-2xl font-bold">Schedule Appointment</p>
-                    <p className="text-xl">{tableAppointments.length}</p>
-                  </div>
-                  <div className="flex justify-center border-t items-center py-2 cursor-pointer hover:bg-blue-600 rounded-b-lg">
-                    Add Schedule
-                  </div>
+          {messageModal && (<div className="fixed inset-0 z-50 overflow-y-auto">
+            <div className="flex justify-center items-center min-h-screen text-center bg-gray-500 bg-opacity-85 transition-opacity">
+              <div className="bg-white rounded-lg shadow-xl w-full max-w-lg mx-4 sm:mx-auto">
+                <div className="border-b border-gray-200 p-4">
+                  <h5 className="text-lg font-medium text-gray-900">Student Message</h5>
+                </div>
+                <div className="p-4 space-y-4">
+                  {/* Render the messages in the modal */}
+                  {messages.map((message) => (
+                    <div key={message._id} className="border border-gray-200 p-2 rounded">
+                      <p className="text-gray-700">{message.messageText}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex justify-end border-t border-gray-200 p-4">
+                  <button
+                    type="button"
+                    className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+                    onClick={() => setMessageModal(false)}
+                  >
+                    Close
+                  </button>
+                  <button type="button" className="ml-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onClick={() => {/* Code to send message and close the modal */ }}>
+                    Send Message
+                  </button>
                 </div>
               </div>
             </div>
-          </div>
+          </div>)}
 
-          {/* table info container */}
 
-          <div className="container py-4">
-            <h2>Your All Upcoming Appointment Details</h2>
-
+          {/* dashbord container */}
+          <section className="container p-6">
+            <h2 className="text-2xl font-semibold mb-4">Status</h2>
             <hr className="mt-0 mb-4" />
-            <table className="table-auto w-full text-center">
-              <thead>
-                <tr>
-                  <th className="px-4 py-2">Sr.No</th>
-                  <th className="px-4 py-2">Name</th>
-                  <th className="px-4 py-2">Email</th>
-                  <th className="px-4 py-2">Date</th>
-                  <th className="px-4 py-2">Shedule Time</th>
-                  <th className="px-4 py-2">Delete</th>
-                </tr>
-              </thead>
-              <tbody>
+            <div className="flex justify-center text-center">
+              <div className="bg-blue-500 min-w-80 text-white rounded-lg shadow-lg flex flex-col justify-between h-40"
+                onClick={() => setSeduleModal(true)}>
+                <div className="p-4 flex flex-col gap-4">
+                  <p className="text-2xl font-bold">Schedule Appointment</p>
+                  <p className="text-xl">{tableAppointments.length}</p>
+                </div>
+                <div className="flex justify-center border-t items-center py-2 cursor-pointer hover:bg-blue-600 rounded-b-lg">
+                  Add Schedule
+                </div>
+              </div>
+            </div>
+
+
+            {/* table info container */}
+
+            <div className="py-4">
+              <h2 className="text-2xl font-semibold mb-4">Your All Upcoming Appointment Details</h2>
+              <hr className="mt-0 mb-4" />
+              <div className="hidden md:block overflow-x-auto">
+                <table className="min-w-full text-center">
+                  <thead>
+                    <tr>
+                      <th className="px-4 py-2">Sr.No</th>
+                      <th className="px-4 py-2">Name</th>
+                      <th className="px-4 py-2">Email</th>
+                      <th className="px-4 py-2">Date</th>
+                      <th className="px-4 py-2">Schedule Time</th>
+                      <th className="px-4 py-2">Delete</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {tableAppointments.map((appointment, index) => {
+                      const scheduleDate = new Date(appointment.scheduleAt);
+                      const formattedDate = scheduleDate.toLocaleDateString();
+                      const formattedTime = scheduleDate.toLocaleTimeString();
+
+                      return (
+                        <tr key={index} className="hover:bg-gray-100">
+                          <td className="border px-4 py-2">{index + 1}</td>
+                          <td className="border px-4 py-2">{appointment.name}</td>
+                          <td className="border px-4 py-2">{appointment.sendBy}</td>
+                          <td className="border px-4 py-2">{formattedDate}</td>
+                          <td className="border px-4 py-2">{formattedTime}</td>
+                          <td className="border px-4 py-2">
+                            <button
+                              className="bg-red-500 text-white rounded px-4 py-2"
+                              onClick={() =>
+                                handleDeleteAppointment(appointment._id)
+                              }
+                            >
+                              <MdDelete />
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+              <div className="block md:hidden space-y-4">
                 {tableAppointments.map((appointment, index) => {
                   const scheduleDate = new Date(appointment.scheduleAt);
                   const formattedDate = scheduleDate.toLocaleDateString();
                   const formattedTime = scheduleDate.toLocaleTimeString();
 
                   return (
-                    <tr key={index} className="hover:bg-gray-100 text-center">
-                      <td className="border px-4 py-2">{index + 1}</td>
-                      <td className="border px-4 py-2">{appointment.name}</td>
-                      <td className="border px-4 py-2">{appointment.sendBy}</td>
-                      <td className="border px-4 py-2">{formattedDate}</td>
-                      <td className="border px-4 py-2">{formattedTime}</td>
-                      <td className="border px-4 py-2">
+                    <div key={index} className="border border-gray-200 rounded-lg p-4 shadow-md bg-white">
+                      <div className="flex justify-between items-center mb-2">
+                        <p className="font-semibold text-lg">Appointment {index + 1}</p>
                         <button
-                          className="bg-red-500 text-white rounded px-4 py-2"
-                          onClick={() =>
-                            handleDeleteAppointment(appointment._id)
-                          }
+                          className="bg-red-500 text-white rounded-full p-2"
+                          onClick={() => handleDeleteAppointment(appointment._id)}
                         >
                           <MdDelete />
                         </button>
-                      </td>
-                    </tr>
+                      </div>
+                      <p className="mb-1"><span className="font-semibold">Name:</span> {appointment.name}</p>
+                      <p className="mb-1"><span className="font-semibold">Email:</span> {appointment.sendBy}</p>
+                      <p className="mb-1"><span className="font-semibold">Date:</span> {formattedDate}</p>
+                      <p><span className="font-semibold">Schedule Time:</span> {formattedTime}</p>
+                    </div>
                   );
                 })}
-              </tbody>
-            </table>
-          </div>
-          {/* student card container */}
-          <div className="container mx-auto py-8">
-            <div className="pagecontent">
-              <h2 className="text-3xl font-bold mb-6">
+              </div>
+            </div>
+
+
+
+            {/* student card container */}
+
+            <div className="py-4">
+              <h2 className="text-2xl font-semibold mb-4">
                 Approve/cancel Appointment
               </h2>
               <hr className="mt-0 mb-6 border-gray-300 rounded-lg" />
@@ -526,12 +582,11 @@ function Teacher() {
                               <button
                                 type="button"
                                 className="relative bg-blue-500 text-white rounded p-2 hover:bg-blue-600"
-                                data-bs-toggle="modal"
-                                data-bs-target="#messageModal"
                                 onClick={() => {
                                   setStudentEmail(email);
                                   setMessages([]); // Clear existing messages
                                   fetchMessages(email); // Assuming studentId is the student email
+                                  setMessageModal(true);
                                 }}
                               >
                                 Inbox
@@ -551,9 +606,11 @@ function Teacher() {
                 ))}
               </div>
             </div>
-          </div>
+
+          </section>
         </>
-      )}
+      )
+      }
     </>
   );
 }

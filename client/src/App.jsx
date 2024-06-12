@@ -13,11 +13,13 @@ import Navbar from "./components/UI/Navbar";
 import ApproveStudent from "./Pages/ApproveStudent";
 import NotFound from "./Pages/NotFound";
 import TodayDate from "./components/UI/TodayDate";
+import Spinner from "./components/UI/Spinner";
 function App() {
   return (
     <>
       <BrowserRouter>
         <Navbar />
+
         <TodayDate />
         <Routes>
           <Route path="/" element={<LandingPage />} />
@@ -29,6 +31,7 @@ function App() {
           <Route path="/student/notapproved" element={<ApproveStudent />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/spinner" element={<Spinner />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
