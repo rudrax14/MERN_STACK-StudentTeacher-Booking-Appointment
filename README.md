@@ -9,6 +9,7 @@ This is a MERN stack project designed to facilitate the booking of appointments 
   - [Admin](#admin)
   - [Teacher](#teacher)
   - [Student](#student)
+- [Tech-Stack-Used](#tech-stack-used)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Screenshots](#screenshots)
@@ -41,6 +42,25 @@ This is a MERN stack project designed to facilitate the booking of appointments 
 - Book Appointment
 - Send Email Alert to Teacher
 - Send Message
+
+## Tech-Stack-Used
+
+**Frontend**
+```bash
+vite (bundler-react)
+tailwindcss (styling)
+react-icons (icons)
+react-router-dom (routing)
+react-toastify (notify)
+axios (API)
+```
+**Backend**
+```bash
+express (API)
+jwt-token (token)
+nodemail (MAIL)
+bcrypt (encryption)
+```
 
 ## Installation
 
