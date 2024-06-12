@@ -84,7 +84,7 @@ function AdminLogin() {
                   onChange={changeHandler}
                   placeholder="Password"
                 />
-                <label >Password: admin123</label>
+                <label >Password: admin</label>
                 <div className="flex mt-4 gap-3 w-full">
                   <input
                     type="submit"
