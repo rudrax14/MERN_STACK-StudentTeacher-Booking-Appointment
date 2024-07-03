@@ -61,25 +61,23 @@ function Admin() {
   }, []);
 
   const handleDeleteTeacher = async (_id, index) => {
-    try {
-      const jwtToken = localStorage.getItem("jwtToken");
-      await axios.delete(
-        `${import.meta.env.VITE_BACKEND_URL}/api/v1/admin/${_id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${jwtToken}`,
-          },
-        }
-      );
-
-      const updatedTeachers = [...teachers];
-      updatedTeachers.splice(index, 1);
-      setTeachers(updatedTeachers);
-      toast.success("Teacher deleted successfully");
-    } catch (error) {
-      console.error("Error deleting teacher:", error);
-      toast.error("Error deleting teacher");
-    }
+    const jwtToken = localStorage.getItem("jwtToken");
+    await axios
+      .delete(`${import.meta.env.VITE_BACKEND_URL}/api/v1/admin/${_id}`, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`,
+        },
+      })
+      .then((res) => {
+        const updatedTeachers = [...teachers];
+        updatedTeachers.splice(index, 1);
+        setTeachers(updatedTeachers);
+        toast.success("Teacher deleted successfully");
+        console.log(res)
+      }).catch((error) => {
+        console.error("Error deleting teacher:", error);
+        toast.error("Error deleting teacher");
+      });
   };
 
   const [formData, setFormData] = useState({
@@ -203,7 +201,10 @@ function Admin() {
         <Spinner />
       ) : (
         <>
-          <Header name="Admin Dashboard" style="bg-gradient-to-r from-[#F64C18] to-[#EE9539]" />
+          <Header
+            name="Admin Dashboard"
+            style="bg-gradient-to-r from-[#F64C18] to-[#EE9539]"
+          />
           <section className="dark:bg-slate-900 dark:text-white px-6 py-4">
             <div className=" container">
               <div className="pagecontent">
@@ -240,6 +241,7 @@ function Admin() {
                       value={formData.name}
                       onChange={changeHandler}
                       placeholder="Name"
+                      required
                     />
                     <input
                       className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300 dark:bg-slate-700"
@@ -248,6 +250,7 @@ function Admin() {
                       value={formData.department}
                       onChange={changeHandler}
                       placeholder="Department"
+                      required
                     />
                     <input
                       className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300 dark:bg-slate-700"
@@ -256,6 +259,7 @@ function Admin() {
                       value={formData.subject}
                       onChange={changeHandler}
                       placeholder="Subject"
+                      required
                     />
                     <input
                       className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300 dark:bg-slate-700"
@@ -264,6 +268,7 @@ function Admin() {
                       value={formData.age}
                       onChange={changeHandler}
                       placeholder="Age"
+                      required
                     />
                     <input
                       className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300 dark:bg-slate-700"
@@ -272,6 +277,7 @@ function Admin() {
                       onChange={changeHandler}
                       name="email"
                       placeholder="Email"
+                      required
                     />
                     <input
                       className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300 dark:bg-slate-700"
@@ -280,6 +286,7 @@ function Admin() {
                       value={formData.password}
                       onChange={changeHandler}
                       placeholder="Password"
+                      required
                     />
                     <input
                       className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300 dark:bg-slate-700"
@@ -288,6 +295,7 @@ function Admin() {
                       onChange={changeHandler}
                       name="passwordConfirm"
                       placeholder="Confirm Password"
+                      required
                     />
                     <div className="flex justify-end space-x-2">
                       <button
@@ -307,7 +315,6 @@ function Admin() {
                   </form>
                 </div>
               </div>
-
             )}
 
             <div className="py-4 container">
@@ -326,18 +333,30 @@ function Admin() {
                   </thead>
                   <tbody>
                     {teachers.map((teacher, index) => (
-                      <tr key={index} className="hover:bg-gray-100 hover:dark:bg-slate-950 text-center">
+                      <tr
+                        key={index}
+                        className="hover:bg-gray-100 hover:dark:bg-slate-950 text-center"
+                      >
                         <td className="border px-4 py-2">{index + 1}</td>
                         <td className="border px-4 py-2">{teacher.name}</td>
-                        <td className="border px-4 py-2">{teacher.subject.join(", ")}</td>
-                        <td className="border px-4 py-2">{teacher.department}</td>
+                        <td className="border px-4 py-2">
+                          {teacher.subject.join(", ")}
+                        </td>
+                        <td className="border px-4 py-2">
+                          {teacher.department}
+                        </td>
                         <td className="border px-4 py-2">
                           <button
-                            className="bg-red-500 text-white rounded px-4 py-2"
+                            className={`bg-red-500 text-white rounded px-4 py-2`}
                             onClick={() => handleDeleteTeacher(teacher._id, index)}
+                            disabled={
+                              teacher._id === "6685a20d5be29facb5059f24" ||
+                              teacher._id === "6685a7f197d78621a37725d8"
+                            }
                           >
                             <MdDelete />
                           </button>
+
                         </td>
                       </tr>
                     ))}
@@ -352,29 +371,38 @@ function Admin() {
                       className="border border-gray-200 rounded-lg p-4 shadow-md bg-white dark:bg-slate-800 hover:dark:bg-slate-950"
                     >
                       <div className="flex justify-between items-center mb-2">
-                        <p className="font-semibold text-lg">Teacher {index + 1}</p>
+                        <p className="font-semibold text-lg">
+                          Teacher {index + 1}
+                        </p>
+                        {console.log(teacher._id)}
                         <button
-                          className="bg-red-500 text-white rounded-full p-2"
-                          onClick={() => handleDeleteTeacher(teacher._id)}
+                          className={`bg-red-500 text-white rounded px-4 py-2`}
+                          onClick={() => handleDeleteTeacher(teacher._id, index)}
+                          disabled={
+                            teacher._id === "6685a20d5be29facb5059f24" ||
+                            teacher._id === "6685a7f197d78621a37725d8"
+                          }
                         >
                           <MdDelete />
                         </button>
                       </div>
                       <p className="mb-1">
-                        <span className="font-semibold">Name:</span> {teacher.name}
+                        <span className="font-semibold">Name:</span>{" "}
+                        {teacher.name}
                       </p>
                       <p className="mb-1">
-                        <span className="font-semibold">Subject:</span> {teacher.subject.join(", ")}
+                        <span className="font-semibold">Subject:</span>{" "}
+                        {teacher.subject.join(", ")}
                       </p>
                       <p className="mb-1">
-                        <span className="font-semibold">Department:</span> {teacher.department}
+                        <span className="font-semibold">Department:</span>{" "}
+                        {teacher.department}
                       </p>
                     </div>
                   );
                 })}
               </div>
             </div>
-
 
             <div className="container mx-auto py-4">
               <div className="teacher">
@@ -383,22 +411,21 @@ function Admin() {
                 <hr className="mt-0 mb-4" />
                 <div className="grid xl:grid-cols-4 sm:grid-cols-2 items-center justify-center gap-4 mx-12">
                   {students.map((student) => (
-                    <div className="card-body border shadow-lg rounded-lg p-4 w-72" key={student._id}>
+                    <div
+                      className="card-body border shadow-lg rounded-lg p-4 w-72"
+                      key={student._id}
+                    >
                       <img
                         src="https://static.vecteezy.com/system/resources/previews/001/942/923/large_2x/student-boy-with-school-suitcase-back-to-school-free-vector.jpg"
                         className="card-img-top"
                         alt="..."
                         style={{ height: "256px" }}
                       />
-                      <h5 className="card-title">
-                        Name: {student.name}
-                      </h5>
+                      <h5 className="card-title">Name: {student.name}</h5>
                       <p className="card-text">
                         Department: {student.department}
                       </p>
-                      <p className="card-text">
-                        Email: {student.email}
-                      </p>
+                      <p className="card-text">Email: {student.email}</p>
                       <div className="flex justify-around mt-4">
                         <button
                           className="bg-green-500 hover:bg-green-600 text-white rounded px-4 py-2"
@@ -407,6 +434,10 @@ function Admin() {
                             approveStudent(student._id);
                             toast.success("Student Approved");
                           }}
+                          disabled={
+                            student._id === "66859c6ba5dda7d5bfe203e5" || student._id ===
+                            "66859d38a5dda7d5bfe203ee" || student._id === "66859f7ef16ac328e1905491"
+                          }
                         >
                           Approve
                         </button>
@@ -417,6 +448,10 @@ function Admin() {
                             deleteStudent(student._id);
                             toast.info("Student Rejected");
                           }}
+                          disabled={
+                            student._id === "66859c6ba5dda7d5bfe203e5" || student._id ===
+                            "66859d38a5dda7d5bfe203ee" || student._id === "66859f7ef16ac328e1905491"
+                          }
                         >
                           Reject
                         </button>

@@ -40,7 +40,7 @@ const Navbar = () => {
   const { theme, toggleTheme } = useContext(ThemeContext); // Use ThemeContext
   return (
     <>
-      <nav className="bg-slate-950 sticky top-0 z-50">
+      <nav className="dark:bg-slate-950 bg-gray-500 sticky top-0 z-50">
         <div className="container mx-auto px-4 py-2 flex justify-between items-center">
           <Link
             className="text-white text-xl font-bold"

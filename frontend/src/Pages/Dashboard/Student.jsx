@@ -88,7 +88,7 @@ function Student() {
       to: teacherEmail,
       messageText: formData.message,
     };
-    setShowModal(false)
+    setShowModal(false);
     // console.log(messageObject);
 
     try {
@@ -117,31 +117,34 @@ function Student() {
   }
 
   // book appoinments
-  const handleBookAppointment = async (appointmentId) => {
-    // console.log(appointmentId);
-    try {
-      setSpinner(true);
-      const jwtToken = localStorage.getItem("Student jwtToken");
-      // console.log(jwtToken);
-      const response = await axios.patch(
+  const handleBookAppointment = async (appointmentId, scheduleAt) => {
+    setSpinner(true);
+    const jwtToken = localStorage.getItem("Student jwtToken");
+    await axios
+      .patch(
         `${import.meta.env.VITE_BACKEND_URL
         }/api/v1/student/appointment/${appointmentId}`,
-        {},
+        {
+          scheduleAt: scheduleAt,
+        },
         {
           headers: {
             Authorization: `Bearer ${jwtToken}`,
           },
         }
-      );
-      setSpinner(false);
-      toast.success("Appointment booked successfully");
-      fetchTable();
-      // console.log("Appointment booked successfully:", response.data);
-    } catch (error) {
-      setSpinner(false);
-      console.error("Error booking appointment:", error);
-      toast.error("Already booked appointment");
-    }
+      )
+      .then((response) => {
+        setSpinner(false);
+        toast.success("Appointment booked successfully");
+        fetchTable();
+        console.log("Appointment booked successfully:", response.data);
+      })
+      .catch((error) => {
+        setSpinner(false);
+        console.error("Error booking appointment:", error);
+        console.log(error);
+        toast.error("Already booked appointment");
+      });
   };
 
   const formatDate = (dateString) => {
@@ -163,47 +166,52 @@ function Student() {
       ) : (
         <>
           {/* message modal */}
-          {showModal && (<div className="fixed inset-0 z-50 overflow-y-auto">
-            <div className="flex items-center justify-center min-h-screen bg-gray-500 bg-opacity-90 transition-opacity">
-              <div className="bg-white dark:bg-slate-800 dark:text-white rounded-lg shadow-lg w-full max-w-md mx-4 sm:mx-auto">
-                <div className="border-b border-gray-200 p-4">
-                  <h5 className="text-lg font-medium text-gray-900 dark:text-white">Message Modal</h5>
+          {showModal && (
+            <div className="fixed inset-0 z-50 overflow-y-auto">
+              <div className="flex items-center justify-center min-h-screen bg-gray-500 bg-opacity-90 transition-opacity">
+                <div className="bg-white dark:bg-slate-800 dark:text-white rounded-lg shadow-lg w-full max-w-md mx-4 sm:mx-auto">
+                  <div className="border-b border-gray-200 p-4">
+                    <h5 className="text-lg font-medium text-gray-900 dark:text-white">
+                      Message Modal
+                    </h5>
+                  </div>
+                  <form onSubmit={submitHandler}>
+                    <div className="p-4">
+                      <input
+                        className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300 dark:bg-slate-700"
+                        type="text"
+                        name="message"
+                        value={formData.message}
+                        onChange={changeHandler}
+                        placeholder="Your Message Goes Here"
+                      />
+                    </div>
+                    <div className="flex justify-end border-t border-gray-200 p-4">
+                      <button
+                        type="button"
+                        className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+                        onClick={() => setShowModal(false)}
+                      >
+                        Close
+                      </button>
+                      <input
+                        type="submit"
+                        value="Send Message"
+                        className="ml-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                      // onClick={() => setShowModal(false)}
+                      />
+                    </div>
+                  </form>
                 </div>
-                <form onSubmit={submitHandler}>
-                  <div className="p-4">
-                    <input
-                      className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300 dark:bg-slate-700"
-                      type="text"
-                      name="message"
-                      value={formData.message}
-                      onChange={changeHandler}
-                      placeholder="Your Message Goes Here"
-                    />
-                  </div>
-                  <div className="flex justify-end border-t border-gray-200 p-4">
-                    <button
-                      type="button"
-                      className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
-                      onClick={() => setShowModal(false)}
-                    >
-                      Close
-                    </button>
-                    <input
-                      type="submit"
-                      value="Send Message"
-                      className="ml-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                    // onClick={() => setShowModal(false)}
-                    />
-                  </div>
-                </form>
               </div>
             </div>
-          </div>)}
-
-
+          )}
 
           {/* header */}
-          <Header name="Student Dashboard" style='bg-gradient-to-r from-cyan-500 to-blue-500' />
+          <Header
+            name="Student Dashboard"
+            style="bg-gradient-to-r from-cyan-500 to-blue-500"
+          />
           <div className="px-4 dark:bg-slate-900 dark:text-white">
             {/* info table */}
             <div className="container mx-auto py-4">
@@ -211,33 +219,39 @@ function Student() {
                 Your Upcoming Lectures Details
               </h2>
               <hr className="mt-0 mb-4" />
-              {!lectureDetails.length == 0 ? (<table className="table-auto w-full">
-                <thead>
-                  <tr>
-                    <th className="px-4 py-2">Sr.No</th>
-                    <th className="px-4 py-2">Teacher</th>
-                    {/* <th className="px-4 py-2">Subject</th> */}
-                    <th className="px-4 py-2">Date</th>
-                    <th className="px-4 py-2">Time Slot</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {lectureDetails.map((detail, index) => (
-                    <tr key={index} className="bg-gray-100 dark:bg-slate-800 text-center hover:dark:bg-slate-950">
-                      <td className="border px-4 py-2">{index + 1}</td>
-                      <td className="border px-4 py-2">{detail.name}</td>
-                      {/* <td className="border px-4 py-2">{}</td> */}
-                      <td className="border px-4 py-2">
-                        {formatDate(detail.scheduleAt)}
-                      </td>
-                      <td className="border px-4 py-2">
-                        {formatTime(detail.scheduleAt)}
-                      </td>
+              {!lectureDetails.length == 0 ? (
+                <table className="table-auto w-full">
+                  <thead>
+                    <tr>
+                      <th className="px-4 py-2">Sr.No</th>
+                      <th className="px-4 py-2">Teacher</th>
+                      {/* <th className="px-4 py-2">Subject</th> */}
+                      <th className="px-4 py-2">Date</th>
+                      <th className="px-4 py-2">Time Slot</th>
                     </tr>
-                  ))}
-
-                </tbody>
-              </table>) : (<h1 className="text-center text-xl">No Upcoming Lectures</h1>)}
+                  </thead>
+                  <tbody>
+                    {lectureDetails.map((detail, index) => (
+                      <tr
+                        key={index}
+                        className="bg-gray-100 dark:bg-slate-800 text-center hover:dark:bg-slate-950"
+                      >
+                        <td className="border px-4 py-2">{index + 1}</td>
+                        <td className="border px-4 py-2">{detail.name}</td>
+                        {/* <td className="border px-4 py-2">{}</td> */}
+                        <td className="border px-4 py-2">
+                          {formatDate(detail.scheduleAt)}
+                        </td>
+                        <td className="border px-4 py-2">
+                          {formatTime(detail.scheduleAt)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <h1 className="text-center text-xl">No Upcoming Lectures</h1>
+              )}
             </div>
             {/* card container */}
             <div className="container mx-auto py-4">
@@ -251,7 +265,6 @@ function Student() {
                       key={index}
                     >
                       <div>
-
                         <img
                           src="https://static.vecteezy.com/system/resources/previews/002/406/452/non_2x/female-teacher-teaching-a-lesson-at-the-school-free-vector.jpg"
                           className="w-full"
@@ -271,7 +284,10 @@ function Student() {
                           {teacher.appointments.length > 0 ? (
                             teacher.appointments.map(
                               (appointment, appointmentIndex) => (
-                                <div key={appointmentIndex} className="flex flex-col gap-4">
+                                <div
+                                  key={appointmentIndex}
+                                  className="flex flex-col gap-4"
+                                >
                                   <p className="text-gray-700 text-base dark:text-gray-400">
                                     Timing:{" "}
                                     {new Date(
@@ -281,11 +297,14 @@ function Student() {
                                       minute: "2-digit",
                                     })}
                                   </p>
-                                  <div className="" >
+                                  <div className="">
                                     <button
                                       className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                                       onClick={() =>
-                                        handleBookAppointment(appointment._id)
+                                        handleBookAppointment(
+                                          appointment._id,
+                                          appointment.scheduleAt
+                                        )
                                       }
                                     >
                                       Book Appointment
@@ -308,8 +327,8 @@ function Student() {
                           data-bs-toggle="modal"
                           data-bs-target="#messageModal"
                           onClick={() => {
-                            setTeacherEmail(teacher.email)
-                            setShowModal(true)
+                            setTeacherEmail(teacher.email);
+                            setShowModal(true);
                           }}
                         >
                           Message

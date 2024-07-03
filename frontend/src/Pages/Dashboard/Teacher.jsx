@@ -98,7 +98,7 @@ function Teacher() {
           },
         }
       );
-      // console.log(response);
+      console.log(response);
       setTableAppointments(response.data.appointments);
     } catch (error) {
       // console.log(error);
@@ -481,6 +481,7 @@ function Teacher() {
                 </div>
                 <div className="block md:hidden space-y-4">
                   {tableAppointments.map((appointment, index) => {
+
                     const scheduleDate = new Date(appointment.scheduleAt);
                     const formattedDate = scheduleDate.toLocaleDateString();
                     const formattedTime = scheduleDate.toLocaleTimeString();

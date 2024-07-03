@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import Spinner from "../UI/Spinner";
+import axios from "axios";
 
 function StudentRegister() {
   const navigate = useNavigate();
@@ -35,27 +36,22 @@ function StudentRegister() {
       passwordConfirm: formData.passwordConfirm,
     };
     setSpinner(true);
-    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/v1/student/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestData),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.token) {
-          localStorage.setItem("token", data.token);
+    axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/student/register`, requestData)
+      .then((response) => {
+        if (response.data.token) {
+          localStorage.setItem("token", response.data.token);
           setSpinner(false);
           navigate("/student/login");
           toast.success("Account Created Successfully");
         } else {
           setSpinner(false);
+          console.log(response.data);
           toast.error("Failed to register");
         }
       })
       .catch((error) => {
         setSpinner(false);
+        toast.error(error.response.data.message);
         console.error("Error:", error);
       });
   }
@@ -69,7 +65,10 @@ function StudentRegister() {
           <div className="bg-white rounded-lg dark:bg-slate-800 dark:text-white dark:border- dark:border shadow-lg p-8 w-full max-w-md">
             <div className="flex flex-col items-center">
               <h2 className="font-bold text-2xl">Student Register</h2>
-              <form className="flex flex-col gap-3 mt-4 w-full" onSubmit={submitHandler}>
+              <form
+                className="flex flex-col gap-3 mt-4 w-full"
+                onSubmit={submitHandler}
+              >
                 <input
                   className="mt-3 p-2 border rounded dark:bg-slate-700"
                   type="text"
@@ -77,6 +76,7 @@ function StudentRegister() {
                   value={formData.name}
                   onChange={changeHandler}
                   placeholder="Name"
+                  required
                 />
                 <input
                   className="mt-2 p-2 border rounded dark:bg-slate-700"
@@ -85,6 +85,7 @@ function StudentRegister() {
                   value={formData.department}
                   onChange={changeHandler}
                   placeholder="Department"
+                  required
                 />
                 <input
                   className="mt-2 p-2 border rounded dark:bg-slate-700"
@@ -93,6 +94,7 @@ function StudentRegister() {
                   value={formData.age}
                   onChange={changeHandler}
                   placeholder="Age"
+                  required
                 />
                 <input
                   className="mt-2 p-2 border rounded dark:bg-slate-700"
@@ -101,6 +103,7 @@ function StudentRegister() {
                   onChange={changeHandler}
                   name="email"
                   placeholder="Email"
+                  required
                 />
                 <input
                   className="mt-2 p-2 border rounded dark:bg-slate-700"
@@ -109,6 +112,7 @@ function StudentRegister() {
                   value={formData.password}
                   onChange={changeHandler}
                   placeholder="Password"
+                  required
                 />
                 <input
                   className="mt-2 p-2 border rounded dark:bg-slate-700"
@@ -117,6 +121,7 @@ function StudentRegister() {
                   onChange={changeHandler}
                   name="passwordConfirm"
                   placeholder="Confirm Password"
+                  required
                 />
                 <div className="flex mt-3 gap-3 w-full">
                   <input
